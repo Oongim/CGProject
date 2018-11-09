@@ -1,0 +1,15 @@
+﻿  소스.cpp
+c:\users\강동균\desktop\컴그\finalproject\finalproject\소스.cpp(71): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+c:\users\강동균\desktop\컴그\finalproject\finalproject\소스.cpp(75): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+c:\users\강동균\desktop\컴그\finalproject\finalproject\소스.cpp(80): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+c:\users\강동균\desktop\컴그\finalproject\finalproject\소스.cpp(84): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+c:\users\강동균\desktop\컴그\finalproject\finalproject\소스.cpp(113): warning C4326: 'main'의 반환 형식이 'int'이어야 하는데 'void'입니다.
+c:\users\강동균\desktop\컴그\finalproject\finalproject\소스.cpp(116): warning C4244: '인수': 'time_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\강동균\desktop\컴그\finalproject\finalproject\소스.cpp(186): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\강동균\desktop\컴그\finalproject\finalproject\소스.cpp(201): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\강동균\desktop\컴그\finalproject\finalproject\소스.cpp(210): warning C4244: '인수': 'int'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\강동균\desktop\컴그\finalproject\finalproject\소스.cpp(220): warning C4244: '인수': 'int'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\강동균\desktop\컴그\finalproject\finalproject\소스.cpp(228): warning C4244: '인수': 'int'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\강동균\desktop\컴그\finalproject\finalproject\소스.cpp(235): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\강동균\desktop\컴그\finalproject\finalproject\소스.cpp(243): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+  FinalProject.vcxproj -> C:\Users\강동균\Desktop\컴그\FinalProject\Debug\FinalProject.exe
