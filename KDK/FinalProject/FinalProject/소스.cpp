@@ -25,7 +25,7 @@ namespace KDK {
 			0,0,0,1 };
 	};
 	Whale whale;
-	
+
 }
 GLdouble rotate[16]
 = { 1,0,0,0,
