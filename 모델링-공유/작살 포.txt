@@ -1,0 +1,179 @@
+void draw_Harpoon_Gun(float x, float y, float z,float x_angle, float y_angle)
+{
+
+	glPushMatrix(); {
+		glTranslatef(x, y, z);
+		glRotatef(y_angle, 0.0, 1.0, 0.0);// 전체 y축 회전
+
+		glColor3f(1.0, 0.0, 0.0);
+		/*********************Y자 베이스 *********************/
+		glPushMatrix(); {
+			glTranslatef(0, -45, 0);
+			glPushMatrix(); {
+				glRotatef(90, 1.0, 0.0, 0.0);
+				drawCylinder(15, 10);//바닥 원기둥
+			}glPopMatrix();
+			/***************y자 몸통*******************/
+			glPushMatrix(); {
+				glColor3f(1.0, 0.0, 0.0);
+				glTranslatef(0, 5, 0);
+				glPushMatrix(); {
+					glScalef(1.5, 2.0, 1.0);
+					glColor3f(1.0, 0.0, 0.0);
+					glutSolidCube(10);
+					glColor3f(1.0, 1.0, 0.0);
+					glutWireCube(10);
+				}glPopMatrix();
+				glPushMatrix(); {
+					glPushMatrix(); {//    /
+						glTranslatef(3, 0, 0);
+						glRotatef(70, 0.0, 0.0, 1.0);
+						glTranslatef(10, 0, 0);
+						glScalef(2.0, 0.5, 1.0);
+
+						glColor3f(1.0, 0.0, 0.0);
+						glutSolidCube(10);
+						glColor3f(1.0, 1.0, 0.0);
+						glutWireCube(10);
+					}glPopMatrix();
+					glPushMatrix(); {
+						glTranslatef(10, 28, 0);
+						glScalef(0.5, 2.0, 1.0);
+						
+						glColor3f(1.0, 0.0, 0.0);
+						glutSolidCube(10);
+						glColor3f(1.0, 1.0, 0.0);
+						glutWireCube(10);
+					}glPopMatrix();
+				}glPopMatrix();
+				glPushMatrix(); {/*     \                                                      */
+					glPushMatrix(); {//    /
+						glTranslatef(-3, 0, 0);
+						glRotatef(-70, 0.0, 0.0, 1.0);
+						glTranslatef(-10, 0, 0);
+						glScalef(2.0, 0.5, 1.0);
+						
+						glColor3f(1.0, 0.0, 0.0);
+						glutSolidCube(10);
+						glColor3f(1.0, 1.0, 0.0);
+						glutWireCube(10);
+					}glPopMatrix();
+					glPushMatrix(); {
+						glTranslatef(-10, 28, 0);
+						glScalef(0.5, 2.0, 1.0);
+						
+						glColor3f(1.0, 0.0, 0.0);
+						glutSolidCube(10);
+						glColor3f(1.0, 1.0, 0.0);
+						glutWireCube(10);
+					}glPopMatrix();
+				}glPopMatrix();
+			}glPopMatrix();
+		}glPopMatrix();
+		/*******************//*포신*//********************/
+		glRotatef(x_angle, 1.0, 0.0, 0.0);   //포신의 x축 회전
+		glTranslatef(0, 0, 8);
+		glColor3f(1.0, 1.0, 0.8);
+		glPushMatrix(); {
+			/**********************조준쇠******************/
+			glPushMatrix(); {
+				glColor3f(0.5, 0.5, 0.5);
+				glTranslatef(0, 15,-5);
+				glPushMatrix(); {
+					glColor3f(0.3, 0.3, 0.3);
+					glTranslatef(0, -3, -15);
+					glScalef(1.0, 5, 1);
+					glutSolidCube(2);
+				}glPopMatrix();
+				glPushMatrix(); {
+					glColor3f(0.3, 0.3, 0.3);
+					glTranslatef(0, -4, 10);
+					glScalef(1.0, 4, 1);
+					glutSolidCube(2);
+				}glPopMatrix();
+				glColor3f(0.5, 0.5, 0.5);
+				glRotatef(5, 1.0, 0.0, 0.0);
+				glScalef(1.0, 2, 40);
+				glutSolidCube(1);
+			}glPopMatrix();
+			/*********************네모몸통*******************************/
+			glPushMatrix(); {
+				glColor3f(1.0, 1.0, 0.7);
+				glTranslatef(0, -6, -15);
+				glPushMatrix();{
+					glRotatef(35, 1.0, 0.0, 0.0);
+					glScalef(1.0, 1.0, 1.5);
+					glRotatef(-45, 1.0, 0.0, 0.0);
+					glScalef(1.0, 1.5, 1.2);
+					glutSolidCube(16);
+				}glPopMatrix();
+				
+				/*************손잡이*****************/
+				glPushMatrix(); {
+					glColor3f(0.4, 0.4, 0.4);
+					glTranslatef(0, 0, -25);
+					glPushMatrix(); {
+						glTranslatef(0, 0, -10);
+						drawCylinder(2, 10);
+					}glPopMatrix();
+					glScalef(4, 5, 3);
+					glutSolidCube(1);
+				}glPopMatrix();
+				//
+				glPushMatrix(); {
+					glColor3f(0.5, 0.5, 0.5);
+					glTranslatef(8, 0, -10);
+					glPushMatrix(); {
+						glScalef(1, 6, 15);
+						glutSolidCube(1);
+					}glPopMatrix();
+					glPushMatrix(); {
+						glColor3f(0.3, 0.3, 0.3);
+						glTranslatef(0, 0, -7);
+						glRotatef(40, 0.0, 1.0, 0.0);
+						glTranslatef(0, 0, -5);
+						glScalef(1, 4, 10);
+						glutSolidCube(1);
+					}glPopMatrix();
+				}glPopMatrix();
+				glPushMatrix(); {
+					glColor3f(0.5, 0.5, 0.5);
+					glTranslatef(-8, 0, -10);
+					glPushMatrix(); {
+						glScalef(1, 6, 15);
+						glutSolidCube(1);
+					}glPopMatrix();
+					glPushMatrix(); {
+						glColor3f(0.3, 0.3, 0.3);
+						glTranslatef(0, 0, -7);
+						glRotatef(-40, 0.0, 1.0, 0.0);
+						glTranslatef(0, 0, -5);
+						glScalef(1, 4, 10);
+						glutSolidCube(1);
+					}glPopMatrix();
+				}glPopMatrix();
+			}glPopMatrix();
+			/********************** 포신 원통**************************/
+			glPushMatrix(); {    
+				glTranslatef(0, 0, -20);
+				glColor3f(1.0, 0.8, 0.8);
+				drawCylinder(8, 30);
+
+			}glPopMatrix();
+			glPushMatrix(); {
+				glTranslatef(0, -14, -13);
+				glColor3f(1.0, 0.8, 0.8);
+				drawCylinder(6, 25);
+				glColor3f(0.8, 0.8, 1.0);
+				glTranslatef(0, 0,20);
+				drawCylinder(4, 10);
+			}glPopMatrix();
+			glPushMatrix(); {
+				glColor3f(1.0, 1.0, 0.8);
+				glTranslatef(0, 0, 15);
+				glScalef(1.0, 1.0, 10.0);           
+				glutSolidTorus(1, 4, 20, 20);
+			}glPopMatrix();
+		}glPopMatrix();
+	}glPopMatrix();
+}

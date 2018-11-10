@@ -1,0 +1,103 @@
+void draw_basic_Whale(float r, float phi, float theta, GLdouble arr[])
+{
+//r 원점으로부터의 거리, phi x와 z의 각도, theta x,z평면과 y의 각도, arr 회전을 쓸 배열이 들어갈 듯
+	float x = r * cos(phi*RADIAN) * cos(theta*RADIAN);
+	float y = r * sin(phi*RADIAN);
+	float z = r * cos(phi*RADIAN) * sin(theta*RADIAN);
+	glPushMatrix(); {
+		glTranslatef(x, y, z);
+		glPushMatrix(); {
+			glRotatef(phi, 0.0, 1.0, 0.0);
+			glMultMatrixd(arr);
+			glGetDoublev(GL_MODELVIEW_MATRIX, arr);
+		}glPopMatrix();
+		///////////////////큰 몸통/////////////////////////////////////////////
+		glColor3f(1.0, 1.0, 1.0);
+		drawRect(100);
+		/////////////////////////지느러미 2개//////////////////////////
+		glPushMatrix(); {
+			glTranslatef(0, -30, 20);
+			/****************왼쪽*******************/
+			glPushMatrix(); {
+				glTranslatef(60, 0, 0);
+
+				glScalef(0.5, 0.5, 1);
+				//glColor3f(1.0, 1.0, 1.0);
+				drawRect(40);
+				glPushMatrix(); {
+					glTranslatef(30, 0, 0);
+
+					glScalef(0.7, 0.8, 0.7);
+					//glColor3f(1.0, 1.0, 1.0);
+					drawRect(40);
+				}glPopMatrix();
+			}glPopMatrix();
+			/***************오른쪽*****************/
+			glPushMatrix(); {
+				glTranslatef(-60, 0, 0);
+
+				glScalef(0.5, 0.5, 1);
+				//glColor3f(1.0, 1.0, 1.0);
+				drawRect(40);
+				glPushMatrix(); {
+					glTranslatef(-30, 0, 0);
+
+					glScalef(0.7, 0.8, 0.7);
+					//glColor3f(1.0, 1.0, 1.0);
+					drawRect(40);
+				}glPopMatrix();
+			}glPopMatrix();
+		}glPopMatrix();
+		/////////////////////////////////////////////////////////////////////
+		/**********************중간 몸통***********************************/
+		glPushMatrix(); {
+			glTranslatef(0, -10 + KDK::whale.tail_moveRange[0], 70);
+
+			glRotatef(0, 0.0, 0.0, 1.0);
+			glPushMatrix(); {
+				glScalef(1, 1, 0.5);
+				//glColor3f(1.0, 1.0, 1.0);
+				drawRect(80);
+			}glPopMatrix();
+			/*****************꼬리 몸통**********************************/
+			glPushMatrix(); {
+				glTranslatef(0, -10 + KDK::whale.tail_moveRange[1], 40);
+
+				glRotatef(0, 0.0, 0.0, 1.0);
+				//glColor3f(1.0, 1.0, 1.0);
+				drawRect(40);
+				/*************************************************************/
+				glPushMatrix(); {
+					glTranslatef(0, 0, 20);
+					glRotatef(KDK::whale.Tail_Radian, 1.0, 0.0, 0.0);
+					glTranslatef(0, 0, 20);
+					//////////////////꼬리 지느러미 2개+가운데 1개////////////////// 
+					/******************지느러미 왼쪽**********************/
+					glPushMatrix(); {
+						glTranslatef(20, 0, 0);
+						glRotatef(30, 0.0, 1.0, 0.0);
+						glScalef(0.7, 0.5, 1);
+						//glColor3f(1.0, 1.0, 1.0);
+						drawRect(40);
+					}glPopMatrix();
+					/********************지느러미 오른쪽***************************/
+					glPushMatrix(); {
+						glTranslatef(-20, 0, 0);
+						glRotatef(-30, 0.0, 1.0, 0.0);
+						glScalef(0.7, 0.5, 1);
+						//glColor3f(1.0, 1.0, 1.0);
+						drawRect(40);
+					}glPopMatrix();
+					/***********************지느러미 가운데**********************/
+					glPushMatrix(); {
+						glTranslatef(0, 0, -10);
+						glScalef(1, 1, 1);
+						//glColor3f(1.0, 1.0, 1.0);
+						drawRect(20);
+					}glPopMatrix();
+					/*****************************************************************/
+				}glPopMatrix();
+			}glPopMatrix();
+		}glPopMatrix();
+	}glPopMatrix();
+}

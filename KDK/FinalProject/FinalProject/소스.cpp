@@ -32,6 +32,7 @@ GLdouble rotate[16]
 0,1,0,0,
 0,0,1,0,
 0,0,0,1 };
+int x_c, y_c;
 void init()
 {
 	m_camera.Initialize(float3{ 0,0,0 }, 300, 1, 1000, 90);
@@ -45,11 +46,16 @@ void Keyboard(unsigned char key, int x, int y)
 
 	switch (key) {
 	case 'x':
-		glPushMatrix();
-		glRotatef(5, 1.0, 0.0, 0.0);
-		glMultMatrixd(rotate);
-		glGetDoublev(GL_MODELVIEW_MATRIX, rotate);
-		glPopMatrix();
+		x_c ++;
+		break;
+	case 'X':
+		x_c--;
+		break;
+	case 'y':
+		y_c++;
+		break;
+	case 'Y':
+		y_c--;
 		break;
 	default:
 		break;
@@ -120,6 +126,7 @@ void TimerFunction(int value)
 				KDK::whale.tail_moveRange[0] = 20;
 		}
 	}
+
 	glutPostRedisplay();
 	glutTimerFunc(50, TimerFunction, 1);
 }
@@ -356,17 +363,17 @@ void draw_Harpoon(float x,float y, float z)
 		}glPopMatrix();
 	}glPopMatrix();
 }
-void draw_Harpoon_Gun(float x, float y, float z)
+void draw_Harpoon_Gun(float x, float y, float z,float x_angle, float y_angle)
 {
 
 	glPushMatrix(); {
-		glTranslatef(x, y, z-5);
-		glRotatef(0, 0.0, 1.0, 0.0);// 전체 y축 회전
+		glTranslatef(x, y, z);
+		glRotatef(y_angle, 0.0, 1.0, 0.0);// 전체 y축 회전
 
 		glColor3f(1.0, 0.0, 0.0);
 		/*********************Y자 베이스 *********************/
 		glPushMatrix(); {
-			glTranslatef(0, -45, -8);
+			glTranslatef(0, -45, 0);
 			glPushMatrix(); {
 				glRotatef(90, 1.0, 0.0, 0.0);
 				drawCylinder(15, 10);//바닥 원기둥
@@ -429,8 +436,8 @@ void draw_Harpoon_Gun(float x, float y, float z)
 			}glPopMatrix();
 		}glPopMatrix();
 		/*******************//*포신*//********************/
-		glRotatef(0, 0.0, 1.0, 0.0);   //포신의 x축 회전
-
+		glRotatef(x_angle, 1.0, 0.0, 0.0);   //포신의 x축 회전
+		glTranslatef(0, 0, 8);
 		glColor3f(1.0, 1.0, 0.8);
 		glPushMatrix(); {
 			/**********************조준쇠******************/
@@ -458,13 +465,60 @@ void draw_Harpoon_Gun(float x, float y, float z)
 			glPushMatrix(); {
 				glColor3f(1.0, 1.0, 0.7);
 				glTranslatef(0, -6, -15);
-				glRotatef(35, 1.0, 0.0, 0.0);
-				glScalef(1.0, 1.0, 1.5);
-				glRotatef(-45, 1.0, 0.0, 0.0);
-				glScalef(1.0, 1.5, 1.2);
-				glutSolidCube(16);
+				glPushMatrix();{
+					glRotatef(35, 1.0, 0.0, 0.0);
+					glScalef(1.0, 1.0, 1.5);
+					glRotatef(-45, 1.0, 0.0, 0.0);
+					glScalef(1.0, 1.5, 1.2);
+					glutSolidCube(16);
+				}glPopMatrix();
+				
+				/*************손잡이*****************/
+				glPushMatrix(); {
+					glColor3f(0.4, 0.4, 0.4);
+					glTranslatef(0, 0, -25);
+					glPushMatrix(); {
+						glTranslatef(0, 0, -10);
+						drawCylinder(2, 10);
+					}glPopMatrix();
+					glScalef(4, 5, 3);
+					glutSolidCube(1);
+				}glPopMatrix();
+				//
+				glPushMatrix(); {
+					glColor3f(0.5, 0.5, 0.5);
+					glTranslatef(8, 0, -10);
+					glPushMatrix(); {
+						glScalef(1, 6, 15);
+						glutSolidCube(1);
+					}glPopMatrix();
+					glPushMatrix(); {
+						glColor3f(0.3, 0.3, 0.3);
+						glTranslatef(0, 0, -7);
+						glRotatef(40, 0.0, 1.0, 0.0);
+						glTranslatef(0, 0, -5);
+						glScalef(1, 4, 10);
+						glutSolidCube(1);
+					}glPopMatrix();
+				}glPopMatrix();
+				glPushMatrix(); {
+					glColor3f(0.5, 0.5, 0.5);
+					glTranslatef(-8, 0, -10);
+					glPushMatrix(); {
+						glScalef(1, 6, 15);
+						glutSolidCube(1);
+					}glPopMatrix();
+					glPushMatrix(); {
+						glColor3f(0.3, 0.3, 0.3);
+						glTranslatef(0, 0, -7);
+						glRotatef(-40, 0.0, 1.0, 0.0);
+						glTranslatef(0, 0, -5);
+						glScalef(1, 4, 10);
+						glutSolidCube(1);
+					}glPopMatrix();
+				}glPopMatrix();
 			}glPopMatrix();
-			/************************************************/
+			/********************** 포신 원통**************************/
 			glPushMatrix(); {    
 				glTranslatef(0, 0, -20);
 				glColor3f(1.0, 0.8, 0.8);
@@ -502,7 +556,7 @@ GLvoid drawScene(GLvoid)
 	draw_basic_Whale(100, 0, 0, rotate);
 	//////////////////////////작살//////////////////////////
 	draw_Harpoon(0, 0, 0);
-	draw_Harpoon_Gun(0,0,0);
+	draw_Harpoon_Gun(0,0,0, x_c,y_c);
 
 
 	/*************drawEnd*************************************************/

@@ -1,0 +1,26 @@
+void draw_Harpoon(float x,float y, float z)
+{	//나중에 각도 추가하거나 알아서 계산해야 될듯
+	
+	glPushMatrix(); {
+		glTranslatef(x, y, z);
+		glRotatef(0, 0.0, 1.0, 0.0);
+
+		glColor3f(1.0, 0.0, 1.0);
+		/*********************작살 봉*********************/
+		glPushMatrix(); {
+			glScalef(1.0, 1.0, 50.0);           //봉길이 50
+			glutSolidTorus(0.5, 1, 20, 20);
+		}glPopMatrix();
+		/*********************작살 촉*********************/
+		glColor3f(1.0, 0.0, 0.0);
+		glPushMatrix(); {
+			glTranslatef(0, 0, 25);
+			glScalef(1.0, 1.0, 1.0);
+			glutSolidCone(3, 5, 10, 10);
+			glTranslatef(0, 0, 3);
+			glutSolidCone(3, 5, 10, 10);
+			glTranslatef(0, 0, 3);
+			glutSolidCone(3, 5, 10, 10);
+		}glPopMatrix();
+	}glPopMatrix();
+}
