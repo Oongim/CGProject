@@ -198,7 +198,7 @@ void main(int argc, char *argv[])
 	glutTimerFunc(10, Timerfunction, 1);         // 타이머 함수 설정
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+	//glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 	glutMainLoop();
 }
 // 윈도우 출력 함수
@@ -245,12 +245,21 @@ void Keyboard(unsigned char key, int x, int y)
 {
 	if (key == 'w')
 	{
-		KHM::Boat.z += cos(KHM::Boat.MOVE_RADIAN) * 3;
-		KHM::Boat.x += sin(KHM::Boat.MOVE_RADIAN) * 3;
-		KHM::Harpoon.z = KHM::Boat.z;
-		KHM::Harpoon.x = KHM::Boat.x;
+		//KHM::Boat.x += sin(KHM::Boat.MOVE_RADIAN) * 3;
+		//KHM::Boat.z += cos(KHM::Boat.MOVE_RADIAN) * 3;
+
+		KHM::Boat.x += cos(KHM::Boat.HULL_RADIAN) * 3;
+		KHM::Boat.y -= sin(KHM::Boat.HULL_RADIAN) * 3;
+		KHM::Boat.z += cos(KHM::Boat.HULL_RADIAN) * 3;
+		//KHM::Harpoon.z = KHM::Boat.z;
+		//KHM::Harpoon.x = KHM::Boat.x;
 		cout << KHM::Boat.x << " " << KHM::Boat.y << " " << KHM::Boat.z << " " << KHM::Boat.HULL_RADIAN << " " << KHM::Boat.MOVE_RADIAN << endl;
 	}
+	//X = x0 + 거리 * cos(각도 Z) *   sin(각도 Y)
+
+	//Y = y0 + 거리 * sin(Anglez)
+
+	//Z = z0 + 거리 * cos(각도 Z) *   cos(각도 Y)
 	if (key == 'a')
 	{
 		KHM::Boat.HULL_RADIAN++;
