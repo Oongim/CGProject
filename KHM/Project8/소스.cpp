@@ -8,23 +8,25 @@
 #define PI 3.141592
 #define RADIAN PI/180
 #define WORLD_SCALE 4000
-enum Direction{LEFT = -1 , KEEP, RIGHT};
+#define DISTANCE 500.0
+enum Direction { LEFT = -1, KEEP, RIGHT };
 using namespace std;
 
 static double prev_mx = 0;
 static double prev_my = 0;
 
 
-namespace KHM 
+namespace KHM
 {
 	int MODE_OF_VIEW = 3; // 1 = 1인칭(작살), 3 = 3인칭 
-	struct BOAT 
+	float temp_distance = 500;
+	float temp_x_angle = 0;
+	float temp_y_angle = 0;
+	struct BOAT
 	{
 		bool is_forward = false;
 		int direction = KEEP;
 		bool is_breaking = false;
-		float HULL_RADIAN = 0;
-		float MOVE_RADIAN = 0;
 		float speed = 0.0;
 		float velocity = 0.0002;
 	};
@@ -32,12 +34,13 @@ namespace KHM
 
 	struct HARPOON
 	{
-		float HULL_RADIAN = 0;
+		float y_angle = 0;
+		float x_angle = 0;
 		float x = 0;
 		float y = 0;
 		float z = 0;
 		float t = 0;
-		bool is_hit = false; 
+		bool is_hit = false;
 		bool is_fired = false;
 	};
 	struct Node
@@ -46,58 +49,394 @@ namespace KHM
 		Node * next;
 	};
 	Node * Head;
-	void Insert()
+	void Insert_Harpoon()
 	{
 		Node *New = new Node;
-		
 		New->Harpoon.x = 0;
-		New->Harpoon.y = 0;
+		New->Harpoon.y = 150;
 		New->Harpoon.z = 0;
-		New->Harpoon.HULL_RADIAN = 0;
+		New->Harpoon.x_angle = KHM::temp_x_angle;
+		New->Harpoon.y_angle = KHM::temp_y_angle;
 		New->Harpoon.is_hit = false;
 		New->Harpoon.is_fired = false;
-		New->next = nullptr;
-		Node *curr = Head;
-		while (Head->next != nullptr)
+
+		New->next = Head->next;
+		Head->next = New;
+	}
+	void Delete_Harpoon(Node * key)
+	{
+		Node*curr = Head->next;
+		Node*prev = Head;
+		while (curr != nullptr)
 		{
+			if (key == curr)
+			{
+				prev->next = curr->next;
+				delete curr;
+			}
+			prev = curr;
 			curr = curr->next;
 		}
-		curr->next = New;
 	}
 	void shot_Harpoon()
 	{
-		Node *curr = Head;
-		while (Head->next != nullptr)
+		Node *curr = Head->next;
+		KHM::temp_x_angle = curr->Harpoon.x_angle;
+		KHM::temp_y_angle = curr->Harpoon.y_angle;
+		curr->Harpoon.is_fired = true;
+		Insert_Harpoon();
+	}
+	void move_Harpoon()
+	{
+		Node* curr = Head->next;
+		while (curr != nullptr)
 		{
+			if (curr->Harpoon.is_fired)
+			{
+				if (curr->Harpoon.y > 0)
+				{
+					curr->Harpoon.y -= 0.98;
+				}
+				curr->Harpoon.z += 50 * (1 - curr->Harpoon.t);
+				if (curr->Harpoon.t < 1)
+				{
+					curr->Harpoon.t += 0.01;
+					//KHM::Harpoon.x += sin(KHM::Boat.MOVE_RADIAN) * 3;
+				}
+
+
+				//여기 어딘가에 타겟 맞췄을 때 is_hit  true로 바꾸는거
+				//맵의 범위를 넘었을 때 삭제
+			}
+
 			curr = curr->next;
 		}
-		curr->Harpoon.is_fired = true;
 	}
+	void draw_loaded_Harpoon()
+	{
+		Node* curr = Head->next;
+		glPushMatrix(); {
+			glTranslatef(curr->Harpoon.x, curr->Harpoon.y, curr->Harpoon.z);
+			glRotatef(curr->Harpoon.y_angle, 0.0, 1.0, 0.0);
+			glRotatef(curr->Harpoon.x_angle, 1.0, 0.0, 0.0);
+			glScalef(1.0, 1.0, 1.0);
+
+			glColor3f(1.0, 0.0, 1.0);
+			/*********************작살 봉*********************/
+			glPushMatrix(); {
+				glScalef(1.0, 1.0, 50.0);           //봉길이 50
+				glutSolidTorus(0.5, 1, 20, 20);
+			}glPopMatrix();
+			/*********************작살 촉*********************/
+			glColor3f(1.0, 0.0, 0.0);
+			glPushMatrix(); {
+				glTranslatef(0, 0, 25);
+				glScalef(1.0, 1.0, 1.0);
+				glutSolidCone(3, 5, 10, 10);
+				glTranslatef(0, 0, 3);
+				glutSolidCone(3, 5, 10, 10);
+				glTranslatef(0, 0, 3);
+				glutSolidCone(3, 5, 10, 10);
+			}glPopMatrix();
+		}glPopMatrix();
+	}
+	void draw_moving_Harpoon()
+	{
+		Node* curr = Head->next->next;
+		while (curr != nullptr)
+		{
+			glPushMatrix(); {
+			glRotatef(curr->Harpoon.y_angle, 0.0, 1.0, 0.0);
+			glRotatef(curr->Harpoon.x_angle, 1.0, 0.0, 0.0);
+			glPushMatrix(); {
+				//glRotated(curr->Harpoon.y_angle, 0, 1, 0);
+				glTranslatef(curr->Harpoon.x, curr->Harpoon.y, curr->Harpoon.z);
+
+				glScalef(1.0, 1.0, 1.0);
+
+				glColor3f(1.0, 0.0, 1.0);
+				/*********************작살 봉*********************/
+				glPushMatrix(); {
+					glScalef(1.0, 1.0, 50.0);           //봉길이 50
+					glutSolidTorus(0.5, 1, 20, 20);
+				}glPopMatrix();
+				/*********************작살 촉*********************/
+				glColor3f(1.0, 0.0, 0.0);
+				glPushMatrix(); {
+					glTranslatef(0, 0, 25);
+					glScalef(1.0, 1.0, 1.0);
+					glutSolidCone(3, 5, 10, 10);
+					glTranslatef(0, 0, 3);
+					glutSolidCone(3, 5, 10, 10);
+					glTranslatef(0, 0, 3);
+					glutSolidCone(3, 5, 10, 10);
+				}glPopMatrix();
+			}glPopMatrix();
+			}glPopMatrix();
+			curr = curr->next;
+		}
+	}
+}
+
+void drawCylinder(GLfloat radius, GLfloat h)
+{
+	/* function createCyliner()
+	원기둥의 중심 x,y,z좌표, 반지름, 높이를 받아 원기둥을 생성하는 함수(+z방향으로 원에서 늘어남)
+	centerx : 원기둥 원의 중심 x좌표
+	centery : 원기둥 원의 중심 y좌표
+	centerz : 원기둥 원의 중심 z좌표
+	radius : 원기둥의 반지름
+	h : 원기둥의 높이
+	*/
+	GLfloat x, y, angle, centerx = 0, centery = 0, centerz = 0;
+
+	glBegin(GL_TRIANGLE_FAN);           //원기둥의 윗면
+	glNormal3f(0.0f, 0.0f, -1.0f);
+	glVertex3f(centerx, centery, centerz);
+
+	for (angle = 0.0f; angle < (2.0f*PI); angle += (PI / 8.0f))
+	{
+		x = centerx + radius * sin(angle);
+		y = centery + radius * cos(angle);
+		glNormal3f(0.0f, 0.0f, -1.0f);
+		glVertex3f(x, y, centerz);
+	}
+	glEnd();
+
+	glBegin(GL_QUAD_STRIP);            //원기둥의 옆면
+	for (angle = 0.0f; angle < (2.0f*PI); angle += (PI / 8.0f))
+	{
+		x = centerx + radius * sin(angle);
+		y = centery + radius * cos(angle);
+		glNormal3f(sin(angle), cos(angle), 0.0f);
+		glVertex3f(x, y, centerz);
+		glVertex3f(x, y, centerz + h);
+	}
+	glEnd();
+
+	glBegin(GL_TRIANGLE_FAN);           //원기둥의 밑면
+	glNormal3f(0.0f, 0.0f, 1.0f);
+	glVertex3f(centerx, centery, centerz + h);
+	for (angle = (2.0f*PI); angle > 0.0f; angle -= (PI / 8.0f))
+	{
+		x = centerx + radius * sin(angle);
+		y = centery + radius * cos(angle);
+		glNormal3f(0.0f, 0.0f, 1.0f);
+		glVertex3f(x, y, centerz + h);
+	}
+	glEnd();
+}
+
+void draw_Harpoon_Gun(float x, float y, float z, float x_angle, float y_angle)
+{
+
+	glPushMatrix(); {
+		glTranslatef(x, y, z);
+		glRotatef(y_angle, 0.0, 1.0, 0.0);// 전체 y축 회전
+		glTranslatef(0, 0, -10);
+		glColor3f(1.0, 0.0, 0.0);
+		/*********************Y자 베이스 *********************/
+		glPushMatrix(); {
+			glTranslatef(0, -45, 0);
+			glPushMatrix(); {
+				glRotatef(90, 1.0, 0.0, 0.0);
+				drawCylinder(15, 10);//바닥 원기둥
+			}glPopMatrix();
+			/***************y자 몸통*******************/
+			glPushMatrix(); {
+				glColor3f(1.0, 0.0, 0.0);
+				glTranslatef(0, 5, 0);
+				glPushMatrix(); {
+					glScalef(1.5, 2.0, 1.0);
+					glColor3f(1.0, 0.0, 0.0);
+					glutSolidCube(10);
+					glColor3f(1.0, 1.0, 0.0);
+					glutWireCube(10);
+				}glPopMatrix();
+				glPushMatrix(); {
+					glPushMatrix(); {//    /
+						glTranslatef(3, 0, 0);
+						glRotatef(70, 0.0, 0.0, 1.0);
+						glTranslatef(10, 0, 0);
+						glScalef(2.0, 0.5, 1.0);
+
+						glColor3f(1.0, 0.0, 0.0);
+						glutSolidCube(10);
+						glColor3f(1.0, 1.0, 0.0);
+						glutWireCube(10);
+					}glPopMatrix();
+					glPushMatrix(); {
+						glTranslatef(10, 28, 0);
+						glScalef(0.5, 2.0, 1.0);
+
+						glColor3f(1.0, 0.0, 0.0);
+						glutSolidCube(10);
+						glColor3f(1.0, 1.0, 0.0);
+						glutWireCube(10);
+					}glPopMatrix();
+				}glPopMatrix();
+				glPushMatrix(); {/*     \                                                      */
+					glPushMatrix(); {//    /
+						glTranslatef(-3, 0, 0);
+						glRotatef(-70, 0.0, 0.0, 1.0);
+						glTranslatef(-10, 0, 0);
+						glScalef(2.0, 0.5, 1.0);
+
+						glColor3f(1.0, 0.0, 0.0);
+						glutSolidCube(10);
+						glColor3f(1.0, 1.0, 0.0);
+						glutWireCube(10);
+					}glPopMatrix();
+					glPushMatrix(); {
+						glTranslatef(-10, 28, 0);
+						glScalef(0.5, 2.0, 1.0);
+
+						glColor3f(1.0, 0.0, 0.0);
+						glutSolidCube(10);
+						glColor3f(1.0, 1.0, 0.0);
+						glutWireCube(10);
+					}glPopMatrix();
+				}glPopMatrix();
+			}glPopMatrix();
+		}glPopMatrix();
+		/*******************//*포신*//********************/
+		glRotatef(x_angle, 1.0, 0.0, 0.0);   //포신의 x축 회전
+
+		glColor3f(1.0, 0.0, 1.0);
+		glPushMatrix(); {
+			glTranslatef(0, 0, 10);
+			/*********************작살 봉*********************/
+			glPushMatrix(); {
+				glScalef(1.0, 1.0, 50.0);           //봉길이 50
+				glutSolidTorus(0.5, 1, 20, 20);
+			}glPopMatrix();
+			/*********************작살 촉*********************/
+			glColor3f(1.0, 0.0, 0.0);
+			glPushMatrix(); {
+				glTranslatef(0, 0, 25);
+				glScalef(1.0, 1.0, 1.0);
+				glutSolidCone(3, 5, 10, 10);
+				glTranslatef(0, 0, 3);
+				glutSolidCone(3, 5, 10, 10);
+				glTranslatef(0, 0, 3);
+				glutSolidCone(3, 5, 10, 10);
+			}glPopMatrix();
+		}glPopMatrix();
+		glTranslatef(0, 0, 8);
+		glColor3f(1.0, 1.0, 0.8);
+		glPushMatrix(); {
+			/**********************조준쇠******************/
+			glPushMatrix(); {
+				glColor3f(0.5, 0.5, 0.5);
+				glTranslatef(0, 15, -5);
+				glPushMatrix(); {
+					glColor3f(0.3, 0.3, 0.3);
+					glTranslatef(0, -3, -15);
+					glScalef(1.0, 5, 1);
+					glutSolidCube(2);
+				}glPopMatrix();
+				glPushMatrix(); {
+					glColor3f(0.3, 0.3, 0.3);
+					glTranslatef(0, -4, 10);
+					glScalef(1.0, 4, 1);
+					glutSolidCube(2);
+				}glPopMatrix();
+				glColor3f(0.5, 0.5, 0.5);
+				glRotatef(5, 1.0, 0.0, 0.0);
+				glScalef(1.0, 2, 40);
+				glutSolidCube(1);
+			}glPopMatrix();
+			/*********************네모몸통*******************************/
+			glPushMatrix(); {
+				glColor3f(1.0, 1.0, 0.7);
+				glTranslatef(0, -6, -15);
+				glPushMatrix(); {
+					glRotatef(35, 1.0, 0.0, 0.0);
+					glScalef(1.0, 1.0, 1.5);
+					glRotatef(-45, 1.0, 0.0, 0.0);
+					glScalef(1.0, 1.5, 1.2);
+					glutSolidCube(16);
+				}glPopMatrix();
+
+				/*************손잡이*****************/
+				glPushMatrix(); {
+					glColor3f(0.4, 0.4, 0.4);
+					glTranslatef(0, 0, -25);
+					glPushMatrix(); {
+						glTranslatef(0, 0, -10);
+						drawCylinder(2, 10);
+					}glPopMatrix();
+					glScalef(4, 5, 3);
+					glutSolidCube(1);
+				}glPopMatrix();
+				//
+				glPushMatrix(); {
+					glColor3f(0.5, 0.5, 0.5);
+					glTranslatef(8, 0, -10);
+					glPushMatrix(); {
+						glScalef(1, 6, 15);
+						glutSolidCube(1);
+					}glPopMatrix();
+					glPushMatrix(); {
+						glColor3f(0.3, 0.3, 0.3);
+						glTranslatef(0, 0, -7);
+						glRotatef(40, 0.0, 1.0, 0.0);
+						glTranslatef(0, 0, -5);
+						glScalef(1, 4, 10);
+						glutSolidCube(1);
+					}glPopMatrix();
+				}glPopMatrix();
+				glPushMatrix(); {
+					glColor3f(0.5, 0.5, 0.5);
+					glTranslatef(-8, 0, -10);
+					glPushMatrix(); {
+						glScalef(1, 6, 15);
+						glutSolidCube(1);
+					}glPopMatrix();
+					glPushMatrix(); {
+						glColor3f(0.3, 0.3, 0.3);
+						glTranslatef(0, 0, -7);
+						glRotatef(-40, 0.0, 1.0, 0.0);
+						glTranslatef(0, 0, -5);
+						glScalef(1, 4, 10);
+						glutSolidCube(1);
+					}glPopMatrix();
+				}glPopMatrix();
+			}glPopMatrix();
+			/********************** 포신 원통**************************/
+			glPushMatrix(); {
+				glTranslatef(0, 0, -20);
+				glColor3f(1.0, 0.8, 0.8);
+				drawCylinder(8, 30);
+
+			}glPopMatrix();
+			glPushMatrix(); {
+				glTranslatef(0, -14, -13);
+				glColor3f(1.0, 0.8, 0.8);
+				drawCylinder(6, 25);
+				glColor3f(0.8, 0.8, 1.0);
+				glTranslatef(0, 0, 20);
+				drawCylinder(4, 10);
+			}glPopMatrix();
+			glPushMatrix(); {
+				glColor3f(1.0, 1.0, 0.8);
+				glTranslatef(0, 0, 15);
+				glScalef(1.0, 1.0, 10.0);
+				glutSolidTorus(1, 4, 20, 20);
+			}glPopMatrix();
+		}glPopMatrix();
+	}glPopMatrix();
 }
 
 GLvoid drawScene(GLvoid);
 GLvoid Reshape(int w, int h);
 
-Camera<float3> m_camera{ 600.f / 800.f };
+Camera<float3> m_camera{ 768.f / 1024.f };
 
 void Keyboard(unsigned char key, int x, int y);
 void UpKeyboard(unsigned char key, int x, int y);
 
 void Timerfunction(int value);
-
-double Eye_x = 0.0;
-double Eye_y = 0.0;
-double Eye_z = 900.0;
-
-double Temp_x = 0;
-double Temp_y = 0;
-double Temp_z = 0;
-
-double Camera_x = 0;
-double Camera_y = 0;
-double Camera_z = 900.0;
-
-
 
 GLdouble rotateWC[16]
 = { 1,0,0,0,
@@ -114,33 +453,79 @@ void Mouse(int button, int state, int x, int y)
 		glutPostRedisplay();
 	}
 }
-void Motion(int x, int y) 
+void mouseWheel(int button, int dir, int x, int y)
+{
+	static float distance = KHM::temp_distance;
+	KHM::temp_distance = distance;
+	if (dir > 0)
+	{
+		m_camera.SetDistance(distance -= 10);
+	}
+	else if (distance < 500)
+	{
+		m_camera.SetDistance(distance += 10);
+	}
+	return;
+}
+void Motion(int x, int y)
 {
 
-	if (x > prev_mx) 
+	if (x > prev_mx)
 	{
-		m_camera.Rotate(0.05, 0);
 		if (KHM::MODE_OF_VIEW == 1)
 		{
-			KHM::Harpoon.HULL_RADIAN -= 2.86472;
+			if (KHM::Head->next->Harpoon.y_angle > -28.6472)
+			{
+				KHM::Head->next->Harpoon.y_angle -= 2.86472;
+			}
+		}
+		else
+		{
+			m_camera.Rotate(0.05, 0);
 		}
 	}
-	else if (x < prev_mx) 
+	else if (x < prev_mx)
 	{
-		m_camera.Rotate(-0.05, 0);
 		if (KHM::MODE_OF_VIEW == 1)
 		{
-			KHM::Harpoon.HULL_RADIAN += 2.86472;
+			if (KHM::Head->next->Harpoon.y_angle < 28.6472)
+			{
+				KHM::Head->next->Harpoon.y_angle += 2.86472;
+			}
+		}
+		else
+		{
+			m_camera.Rotate(-0.05, 0);
 		}
 	}
 
 	if (y > prev_my)
 	{
-		m_camera.Rotate(0, -0.05);
+		if (KHM::MODE_OF_VIEW == 1)
+		{
+			if (KHM::Head->next->Harpoon.x_angle < 28.6472)
+			{
+				KHM::Head->next->Harpoon.x_angle += 2.86472;
+			}
+		}
+		else
+		{
+			m_camera.Rotate(0, -0.05);
+		}
 	}
-	else if (y < prev_my) 
+	else if (y < prev_my)
 	{
-		m_camera.Rotate(0, 0.05);
+		if (KHM::MODE_OF_VIEW == 1)
+		{
+			if (KHM::Head->next->Harpoon.x_angle > -28.6472)
+			{
+				KHM::Head->next->Harpoon.x_angle -= 2.86472;
+			}
+		}
+		else
+		{
+			m_camera.Rotate(0, 0.05);
+		}
 	}
 	glutPostRedisplay();
 	prev_mx = x;
@@ -179,7 +564,7 @@ void draw_BOTTOM()
 {
 	glPushMatrix();
 	glColor4f(0.66f, 0.66f, 0.66f, 1.0f);
-	glutWireSphere(1500, 75, 75);
+	glutWireSphere(WORLD_SCALE - 500, 75, 75);
 	glPopMatrix();
 }
 void draw_SEA()
@@ -194,55 +579,31 @@ void draw_BOAT()
 	glPushMatrix();
 	//glTranslated(KHM::Boat.x, KHM::Boat.y, KHM::Boat.z);
 	//glRotated(KHM::Boat.phi, 0, 1, 0); 
-	glRotated(KHM::Boat.HULL_RADIAN , 0, 1, 0); //배 방향
 	glColor4f(1.0f, 0.5f, 0.5f, 1.0f);
 	glScalef(1.0f, 1.0f, 2.0f);
 	glutSolidCube(100);
 	glPopMatrix();
 }
 
-void draw_HARPOON()
-{
-	glPushMatrix();
-	//glTranslated(KHM::Harpoon.x, KHM::Harpoon.y + 100, KHM::Harpoon.z);
-
-	glColor3f(1.0, 0.0, 1.0);
-	/*********************작살 봉*********************/
-	glPushMatrix(); {
-		glScalef(1.0, 1.0, 50.0);           //봉길이 50
-		glutSolidTorus(0.5, 1, 20, 20);
-	}glPopMatrix();
-	/*********************작살 촉*********************/
-	glColor3f(1.0, 0.0, 0.0);
-	glPushMatrix(); {
-		glTranslatef(0, 0, 25);
-		glScalef(1.0, 1.0, 1.0);
-		glutSolidCone(3, 5, 10, 10);
-		glTranslatef(0, 0, 3);
-		glutSolidCone(3, 5, 10, 10);
-		glTranslatef(0, 0, 3);
-		glutSolidCone(3, 5, 10, 10);
-	}glPopMatrix();
-
-	glPopMatrix();
-}
-
 void initialize()
 {
+	KHM::Head = new KHM::Node;
 	KHM::Head->next = nullptr;
+	KHM::Insert_Harpoon();
 }
 void main(int argc, char *argv[])
 {
 	initialize();
-	m_camera.Initialize(float3{ 0,0,0 }, 1200, 1, 9999, 90);
+	m_camera.Initialize(float3{ 0,0,0 }, DISTANCE, 1, 9999, 90);
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGBA | GLUT_DEPTH); // 디스플레이 모드 설정
 	glutInitWindowPosition(100, 100); // 윈도우의 위치지정
-	glutInitWindowSize(800, 600); // 윈도우의 크기 지정
+	glutInitWindowSize(1024, 768); // 윈도우의 크기 지정
 	glutCreateWindow("포경"); // 윈도우 생성 (윈도우 이름)
 	glutDisplayFunc(drawScene); // 출력 함수의 지정
 	glutMouseFunc(Mouse);
 	glutMotionFunc(Motion);
+	glutMouseWheelFunc(mouseWheel);
 	glutReshapeFunc(Reshape);
 	glutKeyboardFunc(Keyboard);                  // 키보드 입력 콜백 함수
 	glutKeyboardUpFunc(UpKeyboard);                  // 키보드 입력 콜백 함수
@@ -262,19 +623,26 @@ GLvoid drawScene(GLvoid)
 
 	//draw_COORD();
 	draw_BOAT();
-	glPushMatrix();
-	glTranslated(0, -WORLD_SCALE, 0);
-	glMultMatrixd(rotateWC);
+	draw_Harpoon_Gun(0,150,0, KHM::Head->next->Harpoon.x_angle, KHM::Head->next->Harpoon.y_angle);
+	//KHM::draw_loaded_Harpoon();
+	glPushMatrix(); {
+		glTranslated(0, +150, 0);
+		glMultMatrixd(rotateWC);
+		glTranslated(0, -150, 0);
+		KHM::draw_moving_Harpoon();
+	}glPopMatrix();
+	glPushMatrix(); {
+		glTranslated(0, -WORLD_SCALE, 0);
+		glMultMatrixd(rotateWC);
 
-	glPushMatrix();
-	glTranslated(0, WORLD_SCALE, 0);
-	glutSolidCube(100);
-	glPopMatrix();
+		glPushMatrix(); {
+			glTranslated(0, WORLD_SCALE, 0);
+		}glPopMatrix();
 
-	//draw_HARPOON();
-	draw_BOTTOM();
-	draw_SEA();
-	glPopMatrix();
+
+		draw_BOTTOM();
+		draw_SEA();
+	}glPopMatrix();
 	glFlush(); // 화면에 출력하기
 }
 GLvoid Reshape(int w, int h)
@@ -323,8 +691,8 @@ void Keyboard(unsigned char key, int x, int y)
 			glMultMatrixd(rotateWC);
 			glGetDoublev(GL_MODELVIEW_MATRIX, rotateWC);
 			glPopMatrix();
-		}		
-		
+		}
+
 		break;
 	case 'a':
 		KHM::Boat.direction = LEFT;
@@ -349,7 +717,10 @@ void Keyboard(unsigned char key, int x, int y)
 		}
 		break;
 	case 'f':
-		shot_Harpoon();
+		if (KHM::MODE_OF_VIEW == 1)
+		{
+			KHM::shot_Harpoon();
+		}
 		break;
 	case '1':
 		m_camera.Initialize_radian();
@@ -359,12 +730,14 @@ void Keyboard(unsigned char key, int x, int y)
 		cout << KHM::MODE_OF_VIEW << endl;
 		break;
 	case '3':
+		KHM::Head->next->Harpoon.x_angle = 0;
+		KHM::Head->next->Harpoon.y_angle = 0;
+		m_camera.Initialize(float3{ 0,0,0 }, KHM::temp_distance, 1, 9999, 90);
 		KHM::MODE_OF_VIEW = 3;
 		cout << KHM::MODE_OF_VIEW << endl;
 		break;
 	}
 
-	Reshape(800, 600);
 	glutPostRedisplay();
 }
 
@@ -387,36 +760,18 @@ void UpKeyboard(unsigned char key, int x, int y)
 	}
 }
 
-void Timerfunction(int value) 
-{   
-	if (KHM::Boat.HULL_RADIAN > 360)
+void Timerfunction(int value)
+{
+	//if (KHM::MODE_OF_VIEW == 3)
+	//{
+	//	//m_camera.Initialize(float3{ KHM::Harpoon.x,KHM::Boat.y,KHM::Boat.z }, DISTANCE, 1, 9999, 90);
+	//}
+	if (KHM::MODE_OF_VIEW == 1)
 	{
-		KHM::Boat.HULL_RADIAN = KHM::Boat.HULL_RADIAN - 360;
+		m_camera.Initialize(float3{ 0,185,0 }, 30, 1, 9999, 90);
 	}
-	KHM::Boat.MOVE_RADIAN = KHM::Boat.HULL_RADIAN;
-	KHM::Boat.MOVE_RADIAN = KHM::Boat.MOVE_RADIAN * RADIAN;
-	if (KHM::MODE_OF_VIEW == 3)
-	{
-		//m_camera.Initialize(float3{ KHM::Boat.x,KHM::Boat.y,KHM::Boat.z }, 1800, 1, 9999, 90);
-	}
-	else if (KHM::MODE_OF_VIEW == 1)
-	{
-		m_camera.Initialize(float3{ KHM::Harpoon.x,KHM::Harpoon.y,KHM::Harpoon.z }, 30, 1, 9999, 90);
-	}
-	curr
-	if (KHM::Harpoon.is_fired == true)
-	{
-		if (KHM::Harpoon.y > 0)
-		{
-			KHM::Harpoon.y -= 0.98;
-		}
-		KHM::Harpoon.z += 50 * (1 - KHM::Harpoon.t);
-		if (KHM::Harpoon.t < 1)
-		{
-			KHM::Harpoon.t += 0.01;
-			//KHM::Harpoon.x += sin(KHM::Boat.MOVE_RADIAN) * 3;
-		}
-	}
+	
+
 	glPushMatrix(); {
 		if (KHM::Boat.is_forward == true)
 		{
@@ -448,15 +803,19 @@ void Timerfunction(int value)
 	glPushMatrix(); {
 		if (KHM::Boat.direction == LEFT)
 		{
-			glRotatef(-(KHM::Boat.speed * 3 + 0.3), 0.0, 1.0, 0.0);
+			glRotatef(-(KHM::Boat.speed * 5 + 0.1), 0.0, 1.0, 0.0);
 		}
 		else if (KHM::Boat.direction == RIGHT)
 		{
-			glRotatef((KHM::Boat.speed * 3 + 0.3), 0.0, 1.0, 0.0);
+			glRotatef((KHM::Boat.speed * 5 + 0.1), 0.0, 1.0, 0.0);
 
 		}
 		glMultMatrixd(rotateWC);
 		glGetDoublev(GL_MODELVIEW_MATRIX, rotateWC);
+	}glPopMatrix();
+
+	glPushMatrix(); {
+	KHM::move_Harpoon();
 	}glPopMatrix();
 	glutPostRedisplay();                  // 화면 재출력
 	glutTimerFunc(10, Timerfunction, 1);      // 타이머함수 재설정

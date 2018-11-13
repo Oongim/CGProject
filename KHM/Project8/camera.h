@@ -2,7 +2,7 @@
 #pragma once
 #include <GL/freeglut.h>
 #include <cmath>
-#define PI 3.14
+#define PI 3.141592
 template<typename Vector3>
 float Length(Vector3&& vec) { return sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z); }
 
@@ -72,11 +72,12 @@ public:
 		m_vertical += v;
 		if (-PI * 0.5f < m_horizontal + h && m_horizontal + h < PI * 0.5f)
 			m_horizontal += h;
+		std::cout << m_vertical << " " << m_horizontal << std::endl;
 	}
 
 	void Initialize_radian()
 	{
-		m_vertical = 0;
+		m_vertical = PI * 0.5f;
 		m_horizontal = 0;
 	}
 
