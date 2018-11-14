@@ -1,7 +1,8 @@
 #pragma once
+#pragma once
 #include <GL/freeglut.h>
 #include <cmath>
-#define PI 3.14
+#define PI 3.141592
 template<typename Vector3>
 float Length(Vector3&& vec) { return sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z); }
 
@@ -34,7 +35,7 @@ public:
 		// 카메라 생성 시 최초 1회는 aspect를 자동으로 설정한다.
 		: m_aspect{ glutGet(GLUT_WINDOW_WIDTH) / static_cast<float>(glutGet(GLUT_WINDOW_HEIGHT)) }
 	{
-	}	
+	}
 	Camera(float aspect)
 		// 카메라 생성 시 최초 1회는 aspect를 자동으로 설정한다.
 		: m_aspect{ aspect }
@@ -65,11 +66,19 @@ public:
 
 	void zoom(float per) { m_distance = m_distance * per; }
 
+
 	void Rotate(float v, float h)
 	{
 		m_vertical += v;
 		if (-PI * 0.5f < m_horizontal + h && m_horizontal + h < PI * 0.5f)
 			m_horizontal += h;
+		std::cout << m_vertical << " " << m_horizontal << std::endl;
+	}
+
+	void Initialize_radian()
+	{
+		m_vertical = PI * 0.5f;
+		m_horizontal = 0;
 	}
 
 	void LookAt() const
@@ -118,5 +127,5 @@ public:
 			});
 	}
 
-	Vector3 eye() const { return GetPosition()- GetLookVector() * m_distance; }
+	Vector3 eye() const { return GetPosition() - GetLookVector() * m_distance; }
 };
