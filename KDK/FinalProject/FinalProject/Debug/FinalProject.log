@@ -26,12 +26,11 @@ c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp
 c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(513): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
 c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(522): warning C4305: '-=': 'double'에서 'float'(으)로 잘립니다.
 c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(527): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
-c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(595): warning C4326: 'main'의 반환 형식이 'int'이어야 하는데 'void'입니다.
-c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(806): warning C4244: '인수': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(810): warning C4244: '인수': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(681): warning C4326: 'main'의 반환 형식이 'int'이어야 하는데 'void'입니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(890): warning C4244: '인수': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(894): warning C4244: '인수': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
 c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\camera.h(80): warning C4305: '=': 'double'에서 'float'(으)로 잘립니다.
   c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\camera.h(79): note: 클래스 템플릿 멤버 함수 'void Camera<float3>::Initialize_radian(void)'을(를) 컴파일하고 있습니다.
-  c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(726): note: 컴파일 중인 함수 템플릿 인스턴스화 'void Camera<float3>::Initialize_radian(void)'에 대한 참조를 확인하십시오.
+  c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(810): note: 컴파일 중인 함수 템플릿 인스턴스화 'void Camera<float3>::Initialize_radian(void)'에 대한 참조를 확인하십시오.
   c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(434): note: 컴파일 중인 클래스 템플릿 인스턴스화 'Camera<float3>'에 대한 참조를 확인하세요.
-  LINK : C:\Users\kdk\Documents\GitHub\CGProject\KDK\FinalProject\Debug\FinalProject.exe을(를) 찾을 수 없거나 마지막 증분 링크에 의해 빌드되지 않았습니다. 전체 링크를 수행하고 있습니다.
   FinalProject.vcxproj -> C:\Users\kdk\Documents\GitHub\CGProject\KDK\FinalProject\Debug\FinalProject.exe

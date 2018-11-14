@@ -576,13 +576,99 @@ void draw_SEA()
 }
 void draw_BOAT()
 {
-	glPushMatrix();
-	//glTranslated(KHM::Boat.x, KHM::Boat.y, KHM::Boat.z);
-	//glRotated(KHM::Boat.phi, 0, 1, 0); 
-	glColor4f(1.0f, 0.5f, 0.5f, 1.0f);
-	glScalef(1.0f, 1.0f, 2.0f);
-	glutSolidCube(100);
-	glPopMatrix();
+	glPushMatrix(); {
+		glPushMatrix(); {//와이드 공간
+			glColor4f(1.0f, 0.5f, 0.5f, 1.0f);
+			glScalef(1.0f, 1.0f, 2.0f);
+			glutWireCube(100);
+		}glPopMatrix();
+		float hight= 120;
+		// 3차원 상의 제어점 설정
+		GLfloat left_ctrlpoints[3][4][3] = {
+		{{0.0, hight, 100.0},{50.0, hight+30, 40.0},{50.0, 50.0, 40.0},{50.0, 50.0, -100.0}},
+		{{0.0, 0.0, 90.0},{40.0, -25.0, 40.0},{40.0, -25.0, 0.0},{50.0, -25.0, -100.0}},
+		{{0.0, -50.0, 60.0},{0.0, -50.0, 40.0},{0.0, -50.0, 0.0},{0.0, -50.0, -100.0}}
+		};
+		GLfloat right_ctrlpoints[3][4][3] = {
+		{{0.0, hight, 100.0},{-50.0, hight+30, 40.0},{-50.0, 50.0, 40.0},{-50.0, 50.0, -100.0}},
+		{{0.0, 0.0, 90.0},{-40.0, -25.0, 40.0},{-40.0, -25.0, 0.0},{-50.0, -25.0, -100.0}},
+		{{0.0, -50.0, 60.0},{0.0, -50.0, 40.0},{0.0, -50.0, 0.0},{0.0, -50.0, -100.0}}
+		};
+		GLfloat deck_ctrlpoints[3][4][3] = {
+			{{0.0, hight-10, 100.0},{-50.0, hight+20, 40.0},{-50.0, 40.0, 40.0},{-50.0, 40.0, -100.0}},
+			{{0.0, hight - 10, 100.0},{0.0, hight, 40.0},{0.0, 40.0, 40.0},{0.0, 40.0, -100.0}},
+			{{0.0, hight - 10, 100.0},{50.0, hight , 40.0},{50.0, 40.0, 40.0},{50.0, 40.0, -100.0}}
+		};
+		GLfloat back_ctrlpoints[3][3][3] = {
+			{{50.0, 50.0, -100.0},{50.0, -25.0, -100.0},{0.0, -50.0, -100.0}},
+			{{0.0, 50.0, -100.0},{0.0, -25.0, -100.0},{0.0, -50, -100.0}},
+			{{-50.0, 50.0, -100.0},{-50.0, -25.0, -100.0},{0.0, -50.0, -100.0}}
+		};
+		glTranslated(0, 0, 0);
+		glPushMatrix(); {
+			// 곡면 제어점 설정
+			glMap2f(GL_MAP2_VERTEX_3, 0.0, 1.0, 3, 3, 0.0, 1.0, 9, 3, &back_ctrlpoints[0][0][0]);
+			glEnable(GL_MAP2_VERTEX_3);
+			// 그리드를 이용한 곡면 드로잉
+			glMapGrid2f(10, 0.0, 1.0, 10, 0.0, 1.0);
+			// 선을 이용하여 그리드 연결
+			glEvalMesh2(GL_FILL, 0, 10, 0, 10);
+			glPointSize(5.0); glColor3f(1.0, 1.0, 1.0);
+			glBegin(GL_POINTS);
+			for (int i = 0; i < 3; i++)
+				for (int j = 0; j < 3; j++)
+					glVertex3fv(back_ctrlpoints[i][j]);
+			glEnd();
+		}glPopMatrix();
+		glPushMatrix(); {
+			// 곡면 제어점 설정
+			glMap2f(GL_MAP2_VERTEX_3, 0.0, 1.0, 3, 4, 0.0, 1.0, 12, 3, &deck_ctrlpoints[0][0][0]);
+			glEnable(GL_MAP2_VERTEX_3);
+			// 그리드를 이용한 곡면 드로잉
+			glMapGrid2f(10, 0.0, 1.0, 10, 0.0, 1.0);
+			// 선을 이용하여 그리드 연결
+			glEvalMesh2(GL_FILL, 0, 10, 0, 10);
+			glPointSize(5.0); glColor3f(1.0, 0.0, 1.0);
+			glBegin(GL_POINTS);
+			for (int i = 0; i < 3; i++)
+				for (int j = 0; j < 4; j++)
+					glVertex3fv(deck_ctrlpoints[i][j]);
+			glEnd();
+		}glPopMatrix();
+
+		glPushMatrix(); {
+			// 곡면 제어점 설정
+			glMap2f(GL_MAP2_VERTEX_3, 0.0, 1.0, 3, 4, 0.0, 1.0, 12, 3, &left_ctrlpoints[0][0][0]);
+			glEnable(GL_MAP2_VERTEX_3);
+			// 그리드를 이용한 곡면 드로잉
+			glMapGrid2f(10, 0.0, 1.0, 10, 0.0, 1.0);
+			// 선을 이용하여 그리드 연결
+			glEvalMesh2(GL_FILL, 0, 10, 0, 10);
+			glPointSize(5.0); glColor3f(1.0, 1.0, 0.0);
+			glBegin(GL_POINTS);
+			for (int i = 0; i < 3; i++)
+				for (int j = 0; j < 4; j++)
+					glVertex3fv(left_ctrlpoints[i][j]);
+			glEnd();
+		}glPopMatrix();
+		glPushMatrix(); {
+			// 곡면 제어점 설정
+			glMap2f(GL_MAP2_VERTEX_3, 0.0, 1.0, 3, 4, 0.0, 1.0, 12, 3, &right_ctrlpoints[0][0][0]);
+			glEnable(GL_MAP2_VERTEX_3);
+			// 그리드를 이용한 곡면 드로잉
+			glMapGrid2f(10, 0.0, 1.0, 10, 0.0, 1.0);
+			// 선을 이용하여 그리드 연결
+			glEvalMesh2(GL_FILL, 0, 10, 0, 10);
+			glPointSize(5.0); glColor3f(0.0, 1.0, 1.0);
+			glBegin(GL_POINTS);
+			for (int i = 0; i < 3; i++)
+				for (int j = 0; j < 4; j++)
+					glVertex3fv(right_ctrlpoints[i][j]);
+			glEnd();
+		}glPopMatrix();
+
+
+	}glPopMatrix();
 }
 
 void initialize()
@@ -621,10 +707,8 @@ GLvoid drawScene(GLvoid)
 	//////////////////////////////////////////////
 	m_camera.LookAt();
 
-	//draw_COORD();
 	draw_BOAT();
 	draw_Harpoon_Gun(0, 150, 0, KHM::Head->next->Harpoon.x_angle, KHM::Head->next->Harpoon.y_angle);
-	//KHM::draw_loaded_Harpoon();
 	glPushMatrix(); {
 		glTranslated(0, +150, 0);
 		glMultMatrixd(rotateWC);
