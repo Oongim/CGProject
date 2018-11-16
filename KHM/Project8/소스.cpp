@@ -52,6 +52,7 @@ namespace KHM
 
 	struct HARPOON
 	{
+		float x_angle_2 = 0;
 		float y_angle = 0;
 		float x_angle = 0;
 		float x = 0;
@@ -59,7 +60,6 @@ namespace KHM
 		float z = 0;
 		float t = 0;
 		float power = 1000;
-		float gravity_revise = x_angle + 31.5119;
 		bool is_hit = false;
 		bool is_fired = false;
 		GLdouble rotateWC[16]
@@ -82,6 +82,7 @@ namespace KHM
 		New->Harpoon.z = HARPOON_Z;
 		New->Harpoon.x_angle = KHM::temp_x_angle;
 		New->Harpoon.y_angle = KHM::temp_y_angle;
+		New->Harpoon.x_angle_2 = KHM::temp_x_angle;
 		New->Harpoon.is_hit = false;
 		New->Harpoon.is_fired = false;
 
@@ -110,6 +111,7 @@ namespace KHM
 		Node *curr = Head->next;
 		KHM::temp_x_angle = curr->Harpoon.x_angle;
 		KHM::temp_y_angle = curr->Harpoon.y_angle;
+		curr->Harpoon.x_angle_2 = curr->Harpoon.x_angle;
 		curr->Harpoon.is_fired = true;
 		Insert_Harpoon();
 	}
@@ -134,7 +136,8 @@ namespace KHM
 					//	curr->Harpoon.speed += 10;
 					//}
 					//cout << curr->Harpoon.x_angle << endl;
-					cout << curr->Harpoon.y << endl;
+					//cout << curr->Harpoon.y << endl;
+					curr->Harpoon.x_angle_2 += 0.5;
 					curr->Harpoon.t += 0.01;
 				}
 
@@ -188,7 +191,7 @@ namespace KHM
 				glMultMatrixd(curr->Harpoon.rotateWC);
 				glTranslated(curr->Harpoon.x, curr->Harpoon.y, curr->Harpoon.z);
 				glRotatef(curr->Harpoon.y_angle, 0.0, 1.0, 0.0);
-				glRotatef(curr->Harpoon.x_angle, 1.0, 0.0, 0.0);
+				glRotatef(curr->Harpoon.x_angle_2, 1.0, 0.0, 0.0);
 				glPushMatrix(); {
 					glScalef(1.0, 1.0, 1.0);
 
