@@ -1,36 +1,43 @@
 ﻿  소스.cpp
-c:\users\kdk\documents\github\cgproject\khm\project8\소스.cpp(31): warning C4305: '초기화 중': 'double'에서 'float'(으)로 잘립니다.
-c:\users\kdk\documents\github\cgproject\khm\project8\소스.cpp(98): warning C4305: '-=': 'double'에서 'float'(으)로 잘립니다.
-c:\users\kdk\documents\github\cgproject\khm\project8\소스.cpp(103): warning C4305: '+=': 'double'에서 'float'(으)로 잘립니다.
-c:\users\kdk\documents\github\cgproject\khm\project8\소스.cpp(197): warning C4305: '+=': 'double'에서 'GLfloat'(으)로 잘립니다.
-c:\users\kdk\documents\github\cgproject\khm\project8\소스.cpp(207): warning C4305: '+=': 'double'에서 'GLfloat'(으)로 잘립니다.
-c:\users\kdk\documents\github\cgproject\khm\project8\소스.cpp(220): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-c:\users\kdk\documents\github\cgproject\khm\project8\소스.cpp(220): warning C4305: '-=': 'double'에서 'GLfloat'(으)로 잘립니다.
-c:\users\kdk\documents\github\cgproject\khm\project8\소스.cpp(326): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
-c:\users\kdk\documents\github\cgproject\khm\project8\소스.cpp(333): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
-c:\users\kdk\documents\github\cgproject\khm\project8\소스.cpp(339): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
-c:\users\kdk\documents\github\cgproject\khm\project8\소스.cpp(351): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
-c:\users\kdk\documents\github\cgproject\khm\project8\소스.cpp(357): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
-c:\users\kdk\documents\github\cgproject\khm\project8\소스.cpp(363): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
-c:\users\kdk\documents\github\cgproject\khm\project8\소스.cpp(381): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
-c:\users\kdk\documents\github\cgproject\khm\project8\소스.cpp(397): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
-c:\users\kdk\documents\github\cgproject\khm\project8\소스.cpp(409): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
-c:\users\kdk\documents\github\cgproject\khm\project8\소스.cpp(415): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
-c:\users\kdk\documents\github\cgproject\khm\project8\소스.cpp(417): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
-c:\users\kdk\documents\github\cgproject\khm\project8\소스.cpp(422): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
-c:\users\kdk\documents\github\cgproject\khm\project8\소스.cpp(479): warning C4305: '-=': 'double'에서 'float'(으)로 잘립니다.
-c:\users\kdk\documents\github\cgproject\khm\project8\소스.cpp(484): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
-c:\users\kdk\documents\github\cgproject\khm\project8\소스.cpp(493): warning C4305: '+=': 'double'에서 'float'(으)로 잘립니다.
-c:\users\kdk\documents\github\cgproject\khm\project8\소스.cpp(498): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
-c:\users\kdk\documents\github\cgproject\khm\project8\소스.cpp(508): warning C4305: '+=': 'double'에서 'float'(으)로 잘립니다.
-c:\users\kdk\documents\github\cgproject\khm\project8\소스.cpp(513): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
-c:\users\kdk\documents\github\cgproject\khm\project8\소스.cpp(522): warning C4305: '-=': 'double'에서 'float'(으)로 잘립니다.
-c:\users\kdk\documents\github\cgproject\khm\project8\소스.cpp(527): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
-c:\users\kdk\documents\github\cgproject\khm\project8\소스.cpp(595): warning C4326: 'main'의 반환 형식이 'int'이어야 하는데 'void'입니다.
-c:\users\kdk\documents\github\cgproject\khm\project8\소스.cpp(806): warning C4244: '인수': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\kdk\documents\github\cgproject\khm\project8\소스.cpp(810): warning C4244: '인수': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\kdk\documents\github\cgproject\khm\project8\camera.h(80): warning C4305: '=': 'double'에서 'float'(으)로 잘립니다.
-  c:\users\kdk\documents\github\cgproject\khm\project8\camera.h(79): note: 클래스 템플릿 멤버 함수 'void Camera<float3>::Initialize_radian(void)'을(를) 컴파일하고 있습니다.
-  c:\users\kdk\documents\github\cgproject\khm\project8\소스.cpp(726): note: 컴파일 중인 함수 템플릿 인스턴스화 'void Camera<float3>::Initialize_radian(void)'에 대한 참조를 확인하십시오.
-  c:\users\kdk\documents\github\cgproject\khm\project8\소스.cpp(434): note: 컴파일 중인 클래스 템플릿 인스턴스화 'Camera<float3>'에 대한 참조를 확인하세요.
-LINK : fatal error LNK1104: 'freeglut.lib' 파일을 열 수 없습니다.
+c:\users\kshg1\documents\github\cgproject\cgproject\khm\project8\소스.cpp(49): warning C4305: '초기화 중': 'double'에서 'float'(으)로 잘립니다.
+c:\users\kshg1\documents\github\cgproject\cgproject\khm\project8\소스.cpp(62): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\kshg1\documents\github\cgproject\cgproject\khm\project8\소스.cpp(123): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\kshg1\documents\github\cgproject\cgproject\khm\project8\소스.cpp(126): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\kshg1\documents\github\cgproject\cgproject\khm\project8\소스.cpp(130): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\kshg1\documents\github\cgproject\cgproject\khm\project8\소스.cpp(132): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\kshg1\documents\github\cgproject\cgproject\khm\project8\소스.cpp(144): warning C4305: '+=': 'double'에서 'float'(으)로 잘립니다.
+c:\users\kshg1\documents\github\cgproject\cgproject\khm\project8\소스.cpp(240): warning C4305: '+=': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\kshg1\documents\github\cgproject\cgproject\khm\project8\소스.cpp(250): warning C4305: '+=': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\kshg1\documents\github\cgproject\cgproject\khm\project8\소스.cpp(263): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\kshg1\documents\github\cgproject\cgproject\khm\project8\소스.cpp(263): warning C4305: '-=': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\kshg1\documents\github\cgproject\cgproject\khm\project8\소스.cpp(368): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\kshg1\documents\github\cgproject\cgproject\khm\project8\소스.cpp(375): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\kshg1\documents\github\cgproject\cgproject\khm\project8\소스.cpp(381): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\kshg1\documents\github\cgproject\cgproject\khm\project8\소스.cpp(393): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\kshg1\documents\github\cgproject\cgproject\khm\project8\소스.cpp(399): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\kshg1\documents\github\cgproject\cgproject\khm\project8\소스.cpp(405): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\kshg1\documents\github\cgproject\cgproject\khm\project8\소스.cpp(423): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\kshg1\documents\github\cgproject\cgproject\khm\project8\소스.cpp(439): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\kshg1\documents\github\cgproject\cgproject\khm\project8\소스.cpp(451): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\kshg1\documents\github\cgproject\cgproject\khm\project8\소스.cpp(457): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\kshg1\documents\github\cgproject\cgproject\khm\project8\소스.cpp(459): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\kshg1\documents\github\cgproject\cgproject\khm\project8\소스.cpp(464): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\kshg1\documents\github\cgproject\cgproject\khm\project8\소스.cpp(506): warning C4305: '-=': 'double'에서 'float'(으)로 잘립니다.
+c:\users\kshg1\documents\github\cgproject\cgproject\khm\project8\소스.cpp(511): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+c:\users\kshg1\documents\github\cgproject\cgproject\khm\project8\소스.cpp(520): warning C4305: '+=': 'double'에서 'float'(으)로 잘립니다.
+c:\users\kshg1\documents\github\cgproject\cgproject\khm\project8\소스.cpp(525): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+c:\users\kshg1\documents\github\cgproject\cgproject\khm\project8\소스.cpp(535): warning C4305: '+=': 'double'에서 'float'(으)로 잘립니다.
+c:\users\kshg1\documents\github\cgproject\cgproject\khm\project8\소스.cpp(540): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+c:\users\kshg1\documents\github\cgproject\cgproject\khm\project8\소스.cpp(549): warning C4305: '-=': 'double'에서 'float'(으)로 잘립니다.
+c:\users\kshg1\documents\github\cgproject\cgproject\khm\project8\소스.cpp(554): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+c:\users\kshg1\documents\github\cgproject\cgproject\khm\project8\소스.cpp(719): warning C4326: 'main'의 반환 형식이 'int'이어야 하는데 'void'입니다.
+c:\users\kshg1\documents\github\cgproject\cgproject\khm\project8\소스.cpp(935): warning C4244: '인수': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\kshg1\documents\github\cgproject\cgproject\khm\project8\소스.cpp(936): warning C4244: '인수': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\kshg1\documents\github\cgproject\cgproject\khm\project8\소스.cpp(940): warning C4244: '인수': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\kshg1\documents\github\cgproject\cgproject\khm\project8\소스.cpp(941): warning C4244: '인수': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\kshg1\documents\github\cgproject\cgproject\khm\project8\camera.h(80): warning C4305: '=': 'double'에서 'float'(으)로 잘립니다.
+  c:\users\kshg1\documents\github\cgproject\cgproject\khm\project8\camera.h(79): note: 클래스 템플릿 멤버 함수 'void Camera<float3>::Initialize_radian(void)'을(를) 컴파일하고 있습니다.
+  c:\users\kshg1\documents\github\cgproject\cgproject\khm\project8\소스.cpp(849): note: 컴파일 중인 함수 템플릿 인스턴스화 'void Camera<float3>::Initialize_radian(void)'에 대한 참조를 확인하십시오.
+  c:\users\kshg1\documents\github\cgproject\cgproject\khm\project8\소스.cpp(23): note: 컴파일 중인 클래스 템플릿 인스턴스화 'Camera<float3>'에 대한 참조를 확인하세요.
+c:\users\kshg1\documents\github\cgproject\cgproject\khm\project8\소스.cpp(107): warning C4715: 'KHM::Delete_Harpoon': 모든 제어 경로에서 값을 반환하지는 않습니다.
+  Project8.vcxproj -> C:\Users\kshg1\Documents\GitHub\CGProject\CGProject\KHM\x64\Debug\Project8.exe
