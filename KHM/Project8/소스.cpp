@@ -40,6 +40,7 @@ namespace KHM
 	float temp_distance = 500;
 	float temp_x_angle = 0;
 	float temp_y_angle = 0;
+	float Gauge = 0;
 	struct BOAT
 	{
 		bool is_forward = false;
@@ -595,14 +596,14 @@ void draw_BOTTOM()
 void draw_SEA()
 {
 	glPushMatrix();
-	glColor4f(0.25f, 0.85f, 0.92f, 0.3f);
-	glutWireSphere(WORLD_SCALE, 50, 50);
+	glColor4f(0.25f, 0.85f, 0.92f, 0.5f);
+	glutSolidSphere(WORLD_SCALE, 50, 50);
 	glPopMatrix();
 }
 void draw_SKY()
 {
 	glPushMatrix();
-	glColor4f(0.1f, 0.3f, 1.0f, 0.3f);
+	glColor4f(0.1f, 0.3f, 1.0f, 1.0f);
 	glutSolidSphere(WORLD_SCALE + 4000, 30, 30);
 	glPopMatrix();
 }
@@ -732,7 +733,8 @@ void main(int argc, char *argv[])
 	glutTimerFunc(10, Timerfunction, 1);         // 타이머 함수 설정
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
-	//glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+	//glBlendFunc(GL_SRC_COLOR, GL_ZERO);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glutMainLoop();
 }
 // 윈도우 출력 함수
@@ -840,7 +842,7 @@ void Keyboard(unsigned char key, int x, int y)
 	case 'f':
 		//if (KHM::MODE_OF_VIEW == 1)
 		//{
-		KHM::shot_Harpoon();
+			KHM::Gauge ++;
 		//}
 		break;
 	case '1':
@@ -877,6 +879,13 @@ void UpKeyboard(unsigned char key, int x, int y)
 		break;
 	case 's':
 		KHM::Boat.is_breaking = false;
+		break;
+	case 'f':
+		if (KHM::Gauge >= 2)
+		{
+			KHM::shot_Harpoon();
+		}
+		KHM::Gauge = 0;
 		break;
 	}
 }
@@ -942,6 +951,7 @@ void Timerfunction(int value)
 		glGetDoublev(GL_MODELVIEW_MATRIX, rotateWC);
 	}glPopMatrix();
 
+	cout << KHM::Gauge << endl;
 	glutPostRedisplay();                  // 화면 재출력
 	glutTimerFunc(10, Timerfunction, 1);      // 타이머함수 재설정
 }
