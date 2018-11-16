@@ -58,7 +58,7 @@ namespace KHM
 		float y = 0;
 		float z = 0;
 		float t = 0;
-		float speed = 1000;
+		float power = 1000;
 		float gravity_revise = x_angle + 31.5119;
 		bool is_hit = false;
 		bool is_fired = false;
@@ -120,34 +120,29 @@ namespace KHM
 		{
 			if (curr->Harpoon.is_fired)
 			{
-				curr->Harpoon.x = 1000 * curr->Harpoon.t * cos(curr->Harpoon.x_angle * RADIAN) * sin(curr->Harpoon.y_angle * RADIAN);
-				if (curr->Harpoon.x_angle < 0)
-				{
-					curr->Harpoon.y = HARPOON_Y + (curr->Harpoon.speed * curr->Harpoon.t *sin((curr->Harpoon.x_angle) * RADIAN))*-1;	
-				}
-				else if (curr->Harpoon.x_angle >= 0)
-				{
-					curr->Harpoon.y = HARPOON_Y - ((curr->Harpoon.speed) * curr->Harpoon.t * sin((curr->Harpoon.x_angle) * RADIAN));
-				}
-				curr->Harpoon.z = HARPOON_Z + 1000 * curr->Harpoon.t * cos(curr->Harpoon.x_angle * RADIAN) * cos(curr->Harpoon.y_angle * RADIAN);
-				if (curr->Harpoon.t < 1)
+				curr->Harpoon.x = curr->Harpoon.power * curr->Harpoon.t * cos(curr->Harpoon.x_angle * RADIAN) * sin(curr->Harpoon.y_angle * RADIAN);
+				curr->Harpoon.y = HARPOON_Y - curr->Harpoon.power * curr->Harpoon.t * sin(curr->Harpoon.x_angle * RADIAN) - (0.5 * 1000 * curr->Harpoon.t * curr->Harpoon.t);
+				curr->Harpoon.z = HARPOON_Z + curr->Harpoon.power * curr->Harpoon.t * cos(curr->Harpoon.x_angle * RADIAN) * cos(curr->Harpoon.y_angle * RADIAN);
+				if (curr->Harpoon.t < 5)
 				{
 					//if (curr->Harpoon.x_angle < 0)
 					//{
-						curr->Harpoon.speed -= 10;
+					//	curr->Harpoon.speed -= 10;
 					//}
 					//else if (curr->Harpoon.x_angle >= 0)
 					//{
 					//	curr->Harpoon.speed += 10;
 					//}
 					//cout << curr->Harpoon.x_angle << endl;
+					cout << curr->Harpoon.y << endl;
 					curr->Harpoon.t += 0.01;
 				}
 
 				//여기 어딘가에 타겟 맞췄을 때 is_hit  true로 바꾸는거
 				//맵의 범위를 넘었을 때 삭제
 			}
-			if (curr->Harpoon.t >= 1)
+			//if (curr->Harpoon.t >= 1)
+			if (curr->Harpoon.y <= -100)
 			{
 				curr=Delete_Harpoon(curr);
 			}
@@ -501,7 +496,7 @@ void Motion(int x, int y)
 	{
 		if (KHM::MODE_OF_VIEW == 1)
 		{
-			if (KHM::Head->next->Harpoon.y_angle > -28.6472)
+			if (KHM::Head->next->Harpoon.y_angle >= -28.6472)
 			{
 				KHM::Head->next->Harpoon.y_angle -= 2.86472;
 			}
@@ -515,7 +510,7 @@ void Motion(int x, int y)
 	{
 		if (KHM::MODE_OF_VIEW == 1)
 		{
-			if (KHM::Head->next->Harpoon.y_angle < 28.6472)
+			if (KHM::Head->next->Harpoon.y_angle <= 28.6472)
 			{
 				KHM::Head->next->Harpoon.y_angle += 2.86472;
 			}
@@ -530,7 +525,7 @@ void Motion(int x, int y)
 	{
 		if (KHM::MODE_OF_VIEW == 1)
 		{
-			if (KHM::Head->next->Harpoon.x_angle < 28.6472)
+			if (KHM::Head->next->Harpoon.x_angle <= 28.6472)
 			{
 				KHM::Head->next->Harpoon.x_angle += 2.86472;
 			}
@@ -544,7 +539,7 @@ void Motion(int x, int y)
 	{
 		if (KHM::MODE_OF_VIEW == 1)
 		{
-			if (KHM::Head->next->Harpoon.x_angle > -28.6472)
+			if (KHM::Head->next->Harpoon.x_angle >= -28.6472)
 			{
 				KHM::Head->next->Harpoon.x_angle -= 2.86472;
 			}
