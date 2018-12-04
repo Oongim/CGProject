@@ -55,9 +55,11 @@ namespace KHM
 	{
 		bool is_forward = false;
 		int direction = KEEP;
+		float direction_percent = 1.0f;
 		bool is_breaking = false;
 		float speed = 0.0;
-		float velocity = 0.0002;
+		float velocity = 0.01f;
+		float x, y, z;
 	};
 	BOAT Boat;
 
@@ -258,12 +260,13 @@ namespace KDK {
 	{ { -50.0, 50.0, -100.0 },{ -50.0, -25.0, -100.0 },{ 0.0, -50.0, -100.0 } }
 	};
 	const int SEAWEED_NUM = 40;
-	GLdouble random_seaweed[SEAWEED_NUM][2];
+	GLdouble random_seaweed[SEAWEED_NUM][3];
 	void init_seaweed_postion()
 	{
 		for (int i = 0; i < SEAWEED_NUM; ++i) {
-			random_seaweed[i][0] = rand() % 360;
-			random_seaweed[i][1] = rand() % 360;
+			random_seaweed[i][0] = rand() % WORLD_SCALE - WORLD_SCALE / 2;
+			random_seaweed[i][1] = rand() % WORLD_SCALE - WORLD_SCALE / 2;
+			random_seaweed[i][2] = rand() % 90;
 		}
 	}
 	void draw_pyramid(float size)
@@ -302,56 +305,60 @@ namespace KDK {
 	void draw_MAP_object()
 	{
 		glPushMatrix(); {
-			glColor3f(1, 0, 0.6);
-			glRotated(30, 1, 0, 0);
-			glTranslated(0, WORLD_SCALE, 0);
-			draw_pyramid(1500);
-		}glPopMatrix();
-		glPushMatrix(); {
-			glColor3f(1, 0.7, 0.6);
-			glRotated(270, 0, 0, 1);
-			glTranslated(0, WORLD_SCALE, 0);
-			draw_pyramid(1500);
-		}glPopMatrix();
-		glPushMatrix(); {
-			glColor3f(0.3, 0.7, 0.6);
-			glRotated(135, 1, 0, 1);
-			glTranslated(0, WORLD_SCALE, 0);
-			draw_pyramid(1500);
-		}glPopMatrix();
-		glPushMatrix(); {
+			glTranslated(0, -500, 0);
+			glPushMatrix(); {
+				glColor3f(1, 0, 0.6);
+				//glRotated(30, 1, 0, 0);
+				glTranslated(-2000, 0, 800);
+				draw_pyramid(1500);
+			}glPopMatrix();
+			glPushMatrix(); {
+				glColor3f(1, 0.7, 0.6);
+				//glRotated(270, 0, 0, 1);
+				glTranslated(-1200, 0, -2018);
+				draw_pyramid(1500);
+			}glPopMatrix();
+			glPushMatrix(); {
+				glColor3f(0.3, 0.7, 0.6);
+				//glRotated(135, 1, 0, 1);
+				glTranslated(2500,0, 100);
+				draw_pyramid(1500);
+			}glPopMatrix();
+			glPushMatrix(); {
+				glColor3f(0.2, 0.2, 0.2);
+				//glRotated(-90, 1, 0, 0);
+				glTranslated(+1000, 0, 2000);
+				draw_pyramid(1500);
+			}glPopMatrix();
+
+
 			glColor3f(0.2, 0.2, 0.2);
-			glRotated(-90, 1, 0, 0);
-			glTranslated(0, WORLD_SCALE, 0);
-			draw_pyramid(1500);
-		}glPopMatrix();
+			for (int k = 0; k < SEAWEED_NUM; ++k) {
+				glPushMatrix(); {
+					glTranslated(random_seaweed[k][0], 0, random_seaweed[k][1]);
+					for (int i = 0; i < 3; ++i)
+					{
+						for (int j = 0; j < 3; ++j)
+						{
+							glPushMatrix(); {
+								glRotated(random_seaweed[k][2], 0, 1, 0);
+								glTranslated(50 * i, 0, 50 * j);
 
-
-		glColor3f(0.2, 0.2, 0.2);
-		for (int k = 0; k < SEAWEED_NUM; ++k) {
-			glRotated(KDK::random_seaweed[k][0], 1, 0, 0);
-			glRotated(KDK::random_seaweed[k][0], 0, 0, 1);
-			for (int i = 0; i < 3; ++i)
-			{
-				for (int j = 0; j < 3; ++j)
-				{
-					glPushMatrix(); {
-						glRotated(1 * i, 1, 0, 0);
-						glRotated(1 * j, 0, 0, 1);
-						glTranslated(0, WORLD_SCALE, 0);
-						draw_Seaweed();
-					}glPopMatrix();
-				}
+								draw_Seaweed();
+							}glPopMatrix();
+						}
+					}
+				}glPopMatrix();
 			}
-		}
-		glPushMatrix(); {
-			glColor3f(0, 0, 0);
-			//glRotated(-90, 1, 0, 0);
-			glTranslated(0, WORLD_SCALE, 0);
-			draw_stone();
+
+			glPushMatrix(); {
+				glColor3f(0, 0, 0);
+				//glRotated(-90, 1, 0, 0);
+				glTranslated(0, WORLD_SCALE, 0);
+				draw_stone();
+			}glPopMatrix();
+
 		}glPopMatrix();
-
-
 	}
 };
 void drawCylinder(GLfloat radius, GLfloat h)
@@ -721,31 +728,34 @@ void draw_COORD()
 void draw_BOTTOM()
 {
 	glPushMatrix();
+	glTranslated(0, -(WORLD_SCALE) / 2 - 500, 0);
 	glColor4f(0.66f, 0.66f, 0.66f, 1.0f);
-	glutWireSphere(WORLD_SCALE - 500, 30, 30);
+	glScaled(2, 0.5, 2);
+	glutSolidCube(WORLD_SCALE);
 	glPopMatrix();
 }
 void draw_SEA()
 {
 	glPushMatrix();
+	glTranslated(0, -WORLD_SCALE / 2, 0);
+	glScaled(2, 1, 2);
 	glColor4f(0.25f, 0.85f, 0.92f, 0.5f);
-	glutSolidSphere(WORLD_SCALE, 50, 50);
+	glutSolidCube(WORLD_SCALE);
 	glPopMatrix();
 }
 void draw_SKY()
 {
 	glPushMatrix();
+	glScaled(2, 1, 2);
+
 	glColor4f(0.1f, 0.3f, 1.0f, 1.0f);
-	glutSolidSphere(WORLD_SCALE + 4000, 30, 30);
+	glutSolidCube(WORLD_SCALE + 4000);
 	glPopMatrix();
 }
-float x_angle = 0;
-float y_angle = 0;
 void draw_BOAT()
 {
 
 	glPushMatrix(); {
-		glTranslated(0, 0, 0);
 		glPushMatrix(); {
 			// 곡면 제어점 설정
 			glColor3f(0.0, 1.0, 0.0);
@@ -1052,31 +1062,21 @@ GLvoid drawScene(GLvoid)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glMatrixMode(GL_MODELVIEW);
 	//////////////////////////////////////////////
-	float x = 0, y = 0, z = 0,angle=0;
-	x = x + WORLD_SCALE * cos(x_angle * RADIAN) * sin(y_angle * RADIAN);
-	y = y - WORLD_SCALE * sin(x_angle * RADIAN);
-	z = z + WORLD_SCALE * cos(x_angle * RADIAN) * cos(y_angle * RADIAN);
-	angle = -1*acos(z / WORLD_SCALE)*90;
-	glPushMatrix(); {
-		
-		cout << angle << endl;
-		glTranslated(x, y, z);
-		glRotated(angle-90, 1, 0, 0);
-		glRotated(180, 0, 0, 1);
 
+	glPushMatrix(); {
+
+		glTranslated(KHM::Boat.x, KHM::Boat.y, KHM::Boat.z);
+		glRotated((1 - KHM::Boat.direction_percent) * 90, 0, 1, 0);
 		draw_BOAT();
 		draw_Harpoon_Gun(0, HARPOON_Y, HARPOON_Z, KHM::Head->next->Harpoon.x_angle, KHM::Head->next->Harpoon.y_angle);
+		m_camera.SetPosition(float3{ KHM::Boat.x, KHM::Boat.y, KHM::Boat.z });
 	}glPopMatrix();
-	m_camera.SetPosition(float3{ x,y,z });
+
 	glPushMatrix(); {
 		KHM::draw_moving_Harpoon();
 	}glPopMatrix();
 	glPushMatrix(); {
-		//glTranslated(0, -WORLD_SCALE, 0);
-		//glMultMatrixd(rotateWC);
-
-		//draw_BOTTOM();
-
+		draw_BOTTOM();
 		draw_SKY();
 		KDK::draw_MAP_object();
 		draw_SEA();
@@ -1218,54 +1218,41 @@ void Timerfunction(int value)
 		m_camera.Initialize(float3{ 0,HARPOON_Y + 35,HARPOON_Z }, 30, 1, 99999, 90);
 	}
 
-
-	glPushMatrix(); {
-		if (KHM::Boat.is_forward == true)
+	//======================================================================================
+	if (KHM::Boat.is_forward == true)
+	{
+		if (KHM::Boat.speed < 3.0)
 		{
-			if (KHM::Boat.speed < 0.1)
+			KHM::Boat.speed += KHM::Boat.velocity;
+		}
+	}
+	else
+	{
+		if (KHM::Boat.speed > 0.0)
+		{
+			KHM::Boat.speed -= KHM::Boat.velocity * 2;
+			if (KHM::Boat.is_breaking == true)
 			{
-				KHM::Boat.speed += KHM::Boat.velocity;
+				KHM::Boat.speed -= KHM::Boat.velocity * 3;
+			}
+			if (KHM::Boat.speed <= 0)
+			{
+				KHM::Boat.speed = 0;
 			}
 		}
-		else
-		{
-			if (KHM::Boat.speed > 0.0)
-			{
-				KHM::Boat.speed -= KHM::Boat.velocity * 2;
-				if (KHM::Boat.is_breaking == true)
-				{
-					KHM::Boat.speed -= KHM::Boat.velocity * 3;
-				}
-				if (KHM::Boat.speed <= 0)
-				{
-					KHM::Boat.speed = 0;
-				}
-			}
+	}
+	if (KHM::Boat.direction == LEFT)
+	{
+		KHM::Boat.direction_percent -= 0.1;
+	}
+	else if (KHM::Boat.direction == RIGHT)
+	{
+		KHM::Boat.direction_percent += 0.1;
 
-		}
-		x_angle += -KHM::Boat.speed;
-		KHM::add_wc_x_angle(-KHM::Boat.speed);
-		glRotatef(-KHM::Boat.speed, 1.0, 0.0, 0.0);
-		glMultMatrixd(rotateWC);
-		glGetDoublev(GL_MODELVIEW_MATRIX, rotateWC);
-	}glPopMatrix();
-	glPushMatrix(); {
-		if (KHM::Boat.direction == LEFT)
-		{
-			glRotatef(-(KHM::Boat.speed * 5 + 0.1), 0.0, 1.0, 0.0);
-			KHM::add_wc_y_angle((-(KHM::Boat.speed * 5 + 0.1)));
-			y_angle -= (KHM::Boat.speed * 5 + 0.1);
-		}
-		else if (KHM::Boat.direction == RIGHT)
-		{
-			glRotatef((KHM::Boat.speed * 5 + 0.1), 0.0, 1.0, 0.0);
-			KHM::add_wc_y_angle(((KHM::Boat.speed * 5 + 0.1)));
-			y_angle += (KHM::Boat.speed * 5 + 0.1);
-		}
-		glMultMatrixd(rotateWC);
-		glGetDoublev(GL_MODELVIEW_MATRIX, rotateWC);
-	}glPopMatrix();
-
+	}
+	KHM::Boat.z += KHM::Boat.speed*KHM::Boat.direction_percent;
+	KHM::Boat.x += KHM::Boat.speed*(1 - KHM::Boat.direction_percent);
+	//===========================================================================================
 	glutPostRedisplay();                  // 화면 재출력
-	glutTimerFunc(10, Timerfunction, 1);      // 타이머함수 재설정
+	glutTimerFunc(50, Timerfunction, 1);      // 타이머함수 재설정
 }

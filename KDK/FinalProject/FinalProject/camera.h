@@ -72,7 +72,7 @@ public:
 		m_vertical += v;
 		if (-PI * 0.5f < m_horizontal + h && m_horizontal + h < PI * 0.5f)
 			m_horizontal += h;
-		std::cout << m_vertical << " " << m_horizontal << std::endl;
+
 	}
 
 	void Initialize_radian()
