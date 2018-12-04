@@ -29,6 +29,64 @@ void Keyboard(unsigned char key, int x, int y);
 void UpKeyboard(unsigned char key, int x, int y);
 
 void Timerfunction(int value);
+GLubyte * LoadDIBitmap(const char *filename, BITMAPINFO **info)
+{
+	FILE *fp;
+	GLubyte *bits;
+	int bitsize, infosize;
+	BITMAPFILEHEADER header;
+	// 바이너리 읽기 모드로 파일을 연다
+	//if ((fp = fopen(filename, "rb")) == NULL)
+	fopen_s(&fp, filename, "rb");
+	if (fp == NULL)
+		return NULL;
+	// 비트맵 파일 헤더를 읽는다.
+	if (fread(&header, sizeof(BITMAPFILEHEADER), 1, fp) < 1) {
+		fclose(fp);
+		return NULL;
+	}
+	// 파일이 BMP 파일인지 확인한다.
+	if (header.bfType != 'MB') {
+		fclose(fp);
+		return NULL;
+	}
+	// BITMAPINFOHEADER 위치로 간다.
+	infosize = header.bfOffBits - sizeof(BITMAPFILEHEADER);
+	// 비트맵 이미지 데이터를 넣을 메모리 할당을 한다.
+	if ((*info = (BITMAPINFO *)malloc(infosize)) == NULL) {
+		fclose(fp);
+		exit(0);
+		return NULL;
+	}
+	// 비트맵 인포 헤더를 읽는다.
+	if (fread(*info, 1, infosize, fp) < (unsigned int)infosize) {
+		free(*info);
+		fclose(fp);
+		return NULL;
+	}
+	// 비트맵의 크기 설정
+	if ((bitsize = (*info)->bmiHeader.biSizeImage) == 0)
+		bitsize = ((*info)->bmiHeader.biWidth*(*info)->bmiHeader.biBitCount + 7) / 8.0 * abs((*info)->bmiHeader.biHeight);
+	// 비트맵의 크기만큼 메모리를 할당한다.
+	if ((bits = (unsigned char *)malloc(bitsize)) == NULL) {
+		free(*info);
+		fclose(fp);
+		return NULL;
+	}
+	// 비트맵 데이터를 bit(GLubyte 타입)에 저장한다.
+	if (fread(bits, 1, bitsize, fp) < (unsigned int)bitsize) {
+		free(*info); free(bits);
+		fclose(fp);
+		return NULL;
+	}
+	fclose(fp);
+	return bits;
+}
+GLubyte *pBytes; // 데이터를 가리킬 포인터
+BITMAPINFO *info; // 비트맵 헤더 저장할 변수
+				  // 조명 설정
+				  // n개의 이미지 텍스처 매핑을 한다.
+GLuint textures[4];
 GLdouble rotateWC[16]
 = { 1,0,0,0,
 0,1,0,0,
@@ -293,8 +351,46 @@ namespace KDK {
 	void draw_Seaweed()
 	{
 		glTranslated(0, -300, 0);
-		glScaled(1, 20, 1);
-		glutSolidCube(30);
+		glPushMatrix(); {
+
+			glBegin(GL_QUADS);
+			//윗면
+			glTexCoord2f(0.0f, 1.0f);
+			glVertex3f(-15, 600, -15); //1
+			glTexCoord2f(0.0f, 0.0f);
+			glVertex3f(-15, 600, 15);// 2
+			glTexCoord2f(1.0f, 0.0f);
+			glVertex3f(15, 600, 15);// 3
+			glTexCoord2f(1.0f, 1.0f);
+			glVertex3f(15, 600, -15);//4
+													  //앞면		 
+			glTexCoord2f(0.0f, 1.0f);
+			glVertex3f(-15, 600, 15);//2
+			glTexCoord2f(0.0f, 0.0f);
+			glVertex3f(-15, -600, 15);//6
+			glTexCoord2f(1.0f, 0.0f);
+			glVertex3f(15, -600, 15);//7
+			glTexCoord2f(1.0f, 1.0f);
+			glVertex3f(15, 600, 15);//3
+													 //오른쪽옆면
+			glVertex3f(15, 600, 15);//3
+			glVertex3f(15, -600, 15);//7
+			glVertex3f(15, -600, -15);//8
+			glVertex3f(15, 600, -15);//4
+													  //왼쪽옆면
+			glVertex3f(-15, 600, -15);//1
+			glVertex3f(-15, -600, -15);//5
+			glVertex3f(-15, -600, 15);//6
+			glVertex3f(-15, 600, 15);//2
+													  //뒷면
+			glVertex3f(15, 600, -15);//4
+			glVertex3f(15, -600, -15);//8
+			glVertex3f(-15, -600, -15);//5
+			glVertex3f(-15, 600, -15);//1
+
+			glEnd();
+
+		}glPopMatrix();
 	}
 	void draw_stone()
 	{
@@ -330,8 +426,24 @@ namespace KDK {
 				glTranslated(+1000, 0, 2000);
 				draw_pyramid(1500);
 			}glPopMatrix();
+			glGenTextures(4, textures);
+			//텍스처와 객체를 결합한다. --- (1)
 
-
+			///////////////////////////////////////////////////////////////////////////////
+			glBindTexture(GL_TEXTURE_2D, textures[0]);
+				//이미지 로딩을 한다. --- (2)
+				pBytes = LoadDIBitmap("seaweed.bmp", &info);
+				//텍스처 설정 정의를 한다. --- (3)
+				glTexImage2D(GL_TEXTURE_2D, 0, 3, 128, 670, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, pBytes);
+			
+			//glBindTexture(GL_TEXTURE_2D, textures[0]);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+			glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, GL_MODULATE);
+			// 텍스처 매핑 활성화
+			glEnable(GL_TEXTURE_2D);
 			glColor3f(0.2, 0.2, 0.2);
 			for (int k = 0; k < SEAWEED_NUM; ++k) {
 				glPushMatrix(); {
@@ -350,7 +462,7 @@ namespace KDK {
 					}
 				}glPopMatrix();
 			}
-
+			glDisable(GL_TEXTURE_2D);
 			glPushMatrix(); {
 				glColor3f(0, 0, 0);
 				//glRotated(-90, 1, 0, 0);
@@ -1005,6 +1117,8 @@ void initialize()
 	KHM::Head->next = nullptr;
 	KHM::Insert_Harpoon();
 	KDK::init_seaweed_postion();
+	
+
 }
 void main(int argc, char *argv[])
 {
@@ -1221,7 +1335,7 @@ void Timerfunction(int value)
 	//======================================================================================
 	if (KHM::Boat.is_forward == true)
 	{
-		if (KHM::Boat.speed < 3.0)
+		if (KHM::Boat.speed < 5.0)
 		{
 			KHM::Boat.speed += KHM::Boat.velocity;
 		}
@@ -1243,11 +1357,11 @@ void Timerfunction(int value)
 	}
 	if (KHM::Boat.direction == LEFT)
 	{
-		KHM::Boat.direction_percent -= 0.1;
+		KHM::Boat.direction_percent -= 0.01;
 	}
 	else if (KHM::Boat.direction == RIGHT)
 	{
-		KHM::Boat.direction_percent += 0.1;
+		KHM::Boat.direction_percent += 0.01;
 
 	}
 	KHM::Boat.z += KHM::Boat.speed*KHM::Boat.direction_percent;
