@@ -1182,9 +1182,13 @@ GLvoid drawScene(GLvoid)
 		//glRotated((1 - KHM::Boat.direction_percent) * 90, 0, 1, 0);
 		glRotated(KHM::Boat.y_angle, 0, 1, 0);
 		draw_BOAT();
-		draw_Harpoon_Gun(0, HARPOON_Y, HARPOON_Z, KHM::Head->next->Harpoon.x_angle, 0); //KHM::Head->next->Harpoon.y_angle
+		if (KHM::MODE_OF_VIEW == 1)
+		{
+			draw_Harpoon_Gun(0, HARPOON_Y, HARPOON_Z, KHM::Head->next->Harpoon.x_angle, KHM::Head->next->Harpoon.y_angle); //KHM::Head->next->Harpoon.y_angle
+		}
 		if (KHM::MODE_OF_VIEW == 3)
 		{
+			draw_Harpoon_Gun(0, HARPOON_Y, HARPOON_Z, KHM::Head->next->Harpoon.x_angle, 0); //KHM::Head->next->Harpoon.y_angle
 			m_camera.SetPosition(float3{ KHM::Boat.x, KHM::Boat.y, KHM::Boat.z });
 		}
 	}glPopMatrix();
@@ -1340,7 +1344,7 @@ void Timerfunction(int value)
 
 	if (KHM::MODE_OF_VIEW == 1)
 	{
-		m_camera.Initialize(float3{ 0,HARPOON_Y + 35,HARPOON_Z }, 30, 1, 99999, 90);
+		m_camera.Initialize(float3{ KHM::Boat.x + (70 * sin(KHM::Boat.y_angle * 3/180)) ,KHM::Boat.y + HARPOON_Y + 35,KHM::Boat.z + (HARPOON_Z * cos(KHM::Boat.y_angle * 3 / 180)) }, 30, 1, 99999, 90);
 	}
 
 	//======================================================================================
