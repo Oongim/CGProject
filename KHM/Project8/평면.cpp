@@ -119,7 +119,7 @@ namespace KHM
 	struct HARPOON
 	{
 		float x_angle_2 = 0;
-		float y_angle_2 = 0;
+		float fired_y_angle = 0;
 		float y_angle = 0;
 		float x_angle = 0;
 		float x = 0;
@@ -148,9 +148,9 @@ namespace KHM
 		New->Harpoon.y = KHM::Boat.y + HARPOON_Y;
 		New->Harpoon.z = KHM::Boat.z + (HARPOON_Z * cos(KHM::Boat.y_angle * RADIAN));
 		New->Harpoon.x_angle = KHM::temp_x_angle;
-		New->Harpoon.y_angle = KHM::temp_y_angle;
+		New->Harpoon.y_angle = KHM::Boat.y_angle;
 		New->Harpoon.x_angle_2 = KHM::temp_x_angle;
-		//New->Harpoon.y_angle_2 = KHM::temp_y_angle;
+		New->Harpoon.fired_y_angle = KHM::Boat.y_angle;
 		New->Harpoon.is_hit = false;
 		New->Harpoon.is_fired = false;
 
@@ -179,8 +179,9 @@ namespace KHM
 		Node *curr = Head->next;
 		KHM::temp_x_angle = curr->Harpoon.x_angle;
 		KHM::temp_y_angle = curr->Harpoon.y_angle;
+		//curr->Harpoon.fired_y_angle = KHM::Boat.y_angle;
 		curr->Harpoon.x_angle_2 = curr->Harpoon.x_angle;
-		curr->Harpoon.y_angle = curr->Harpoon.y_angle;
+		curr->Harpoon.y_angle = KHM::Boat.y_angle;
 		curr->Harpoon.is_fired = true;
 		Insert_Harpoon();
 	}
@@ -191,10 +192,10 @@ namespace KHM
 		{
 			if (curr->Harpoon.is_fired)
 			{
-				curr->Harpoon.x = KHM::Boat.x + (70 * sin(KHM::Boat.y_angle * RADIAN)) + curr->Harpoon.power * curr->Harpoon.t * cos(curr->Harpoon.x_angle * RADIAN) * sin(curr->Harpoon.y_angle * RADIAN);
+				curr->Harpoon.x = KHM::Boat.x + (70 * sin(curr->Harpoon.y_angle * RADIAN)) + curr->Harpoon.power * curr->Harpoon.t * cos(curr->Harpoon.x_angle * RADIAN) * sin(curr->Harpoon.y_angle * RADIAN);
 				curr->Harpoon.y = KHM::Boat.y + HARPOON_Y - curr->Harpoon.power * curr->Harpoon.t * sin(curr->Harpoon.x_angle * RADIAN) - (0.5 * 1000 * curr->Harpoon.t * curr->Harpoon.t);
-				curr->Harpoon.z = KHM::Boat.z + (HARPOON_Z * cos(KHM::Boat.y_angle * RADIAN)) + curr->Harpoon.power * curr->Harpoon.t * cos(curr->Harpoon.x_angle * RADIAN) * cos(curr->Harpoon.y_angle * RADIAN);
-				curr->Harpoon.y_angle = KHM::Boat.y_angle;
+				curr->Harpoon.z = KHM::Boat.z + (HARPOON_Z * cos(curr->Harpoon.y_angle * RADIAN)) + curr->Harpoon.power * curr->Harpoon.t * cos(curr->Harpoon.x_angle * RADIAN) * cos(curr->Harpoon.y_angle * RADIAN);
+				//curr->Harpoon.y_angle = KHM::Boat.y_angle;
 				if (curr->Harpoon.t < 5)
 				{
 
@@ -1181,7 +1182,7 @@ GLvoid drawScene(GLvoid)
 		//glRotated((1 - KHM::Boat.direction_percent) * 90, 0, 1, 0);
 		glRotated(KHM::Boat.y_angle, 0, 1, 0);
 		draw_BOAT();
-		draw_Harpoon_Gun(0, HARPOON_Y, HARPOON_Z, KHM::Head->next->Harpoon.x_angle, KHM::Head->next->Harpoon.y_angle);
+		draw_Harpoon_Gun(0, HARPOON_Y, HARPOON_Z, KHM::Head->next->Harpoon.x_angle, 0); //KHM::Head->next->Harpoon.y_angle
 		if (KHM::MODE_OF_VIEW == 3)
 		{
 			m_camera.SetPosition(float3{ KHM::Boat.x, KHM::Boat.y, KHM::Boat.z });
@@ -1280,6 +1281,7 @@ void Keyboard(unsigned char key, int x, int y)
 		//if (KHM::MODE_OF_VIEW == 1)
 		//{
 		KHM::shot_Harpoon();
+		
 		//KHM::Gauge++;
 		//}
 		break;
@@ -1382,7 +1384,7 @@ void Timerfunction(int value)
 	//KHM::Boat.z += KHM::Boat.speed * KHM::Boat.direction_percent;
 	//KHM::Boat.x += KHM::Boat.speed * (1 - KHM::Boat.direction_percent);
 	//===========================================================================================
-	cout << KHM::Boat.is_forward;
+	//cout << KHM::fired_y_angle << endl;
 	glutPostRedisplay();                  // 화면 재출력
 	glutTimerFunc(10, Timerfunction, 1);      // 타이머함수 재설정
 }
