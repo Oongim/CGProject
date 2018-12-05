@@ -130,6 +130,10 @@
     <ClInclude Include="camera.h" />
     <ClInclude Include="float3.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="Resource\seaweed.bmp" />
+    <Image Include="Resource\seaweed.jpg" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
