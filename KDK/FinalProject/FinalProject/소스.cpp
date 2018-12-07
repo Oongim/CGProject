@@ -282,8 +282,8 @@ namespace KDK {
 	void init_seaweed_postion()
 	{
 		for (int i = 0; i < SEAWEED_NUM; ++i) {
-			random_seaweed[i][0] = rand() % WORLD_SCALE - WORLD_SCALE / 2;
-			random_seaweed[i][1] = rand() % WORLD_SCALE - WORLD_SCALE / 2;
+			random_seaweed[i][1] = rand() % (WORLD_SCALE*2) - WORLD_SCALE ;
+			random_seaweed[i][0] = rand() % (WORLD_SCALE*2) - WORLD_SCALE ;
 			random_seaweed[i][2] = rand() % 90;
 		}
 	}
@@ -588,13 +588,13 @@ namespace KDK {
 			whale[i].tail_moveVelocity = 3;
 			whale[i].move_Velocity = 3;
 			whale[i].Tail_Radian = -45;
-			whale[i].x = rand() % WORLD_SCALE - WORLD_SCALE / 2;
-			whale[i].z = rand() % WORLD_SCALE - WORLD_SCALE / 2;
-			whale[i].y = -rand() % 400;
+			whale[i].x = rand() % (WORLD_SCALE * 2) - WORLD_SCALE;
+			whale[i].z = rand() % (WORLD_SCALE * 2) - WORLD_SCALE;
+			whale[i].y = -rand() % 800;
 
-			whale[i].next_x = rand() % WORLD_SCALE - WORLD_SCALE / 2;
-			whale[i].next_z = rand() % WORLD_SCALE - WORLD_SCALE / 2;
-			whale[i].next_y = -rand() % 400;
+			whale[i].next_x = rand() % (WORLD_SCALE * 2) - WORLD_SCALE;
+			whale[i].next_z = rand() % (WORLD_SCALE * 2) - WORLD_SCALE;
+			whale[i].next_y = -rand() % 800;
 		}
 	}
 	void draw_Whale()
@@ -643,6 +643,19 @@ namespace KDK {
 
 			whale[i].theta = acos((whale[i].next_y - whale[i].y) / normal_r) * 180 / PI - 90;
 			//whale[i].theta = std::min(whale[i].theta, 180 - whale[i].theta);
+		}
+	}
+
+	void draw_rader_Whale()
+	{
+		for (int i = 0; i < 10; i++) {
+			if (pow((whale[i].x - KHM::Boat.x) , 2) + pow((whale[i].z - KHM::Boat.z) , 2)
+				< pow(810,2) ){
+				glPushMatrix(); {
+					glTranslated((whale[i].x - KHM::Boat.x) * 200 / windowW / 2, (whale[i].z - KHM::Boat.z) * 200 / windowH / 2, 0);
+					glutSolidCube(10);
+				}glPopMatrix();
+			}
 		}
 	}
 	void initiallize()
@@ -1182,19 +1195,13 @@ GLvoid drawScene(GLvoid)
 	glMaterialfv(GL_FRONT, GL_SPECULAR, specref);
 	glMateriali(GL_FRONT, GL_SHININESS, 128);
 
-	glViewport(windowW - 500, windowH - 500, windowW, windowH);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glOrtho(-40, 40, -30, 30, -30.0, 30.0);
-	glMatrixMode(GL_MODELVIEW);
-	glColor3f(1.0, 0.0, 0.0);
-	glutSolidCube(10.0);
+	
 
 
 	glViewport(0, 0, windowW, windowH);
 	glLoadIdentity();
 	//////////////////////////////////////////////
-
+	
 	glPushMatrix(); {
 		m_camera.LookAt();
 		glTranslated(KHM::Boat.x, KHM::Boat.y, KHM::Boat.z);
@@ -1225,6 +1232,21 @@ GLvoid drawScene(GLvoid)
 		draw_SEA();
 	}glPopMatrix();
 
+	glDisable(GL_LIGHTING);
+	glViewport(windowW - 200, windowH - 200, 200, 200);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho(-100.0, 100.0, -100.0, 100.0, -100.0, 100.0);
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix(); {
+	glColor4f(0.0, 1.0, 0.0, 1.0f);
+	glutWireCone(100, 1, 20, 4);
+	glColor4f(0.0, 0.2, 0.0, 0.5f);
+	glutSolidCone(100, 1, 20, 4);
+	glRotated(KHM::Boat.y_angle, 0, 0, 1);
+	glColor4f(1.0, 0.0, 0.0, 1.0f);
+	KDK::draw_rader_Whale();
+	}glPopMatrix();
 	glFlush(); // 화면에 출력하기
 	glutSwapBuffers(); // 화면에 출력하기
 }
