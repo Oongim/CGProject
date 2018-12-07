@@ -94,167 +94,6 @@ GLdouble rotateWC[16]
 0,0,0,1 };
 
 
-
-namespace KHM
-{
-	int MODE_OF_VIEW = 3; // 1 = 1인칭(작살), 3 = 3인칭 
-	float temp_distance = 500;
-	float temp_x_angle = 0;
-	float temp_y_angle = 0;
-	float Gauge = 0;
-
-	struct BOAT
-	{
-		bool is_forward = false;
-		int direction = KEEP;
-		bool is_breaking = false;
-		float speed = 0.0;
-		float velocity = 1;
-		float x, y, z;
-		float y_angle;
-	};
-	BOAT Boat;
-
-	struct HARPOON
-	{
-		float x_angle_2 = 0;
-		float y_angle = 0;
-		float x_angle = 0;
-		float x = 0;
-		float y = 0;
-		float z = 0;
-		float t = 0;
-		float power = 1000;
-		bool is_hit = false;
-		bool is_fired = false;
-	};
-	struct Node
-	{
-		HARPOON Harpoon;
-		Node * next;
-	};
-	Node * Head;
-	void Insert_Harpoon()
-	{
-		Node *New = new Node;
-		New->Harpoon.x = KHM::Boat.x + (70 * sin(KHM::Boat.y_angle * RADIAN));
-		New->Harpoon.y = KHM::Boat.y + HARPOON_Y;
-		New->Harpoon.z = KHM::Boat.z + (HARPOON_Z * cos(KHM::Boat.y_angle * RADIAN));
-		New->Harpoon.x_angle = KHM::temp_x_angle;
-		New->Harpoon.y_angle = KHM::Boat.y_angle;
-		New->Harpoon.x_angle_2 = KHM::temp_x_angle;
-		New->Harpoon.is_hit = false;
-		New->Harpoon.is_fired = false;
-
-		New->next = Head->next;
-		Head->next = New;
-	}
-	Node* Delete_Harpoon(Node * key)
-	{
-		Node*curr = Head->next;
-		Node*prev = Head;
-		while (curr != nullptr)
-		{
-			if (key == curr)
-			{
-				prev->next = curr->next;
-				delete curr;
-
-				return prev->next;
-			}
-			prev = curr;
-			curr = curr->next;
-		}
-	}
-	void shot_Harpoon()
-	{
-		Node *curr = Head->next;
-		KHM::temp_x_angle = curr->Harpoon.x_angle;
-		KHM::temp_y_angle = curr->Harpoon.y_angle;
-		//curr->Harpoon.fired_y_angle = KHM::Boat.y_angle;
-		curr->Harpoon.x_angle_2 = curr->Harpoon.x_angle;
-		curr->Harpoon.y_angle = KHM::Boat.y_angle;
-		curr->Harpoon.is_fired = true;
-		Insert_Harpoon();
-	}
-	void move_Harpoon()
-	{
-		Node* curr = Head->next;
-		while (curr != nullptr)
-		{
-			if (curr->Harpoon.is_fired)
-			{
-				curr->Harpoon.x = KHM::Boat.x + (70 * sin(curr->Harpoon.y_angle * RADIAN)) + curr->Harpoon.power * curr->Harpoon.t * cos(curr->Harpoon.x_angle * RADIAN) * sin(curr->Harpoon.y_angle * RADIAN);
-				curr->Harpoon.y = KHM::Boat.y + HARPOON_Y - curr->Harpoon.power * curr->Harpoon.t * sin(curr->Harpoon.x_angle * RADIAN) - (0.5 * 1000 * curr->Harpoon.t * curr->Harpoon.t);
-				curr->Harpoon.z = KHM::Boat.z + (HARPOON_Z * cos(curr->Harpoon.y_angle * RADIAN)) + curr->Harpoon.power * curr->Harpoon.t * cos(curr->Harpoon.x_angle * RADIAN) * cos(curr->Harpoon.y_angle * RADIAN);
-				//curr->Harpoon.y_angle = KHM::Boat.y_angle;
-				if (curr->Harpoon.t < 5)
-				{
-
-					curr->Harpoon.x_angle_2 += 0.5;
-					curr->Harpoon.t += 0.01;
-				}
-
-				//여기 어딘가에 타겟 맞췄을 때 is_hit  true로 바꾸는거
-				//맵의 범위를 넘었을 때 삭제
-			}
-			//if (curr->Harpoon.t >= 1)
-			if ((-50 < curr->Harpoon.x && curr->Harpoon.x < 50) && (-50 < curr->Harpoon.y && curr->Harpoon.y < 50) && (250 < curr->Harpoon.z && curr->Harpoon.z < 350))
-			{
-				cout << "명중" << endl;
-				curr = Delete_Harpoon(curr);
-			}
-			else if (curr->Harpoon.y <= -100)
-			{
-				cout << "지움" << endl;
-				curr = Delete_Harpoon(curr);
-			}
-			else curr = curr->next;
-		}
-	}
-	void draw_moving_Harpoon()
-	{
-		Node* curr = Head->next->next;
-		while (curr != nullptr)
-		{
-			glPushMatrix(); {
-				glBegin(GL_LINES);
-
-				glVertex3f(curr->Harpoon.x, curr->Harpoon.y, curr->Harpoon.z);
-				glVertex3f(check_x, check_y, check_z);
-
-
-				glEnd();
-				glTranslated(curr->Harpoon.x, curr->Harpoon.y, curr->Harpoon.z);
-				glRotatef(curr->Harpoon.y_angle, 0.0, 1.0, 0.0);
-				glRotatef(curr->Harpoon.x_angle_2, 1.0, 0.0, 0.0);
-				glPushMatrix(); {
-					glScalef(1.0, 1.0, 1.0);
-
-					glColor3f(1.0, 0.0, 1.0);
-					/*********************작살 봉*********************/
-					glPushMatrix(); {
-						glScalef(1.0, 1.0, 50.0);           //봉길이 50
-						glutSolidTorus(0.5, 1, 20, 20);
-					}glPopMatrix();
-					/*********************작살 촉*********************/
-					glColor3f(1.0, 0.0, 0.0);
-					glPushMatrix(); {
-						glTranslatef(0, 0, 25);
-						glScalef(1.0, 1.0, 1.0);
-						glutSolidCone(3, 5, 10, 10);
-						glTranslatef(0, 0, 3);
-						glutSolidCone(3, 5, 10, 10);
-						glTranslatef(0, 0, 3);
-						glutSolidCone(3, 5, 10, 10);
-					}glPopMatrix();
-				}glPopMatrix();
-			}glPopMatrix();
-			curr = curr->next;
-		}
-	}
-}
-
 namespace KDK {
 	float boat_hight = 120;
 	GLfloat left_ctrlpoints[3][4][3] = {
@@ -484,10 +323,19 @@ namespace KDK {
 		float phi, theta;
 	};
 	Whale whale[10];
+
 	void draw_basic_Whale(float x, float y, float z, int i)
 	{
 		glPushMatrix(); {
+			glBegin(GL_LINES);
+
+			glVertex3f(x, y, z);
+			glVertex3f(check_x, check_y, check_z);
+
+
+			glEnd();
 			glTranslatef(x, y, z);
+
 			glRotatef(whale[i].phi + 180, 0.0, 1.0, 0.0);
 
 			glRotatef(-whale[i].theta, 1.0, 0.0, 0.0);
@@ -664,6 +512,180 @@ namespace KDK {
 		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, GL_MODULATE);
 	}
 };
+namespace KHM
+{
+	int MODE_OF_VIEW = 3; // 1 = 1인칭(작살), 3 = 3인칭 
+	float temp_distance = 500;
+	float temp_x_angle = 0;
+	float temp_y_angle = 0;
+	float Gauge = 0;
+	float real_temp = 0;
+
+	struct BOAT
+	{
+		bool is_forward = false;
+		int direction = KEEP;
+		bool is_breaking = false;
+		float speed = 0.0;
+		float velocity = 1;
+		float x, y, z;
+		float y_angle;
+	};
+	BOAT Boat;
+
+	struct HARPOON
+	{
+		float x_angle = 0;
+		float x_angle_2 = 0;
+		float y_angle = 0;
+		float y_angle_2 = 0;
+		float real_temp_2 = 0;
+		float x = 0;
+		float y = 0;
+		float z = 0;
+		float t = 0;
+		float power = 1000;
+		bool is_hit = false;
+		bool is_fired = false;
+	};
+	struct Node
+	{
+		HARPOON Harpoon;
+		Node * next;
+	};
+	Node * Head;
+	void Insert_Harpoon()
+	{
+		Node *New = new Node;
+		New->Harpoon.x = KHM::Boat.x + (70 * sin(KHM::Boat.y_angle * RADIAN));
+		New->Harpoon.y = KHM::Boat.y + HARPOON_Y;
+		New->Harpoon.z = KHM::Boat.z + (HARPOON_Z * cos(KHM::Boat.y_angle * RADIAN));
+		New->Harpoon.x_angle = KHM::temp_x_angle;
+		New->Harpoon.y_angle = KHM::temp_y_angle;
+		New->Harpoon.x_angle_2 = KHM::temp_x_angle;
+		New->Harpoon.y_angle_2 = KHM::temp_y_angle;
+		New->Harpoon.real_temp_2 = KHM::real_temp;
+		New->Harpoon.is_hit = false;
+		New->Harpoon.is_fired = false;
+
+		New->next = Head->next;
+		Head->next = New;
+	}
+	Node* Delete_Harpoon(Node * key)
+	{
+		Node*curr = Head->next;
+		Node*prev = Head;
+		while (curr != nullptr)
+		{
+			if (key == curr)
+			{
+				prev->next = curr->next;
+				delete curr;
+
+				return prev->next;
+			}
+			prev = curr;
+			curr = curr->next;
+		}
+	}
+	void shot_Harpoon()
+	{
+		Node *curr = Head->next;
+		KHM::temp_x_angle = curr->Harpoon.x_angle; //쏜후 초기화될 작살총 각도 저장
+		KHM::temp_y_angle = curr->Harpoon.y_angle; //쏜후 초기화될 작살총 각도 저장
+		curr->Harpoon.x_angle_2 = curr->Harpoon.x_angle;
+		curr->Harpoon.y_angle = KHM::Boat.y_angle;
+		curr->Harpoon.y_angle_2 = KHM::temp_y_angle;
+		curr->Harpoon.real_temp_2 = KHM::real_temp;
+		curr->Harpoon.is_fired = true;
+		Insert_Harpoon();
+	}
+	void move_Harpoon()
+	{
+		Node* curr = Head->next;
+		while (curr != nullptr)
+		{
+			if (curr->Harpoon.is_fired)
+			{
+				curr->Harpoon.x = KHM::Boat.x + (70 * sin(curr->Harpoon.y_angle * RADIAN)) + curr->Harpoon.power * curr->Harpoon.t * cos(curr->Harpoon.x_angle * RADIAN) * sin((curr->Harpoon.y_angle + curr->Harpoon.real_temp_2) * RADIAN);
+				curr->Harpoon.y = KHM::Boat.y + HARPOON_Y - curr->Harpoon.power * curr->Harpoon.t * sin(curr->Harpoon.x_angle * RADIAN) - (0.5 * 1000 * curr->Harpoon.t * curr->Harpoon.t);
+				curr->Harpoon.z = KHM::Boat.z + (HARPOON_Z * cos(curr->Harpoon.y_angle * RADIAN)) + curr->Harpoon.power * curr->Harpoon.t * cos(curr->Harpoon.x_angle * RADIAN) * cos((curr->Harpoon.y_angle + curr->Harpoon.real_temp_2)* RADIAN);
+				//curr->Harpoon.y_angle = curr->Harpoon.y_angle;
+				if (curr->Harpoon.t < 5)
+				{
+					curr->Harpoon.x_angle_2 += 0.5;//떨어지는 작살각도 증가
+					curr->Harpoon.t += 0.01;
+				}
+
+				//여기 어딘가에 타겟 맞췄을 때 is_hit  true로 바꾸는거
+				//맵의 범위를 넘었을 때 삭제
+				for (int i = 0; i < 10; i++)
+				{
+					if ((KDK::whale[i].x - 50 <= curr->Harpoon.x && curr->Harpoon.x <= KDK::whale[i].x + 50) && (KDK::whale[i].y - 50 <= curr->Harpoon.y && curr->Harpoon.y <= KDK::whale[i].y + 50) && (KDK::whale[i].z - 50 <= curr->Harpoon.z && curr->Harpoon.z <= KDK::whale[i].z + 50))
+					{
+						cout << "명중" << endl;
+						curr = Delete_Harpoon(curr);
+						break;
+					}
+					else if (curr->Harpoon.y <= -500)
+					{
+						curr = Delete_Harpoon(curr);
+						break;
+					}
+				}
+			}
+			if (curr == nullptr)
+				break;
+			curr = curr->next;
+			
+			
+		}
+	}
+	void draw_moving_Harpoon() //움직이는 작살 그림그리기
+	{
+		Node* curr = Head->next->next;
+		while (curr != nullptr)
+		{
+			glPushMatrix(); {
+				glBegin(GL_LINES);
+
+				glVertex3f(curr->Harpoon.x, curr->Harpoon.y, curr->Harpoon.z);
+				glVertex3f(check_x, check_y, check_z);
+
+
+				glEnd();
+
+				glTranslated(curr->Harpoon.x, curr->Harpoon.y, curr->Harpoon.z); //실제로 작살 움직이게 하기
+				glRotatef(curr->Harpoon.y_angle + curr->Harpoon.real_temp_2, 0.0, 1.0, 0.0);//날아가는 작살이 보고있는 각도
+				glRotatef(curr->Harpoon.x_angle_2, 1.0, 0.0, 0.0);//떨어지는 작살의 각도
+				glPushMatrix(); {
+					glScalef(1.0, 1.0, 1.0);
+
+					glColor3f(1.0, 0.0, 1.0);
+					/*********************작살 봉*********************/
+					glPushMatrix(); {
+						glScalef(1.0, 1.0, 50.0);           //봉길이 50
+						glutSolidTorus(0.5, 1, 20, 20);
+					}glPopMatrix();
+					/*********************작살 촉*********************/
+					glColor3f(1.0, 0.0, 0.0);
+					glPushMatrix(); {
+						glTranslatef(0, 0, 25);
+						glScalef(1.0, 1.0, 1.0);
+						glutSolidCone(3, 5, 10, 10);
+						glTranslatef(0, 0, 3);
+						glutSolidCone(3, 5, 10, 10);
+						glTranslatef(0, 0, 3);
+						glutSolidCone(3, 5, 10, 10);
+					}glPopMatrix();
+				}glPopMatrix();
+			}glPopMatrix();
+			curr = curr->next;
+		}
+	}
+}
+
+
 void drawCylinder(GLfloat radius, GLfloat h)
 {
 	GLfloat x, y, angle, centerx = 0, centery = 0, centerz = 0;
@@ -937,10 +959,12 @@ void Motion(int x, int y)
 			if (KHM::Head->next->Harpoon.y_angle >= -28.6472)
 			{
 				KHM::Head->next->Harpoon.y_angle -= 2.86472;
+
 			}
 		}
 		else
 		{
+			//KHM::Head->next->Harpoon.y_angle = 0;
 			m_camera.Rotate(0.05, 0);
 		}
 	}
@@ -955,6 +979,7 @@ void Motion(int x, int y)
 		}
 		else
 		{
+			//KHM::Head->next->Harpoon.y_angle = 0;
 			m_camera.Rotate(-0.05, 0);
 		}
 	}
@@ -970,6 +995,7 @@ void Motion(int x, int y)
 		}
 		else
 		{
+			KHM::Head->next->Harpoon.x_angle = 0;
 			m_camera.Rotate(0, -0.05);
 		}
 	}
@@ -984,6 +1010,7 @@ void Motion(int x, int y)
 		}
 		else
 		{
+			KHM::Head->next->Harpoon.x_angle = 0;
 			m_camera.Rotate(0, 0.05);
 		}
 	}
@@ -1145,7 +1172,7 @@ void main(int argc, char *argv[])
 	glutReshapeFunc(Reshape);
 	glutKeyboardFunc(Keyboard);                  // 키보드 입력 콜백 함수
 	glutKeyboardUpFunc(UpKeyboard);                  // 키보드 입력 콜백 함수
-	glutTimerFunc(10, Timerfunction, 1);         // 타이머 함수 설정
+	glutTimerFunc(20, Timerfunction, 1);         // 타이머 함수 설정
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glEnable(GL_TEXTURE_2D);
@@ -1295,6 +1322,8 @@ void Keyboard(unsigned char key, int x, int y)
 	case 'f':
 		//if (KHM::MODE_OF_VIEW == 1)
 		//{
+
+		//KHM::real_temp = KHM::Head->next->Harpoon.y_angle;
 		KHM::shot_Harpoon();
 
 		//KHM::Gauge++;
@@ -1338,17 +1367,19 @@ void UpKeyboard(unsigned char key, int x, int y)
 		KHM::Boat.is_breaking = false;
 		break;
 	case 'f':
-		if (KHM::Gauge >= 2)
-		{
-			KHM::shot_Harpoon();
-		}
-		KHM::Gauge = 0;
+		//KHM::real_temp = KHM::Head->next->Harpoon.y_angle;
+		//if (KHM::Gauge >= 2)
+		//{
+		//	KHM::shot_Harpoon();
+		//}
+		//KHM::Gauge = 0;
 		break;
 	}
 }
 
 void Timerfunction(int value)
 {
+
 	glPushMatrix(); {
 		KHM::move_Harpoon();
 	}glPopMatrix();
@@ -1397,6 +1428,10 @@ void Timerfunction(int value)
 	//===========================================================================================
 	KDK::update_Whale();
 
+	//cout << KDK::whale[0].x << endl;
+	//cout << KDK::whale[0].y << endl;
+	//cout << KDK::whale[0].z << endl;
+	KHM::real_temp = KHM::Head->next->Harpoon.y_angle;
 	glutPostRedisplay();                  // 화면 재출력
-	glutTimerFunc(10, Timerfunction, 1);      // 타이머함수 재설정
+	glutTimerFunc(20, Timerfunction, 1);      // 타이머함수 재설정
 }
