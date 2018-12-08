@@ -527,7 +527,7 @@ namespace KHM
 		int direction = KEEP;
 		bool is_breaking = false;
 		float speed = 0.0;
-		float velocity = 1;
+		float velocity = 0.025;
 		float x, y, z;
 		float y_angle;
 	};
@@ -538,7 +538,7 @@ namespace KHM
 		float x_angle = 0;
 		float x_angle_2 = 0;
 		float y_angle = 0;
-		float y_angle_2 = 0;
+		//float y_angle_2 = 0;
 		float real_temp_2 = 0;
 		float x = 0;
 		float y = 0;
@@ -551,6 +551,7 @@ namespace KHM
 	struct Node
 	{
 		HARPOON Harpoon;
+		BOAT Boat;
 		Node * next;
 	};
 	Node * Head;
@@ -563,12 +564,12 @@ namespace KHM
 		New->Harpoon.x_angle = KHM::temp_x_angle;
 		New->Harpoon.y_angle = KHM::temp_y_angle;
 		New->Harpoon.x_angle_2 = KHM::temp_x_angle;
-		New->Harpoon.y_angle_2 = KHM::temp_y_angle;
+		//New->Harpoon.y_angle_2 = KHM::temp_y_angle;
 		New->Harpoon.real_temp_2 = KHM::real_temp;
 		New->Harpoon.is_hit = false;
 		New->Harpoon.is_fired = false;
-
 		New->next = Head->next;
+		New->Boat.z ;
 		Head->next = New;
 	}
 	Node* Delete_Harpoon(Node * key)
@@ -595,7 +596,7 @@ namespace KHM
 		KHM::temp_y_angle = curr->Harpoon.y_angle; //쏜후 초기화될 작살총 각도 저장
 		curr->Harpoon.x_angle_2 = curr->Harpoon.x_angle;
 		curr->Harpoon.y_angle = KHM::Boat.y_angle;
-		curr->Harpoon.y_angle_2 = KHM::temp_y_angle;
+		//curr->Harpoon.y_angle_2 = KHM::temp_y_angle;
 		curr->Harpoon.real_temp_2 = KHM::real_temp;
 		curr->Harpoon.is_fired = true;
 		Insert_Harpoon();
@@ -964,7 +965,6 @@ void Motion(int x, int y)
 		}
 		else
 		{
-			//KHM::Head->next->Harpoon.y_angle = 0;
 			m_camera.Rotate(0.05, 0);
 		}
 	}
@@ -979,7 +979,6 @@ void Motion(int x, int y)
 		}
 		else
 		{
-			//KHM::Head->next->Harpoon.y_angle = 0;
 			m_camera.Rotate(-0.05, 0);
 		}
 	}
@@ -1393,7 +1392,7 @@ void Timerfunction(int value)
 	//======================================================================================
 	if (KHM::Boat.is_forward == true)
 	{
-		if (KHM::Boat.speed < 10.0)
+		if (KHM::Boat.speed < 5.0)
 		{
 			KHM::Boat.speed += KHM::Boat.velocity;
 		}
@@ -1419,11 +1418,12 @@ void Timerfunction(int value)
 
 	if (KHM::Boat.direction == LEFT)
 	{
-		KHM::Boat.y_angle++;
+		KHM::Boat.y_angle+= KHM::Boat.speed / 5 + 0.5;
+		//glRotatef(-(KHM::Boat.speed * 5 + 0.1), 0.0, 1.0, 0.0);
 	}
 	else if (KHM::Boat.direction == RIGHT)
 	{
-		KHM::Boat.y_angle--;
+		KHM::Boat.y_angle-= KHM::Boat.speed / 5 + 0.5;
 	}
 	//===========================================================================================
 	KDK::update_Whale();
