@@ -1,75 +1,83 @@
 ﻿  소스.cpp
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(71): warning C4244: '=': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(128): warning C4244: '=': 'int'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(129): warning C4244: '=': 'int'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(140): warning C4244: '=': 'int'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(274): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(280): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(286): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(292): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(303): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(461): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(476): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(485): warning C4244: '인수': 'int'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(495): warning C4244: '인수': 'int'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(503): warning C4244: '인수': 'int'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(510): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(518): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(541): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(542): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(543): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(546): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(547): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(548): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(592): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(593): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(594): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(596): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(598): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(676): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(678): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(726): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(727): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(728): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(733): warning C4305: '+=': 'double'에서 'float'(으)로 잘립니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(824): warning C4305: '+=': 'double'에서 'GLfloat'(으)로 잘립니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(834): warning C4305: '+=': 'double'에서 'GLfloat'(으)로 잘립니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(847): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(847): warning C4305: '-=': 'double'에서 'GLfloat'(으)로 잘립니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(952): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(959): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(965): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(977): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(983): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(989): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1007): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1023): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1035): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1041): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1043): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1048): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1088): warning C4305: '-=': 'double'에서 'float'(으)로 잘립니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1095): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1104): warning C4305: '+=': 'double'에서 'float'(으)로 잘립니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1110): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1120): warning C4305: '+=': 'double'에서 'float'(으)로 잘립니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1126): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1135): warning C4305: '-=': 'double'에서 'float'(으)로 잘립니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1141): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1225): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1234): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1266): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1287): warning C4326: 'main'의 반환 형식이 'int'이어야 하는데 'void'입니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1288): warning C4244: '인수': 'time_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1387): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1406): warning C4244: '인수': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1503): warning C4244: '인수': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1512): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1583): warning C4244: '+=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1584): warning C4244: '+=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\camera.h(80): warning C4305: '=': 'double'에서 'float'(으)로 잘립니다.
-  c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\camera.h(79): note: 클래스 템플릿 멤버 함수 'void Camera<float3>::Initialize_radian(void)'을(를) 컴파일하고 있습니다.
-  c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1499): note: 컴파일 중인 함수 템플릿 인스턴스화 'void Camera<float3>::Initialize_radian(void)'에 대한 참조를 확인하십시오.
-  c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(28): note: 컴파일 중인 클래스 템플릿 인스턴스화 'Camera<float3>'에 대한 참조를 확인하세요.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(706): warning C4715: 'KHM::Delete_Harpoon': 모든 제어 경로에서 값을 반환하지는 않습니다.
-  FinalProject.vcxproj -> C:\Users\강동균\Documents\GitHub\CGProject\KDK\FinalProject\Debug\FinalProject.exe
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(81): warning C4244: '=': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(139): warning C4244: '=': 'int'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(140): warning C4244: '=': 'int'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(151): warning C4244: '=': 'int'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(286): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(292): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(298): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(304): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(315): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(476): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(491): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(500): warning C4244: '인수': 'int'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(510): warning C4244: '인수': 'int'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(518): warning C4244: '인수': 'int'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(525): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(533): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(557): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(558): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(559): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(562): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(563): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(564): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(613): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(614): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(615): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(617): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(619): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(766): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(768): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(816): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(817): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(818): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(823): warning C4305: '+=': 'double'에서 'float'(으)로 잘립니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(940): warning C4244: '인수': 'int'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(944): warning C4244: '인수': 'int'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(951): warning C4244: '인수': 'int'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(955): warning C4244: '인수': 'int'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(985): warning C4305: '+=': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(995): warning C4305: '+=': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1008): warning C4305: '=': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1008): warning C4305: '-=': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1113): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1120): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1126): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1138): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1144): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1150): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1168): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1184): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1196): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1202): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1204): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1209): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1249): warning C4305: '-=': 'double'에서 'float'(으)로 잘립니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1256): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1265): warning C4305: '+=': 'double'에서 'float'(으)로 잘립니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1271): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1281): warning C4305: '+=': 'double'에서 'float'(으)로 잘립니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1287): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1296): warning C4305: '-=': 'double'에서 'float'(으)로 잘립니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1302): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1404): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1440): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1449): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1481): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1502): warning C4326: 'main'의 반환 형식이 'int'이어야 하는데 'void'입니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1503): warning C4244: '인수': 'time_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1596): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1615): warning C4244: '인수': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1712): warning C4244: '인수': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1721): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1792): warning C4244: '+=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1793): warning C4244: '+=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1797): warning C4244: '+=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1801): warning C4244: '-=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\camera.h(80): warning C4305: '=': 'double'에서 'float'(으)로 잘립니다.
+  c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\camera.h(79): note: 클래스 템플릿 멤버 함수 'void Camera<float3>::Initialize_radian(void)'을(를) 컴파일하고 있습니다.
+  c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1708): note: 컴파일 중인 함수 템플릿 인스턴스화 'void Camera<float3>::Initialize_radian(void)'에 대한 참조를 확인하십시오.
+  c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(38): note: 컴파일 중인 클래스 템플릿 인스턴스화 'Camera<float3>'에 대한 참조를 확인하세요.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(660): warning C4715: 'KDK::delete_Spray': 모든 제어 경로에서 값을 반환하지는 않습니다.
+c:\users\kdk\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(796): warning C4715: 'KHM::Delete_Harpoon': 모든 제어 경로에서 값을 반환하지는 않습니다.
+  FinalProject.vcxproj -> C:\Users\kdk\Documents\GitHub\CGProject\KDK\FinalProject\Debug\FinalProject.exe

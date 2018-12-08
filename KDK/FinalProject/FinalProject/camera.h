@@ -70,7 +70,7 @@ public:
 	void Rotate(float v, float h)
 	{
 		m_vertical += v;
-		if (-PI * 0.5f < m_horizontal + h && m_horizontal + h < PI * 0.5f)
+		if (-PI * 0.5f < m_horizontal + h && m_horizontal + h <0)
 			m_horizontal += h;
 
 	}

@@ -22,6 +22,16 @@ float check_x = 0;
 float check_y = 0;
 float check_z = 0;
 int windowW, windowH;
+GLfloat AmbientLight[] = { 0.0f, 1.0f, 0.0f, 1.0f }; // 녹색조명
+GLfloat DiffuseLight[] = { 1.0f, 0.0f, 0.0f, 1.0f }; // 적색조명
+GLfloat SpecularLight[] = { 1.0, 1.0, 1.0, 1.0 }; // 백색조명
+GLfloat lightPos[] = { 100.0, 100.0, 200.0, 1.0 }; // 위치: (10, 5, 20)
+
+GLfloat ambientLight[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+GLfloat specref[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+const char *shot_string[] = {
+	"NOT READY" ,"CHARGING","READY"
+};
 GLvoid drawScene(GLvoid);
 GLvoid Reshape(int w, int h);
 
@@ -116,7 +126,8 @@ namespace KDK {
 	{ { 0.0, 50.0, -100.0 },{ 0.0, -25.0, -100.0 },{ 0.0, -50, -100.0 } },
 	{ { -50.0, 50.0, -100.0 },{ -50.0, -25.0, -100.0 },{ 0.0, -50.0, -100.0 } }
 	};
-	const int number_of_wave_pivots = 30;
+	/////////////////////////////////파도/////////////////////////////////////////////////////
+	const int number_of_wave_pivots = 8;
 	const int wave_speed = 1;
 	GLfloat wave_pivots[number_of_wave_pivots][number_of_wave_pivots][3];
 	int wave_velocity[number_of_wave_pivots][number_of_wave_pivots] = { 0 };
@@ -125,9 +136,9 @@ namespace KDK {
 		for (int i = 0; i < number_of_wave_pivots; ++i)
 		{
 			for (int j = 0; j < number_of_wave_pivots; ++j) {
-				wave_pivots[i][j][0] = ((WORLD_SCALE * 2) / (number_of_wave_pivots-1)) * i - WORLD_SCALE;
-				wave_pivots[i][j][2] = ((WORLD_SCALE * 2) / (number_of_wave_pivots-1)) * j - WORLD_SCALE;
-				if (i == 0 && j == 0 || i == number_of_wave_pivots-1 && j == number_of_wave_pivots - 1 ||
+				wave_pivots[i][j][0] = ((WORLD_SCALE * 2) / (number_of_wave_pivots - 1)) * i - WORLD_SCALE;
+				wave_pivots[i][j][2] = ((WORLD_SCALE * 2) / (number_of_wave_pivots - 1)) * j - WORLD_SCALE;
+				if (i == 0 && j == 0 || i == number_of_wave_pivots - 1 && j == number_of_wave_pivots - 1 ||
 					i == 0 && j == number_of_wave_pivots - 1 || i == number_of_wave_pivots - 1 && j == 0)
 				{
 
@@ -137,7 +148,7 @@ namespace KDK {
 				else
 				{
 
-					wave_pivots[i][j][1] = rand() % 500 - 250;
+					wave_pivots[i][j][1] = rand() % 300 - 150;
 					if (rand() % 2)
 						wave_velocity[i][j] = wave_speed;
 					else
@@ -173,6 +184,7 @@ namespace KDK {
 			//glPointSize(2.0);
 		}glPopMatrix();
 	}
+	///////////////////////////////맵////////////////////////////////////////////////////////
 	const int SEAWEED_NUM = 40;
 	GLdouble random_seaweed[SEAWEED_NUM][3];
 	void init_seaweed_postion()
@@ -274,25 +286,25 @@ namespace KDK {
 				glColor3f(1, 0, 0.6);
 				//glRotated(30, 1, 0, 0);
 				glTranslated(-2000, 0, 800);
-				draw_pyramid(1500);
+				draw_pyramid(2000);
 			}glPopMatrix();
 			glPushMatrix(); {
 				glColor3f(1, 0.7, 0.6);
 				//glRotated(270, 0, 0, 1);
-				glTranslated(-1200, 0, -2018);
-				draw_pyramid(1500);
+				glTranslated(-1000, 0, -2500);
+				draw_pyramid(2000);
 			}glPopMatrix();
 			glPushMatrix(); {
 				glColor3f(0.3, 0.7, 0.6);
 				//glRotated(135, 1, 0, 1);
 				glTranslated(2500, 0, 100);
-				draw_pyramid(1500);
+				draw_pyramid(2000);
 			}glPopMatrix();
 			glPushMatrix(); {
 				glColor3f(0.2, 0.2, 0.2);
 				//glRotated(-90, 1, 0, 0);
-				glTranslated(+1000, 0, 2000);
-				draw_pyramid(1500);
+				glTranslated(+1000, 0, 3000);
+				draw_pyramid(2000);
 			}glPopMatrix();
 			/************************************해초************************************************************/
 
@@ -329,6 +341,7 @@ namespace KDK {
 
 		}glPopMatrix();
 	}
+	////////////////////////////////고래///////////////////////////////////////////////////////
 	void drawRect(float size, float x, float y, float z)
 	{
 		glPushMatrix(); {
@@ -371,7 +384,7 @@ namespace KDK {
 	}
 	void draw_face_Rect(float size)
 	{
-		
+
 		glPushMatrix(); {
 			glBegin(GL_QUADS);
 			//윗면
@@ -412,7 +425,7 @@ namespace KDK {
 
 			glEnd();
 		}glPopMatrix();
-		
+
 	}
 	struct Whale {
 		float x, y, z;
@@ -423,6 +436,8 @@ namespace KDK {
 		int Tail_Radian;
 		int tail_moveRange[2];
 		float phi, theta;
+		int HP;
+		bool isRun_away;
 	};
 	Whale whale[10];
 
@@ -535,6 +550,7 @@ namespace KDK {
 	void init_Whale()
 	{
 		for (int i = 0; i < 10; ++i) {
+			whale[i].HP = 100;
 			whale[i].tail_moveVelocity = 3;
 			whale[i].move_Velocity = 3;
 			whale[i].Tail_Radian = -45;
@@ -589,6 +605,11 @@ namespace KDK {
 				whale[i].y>whale[i].next_y - whale[i].move_Velocity&&whale[i].y<whale[i].next_y + whale[i].move_Velocity&&
 				whale[i].z>whale[i].next_z - whale[i].move_Velocity&&whale[i].z < whale[i].next_z + whale[i].move_Velocity)
 			{
+				if (whale[i].isRun_away)
+				{
+					whale[i].isRun_away = false;
+					whale[i].move_Velocity -= 2;
+				}
 				whale[i].next_x = rand() % WORLD_SCALE - WORLD_SCALE / 2;
 				whale[i].next_z = rand() % WORLD_SCALE - WORLD_SCALE / 2;
 				whale[i].next_y = -rand() % 400;
@@ -596,11 +617,69 @@ namespace KDK {
 			whale[i].phi = ((atan2((whale[i].next_x - whale[i].x), (whale[i].next_z - whale[i].z))) * 180 / PI);
 
 			whale[i].theta = acos((whale[i].next_y - whale[i].y) / normal_r) * 180 / PI - 90;
-			//whale[i].theta = std::min(whale[i].theta, 180 - whale[i].theta);
 		}
 	}
+	void run_away_Whale(float boat_x, float boat_y, float boat_z,int num)
+	{
+		whale[num].isRun_away = true;
+		whale[num].move_Velocity += 2;
+		whale[num].next_x = whale[num].x + whale[num].x - boat_x;
+		whale[num].next_y = whale[num].y + whale[num].y - boat_y;
+		whale[num].next_z = whale[num].z + whale[num].z - boat_z;
+		whale[num].HP -= rand() % 10 + 20;
+	}
+	/////////////////////////////////물보라//////////////////////////////////////////////////////
+	struct Spray {
+		float x, y, z;
+		float angleY;
+		int count;
+
+	};
+	struct Node {
+		Spray spray_of_water;
+		Node * next;
+	};
+	Node *Head;
+	void Insert_Spray();
+	Node* delete_Spray(Node *del)
+	{
+		Node*curr = Head->next;
+		Node*prev = Head;
+		while (curr != nullptr)
+		{
+			if (del == curr)
+			{
+				prev->next = curr->next;
+				delete curr;
+
+				return prev->next;
+			}
+			prev = curr;
+			curr = curr->next;
+		}
+	}
+	void update_Spray()
+	{
+		Node*curr = Head->next;
+		while (curr != nullptr)
+		{
+			curr->spray_of_water.count++;
+			if (curr->spray_of_water.count == 50)
+				curr = delete_Spray(curr);
+			if (curr == nullptr)
+				break;
+			curr = curr->next;
+
+		}
+	}
+	void draw_spray_of_water();
+
+
 	void initiallize()
 	{
+		Head = new Node;
+		Head->spray_of_water.x = NULL;
+		Head->next = nullptr;
 		init_seaweed_postion();
 		init_Whale();
 		init_wave_pivots();
@@ -626,7 +705,18 @@ namespace KDK {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, GL_MODULATE);
+
+		glBindTexture(GL_TEXTURE_2D, textures[2]);
+		pBytes = LoadDIBitmap("background.bmp", &info);
+		glTexImage2D(GL_TEXTURE_2D, 0, 4, 1920, 900, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, pBytes);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, GL_MODULATE);
 	}
+
 };
 namespace KHM
 {
@@ -643,7 +733,7 @@ namespace KHM
 		int direction = KEEP;
 		bool is_breaking = false;
 		float speed = 0.0;
-		float velocity = 1;
+		float velocity = 0.25;
 		float x, y, z;
 		float y_angle;
 	};
@@ -741,6 +831,7 @@ namespace KHM
 					{
 						cout << "명중" << endl;
 						curr = Delete_Harpoon(curr);
+						KDK::run_away_Whale(Boat.x, Boat.y, Boat.z, i);
 						break;
 					}
 					else if (curr->Harpoon.y <= -500)
@@ -800,7 +891,77 @@ namespace KHM
 		}
 	}
 }
+void KDK::Insert_Spray()
+{
+	Node *New = new Node;
+	New->spray_of_water.z = KHM::Boat.z;
+	New->spray_of_water.y = KHM::Boat.y;
+	New->spray_of_water.x = KHM::Boat.x;
+	New->spray_of_water.count = 0;
+	New->spray_of_water.angleY = KHM::Boat.y_angle;
 
+	New->next = Head->next;
+	Head->next = New;
+}
+void KDK::draw_spray_of_water()
+{
+	Node*curr = Head->next;
+	while (curr != nullptr) {
+		glPushMatrix(); {
+			glPointSize(5.0);
+			glColor3f(0.0, 0.0, 1.0);
+
+			if (curr->spray_of_water.count <= 10) {
+				glPushMatrix(); {
+					glTranslatef(KHM::Boat.x, KHM::Boat.y, KHM::Boat.z);
+					glRotatef(curr->spray_of_water.angleY, 0, 1, 0);
+					glTranslatef(0, 0, 100);
+					glPushMatrix(); {
+
+							for (int j = 0; j < 10; ++j)
+							{
+								int rand_r = rand() % 30;
+								glTranslated(rand_r*sin(rand()%180 * RADIAN)*cos(rand() % 360 * RADIAN),
+									rand_r *sin(rand() % 180 * RADIAN)*sin(rand() % 360 * RADIAN),
+									rand_r *cos((rand() % 90 +90)* RADIAN));
+								glBegin(GL_POINTS);
+		
+								glVertex3f(0, 0, 0);
+								glEnd();
+							}
+					}glPopMatrix();
+				}glPopMatrix();
+			}
+
+			glTranslatef(curr->spray_of_water.x, curr->spray_of_water.y, curr->spray_of_water.z);
+			glRotatef(curr->spray_of_water.angleY, 0, 1, 0);
+
+			glPushMatrix(); {
+				glTranslatef(curr->spray_of_water.count * 1+rand()%2, 0, 80);
+				glBegin(GL_POINTS);
+				glVertex3f(0, 2, 0);
+				glEnd();
+				glTranslatef(curr->spray_of_water.count * 1 + rand() % 2, 0, 0);
+				glBegin(GL_POINTS);
+				glVertex3f(10, 0, 0);
+				glEnd();
+			}glPopMatrix();
+
+			glPushMatrix(); {
+				glTranslatef(-curr->spray_of_water.count * 1 - rand() % 2, 0, 80);
+				glBegin(GL_POINTS);
+				glVertex3f(0, 2, 0);
+				glEnd();
+				glTranslatef(-curr->spray_of_water.count *1 - rand() % 2, 0, 0);
+				glBegin(GL_POINTS);
+				glVertex3f(-10, 0, 0);
+				glEnd();
+			}glPopMatrix();
+		}glPopMatrix();
+
+		curr = curr->next;
+	}
+}
 void draw_rader_Whale()
 {
 	for (int i = 0; i < 10; i++) {
@@ -1164,14 +1325,68 @@ void draw_SEA()
 	glutSolidCube(WORLD_SCALE);
 	glPopMatrix();
 }
+void drawRect_BG(float size)
+{
+	glBindTexture(GL_TEXTURE_2D, textures[2]);
+	/*glEnable(GL_TEXTURE_GEN_S);
+	glEnable(GL_TEXTURE_GEN_T);
+	glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
+	glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
+	glutSolidSphere(size, 50, 50);*/
+	glPushMatrix(); {
+		glBegin(GL_QUADS);
+
+		glTexCoord2f(0.0f, 1.0f);
+		glVertex3f(-size / 2, size, size / 2);//2
+		glTexCoord2f(0.0f, 0.0f);
+		glVertex3f(-size / 2, -size, size / 2);//6
+		glTexCoord2f(0.25f, 0.0f);
+		glVertex3f(size / 2, -size , size / 2);//7
+		glTexCoord2f(0.25f, 1.0f);
+		glVertex3f(size / 2, size , size / 2);//3
+											 //오른쪽옆면
+		glTexCoord2f(0.25f, 1.0f);
+		glVertex3f(size / 2, size , size / 2);//3
+		glTexCoord2f(0.25f, 0.0f);
+		glVertex3f(size / 2, -size , size / 2);//7
+		glTexCoord2f(0.5f, 0.0f);
+		glVertex3f(size / 2, -size , -size / 2);//8
+		glTexCoord2f(0.5f, 1.0f);
+		glVertex3f(size / 2, size , -size / 2);//4
+											  //왼쪽옆면
+		glTexCoord2f(0.75f, 1.0f);
+		glVertex3f(-size / 2, size , -size / 2);//1
+		glTexCoord2f(0.75f, 0.0f);
+		glVertex3f(-size / 2, -size, -size / 2);//5
+		glTexCoord2f(1.0f, 0.0f);
+		glVertex3f(-size / 2, -size, size / 2);//6
+		glTexCoord2f(1.0f, 1.0f);
+		glVertex3f(-size / 2, size , size / 2);//2
+											  //뒷면
+		glTexCoord2f(0.5f, 1.0f);
+		glVertex3f(size / 2, size , -size / 2);//4
+		glTexCoord2f(0.5f, 0.0f);
+		glVertex3f(size / 2, -size , -size / 2);//8
+		glTexCoord2f(0.75f, 0.0f);
+		glVertex3f(-size / 2, -size, -size / 2);//5
+		glTexCoord2f(0.75f, 1.0f);
+		glVertex3f(-size / 2, size , -size / 2);//1
+		glEnd();
+		//glDisable(GL_TEXTURE_GEN_S);
+		//glDisable(GL_TEXTURE_GEN_T);
+	}glPopMatrix();
+}
 void draw_SKY()
 {
 	glPushMatrix();
-	glScaled(2, 1, 2);
-
+	glTranslated(0, WORLD_SCALE / 4, 0);
+	glEnable(GL_TEXTURE_2D);
+	
 	glColor4f(0.1f, 0.3f, 1.0f, 1.0f);
-	glutSolidCube(WORLD_SCALE + 4000);
+	drawRect_BG(WORLD_SCALE*2+10);
+	glDisable(GL_TEXTURE_2D);
 	glPopMatrix();
+
 }
 void draw_BOAT()
 {
@@ -1186,7 +1401,7 @@ void draw_BOAT()
 			glMapGrid2f(10, 0.0, 1.0, 10, 0.0, 1.0);
 			// 선을 이용하여 그리드 연결
 			glEvalMesh2(GL_FILL, 0, 10, 0, 10);
-			glColor3f(1.0, 1.0, 1.0);
+			glColor3f(0.8, 0.3, 0.3);
 		}glPopMatrix();
 		glPushMatrix(); {
 			// 곡면 제어점 설정
@@ -1308,13 +1523,7 @@ void main(int argc, char *argv[])
 	glutMainLoop();
 }
 // 윈도우 출력 함수
-GLfloat AmbientLight[] = { 0.0f, 1.0f, 0.0f, 1.0f }; // 녹색조명
-GLfloat DiffuseLight[] = { 1.0f, 0.0f, 0.0f, 1.0f }; // 적색조명
-GLfloat SpecularLight[] = { 1.0, 1.0, 1.0, 1.0 }; // 백색조명
-GLfloat lightPos[] = { 10.0, 5.0, 20.0, 1.0 }; // 위치: (10, 5, 20)
-const char *shot_string[] = {
-	"NOT READY" ,"CHARGING","READY"
-};
+
 GLvoid drawScene(GLvoid)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -1328,8 +1537,7 @@ GLvoid drawScene(GLvoid)
 	glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
 	glEnable(GL_LIGHT0);
 
-	GLfloat ambientLight[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-	GLfloat specref[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+
 	// 조명 효과를 설정한다.
 	glEnable(GL_LIGHTING);
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientLight);
@@ -1363,6 +1571,7 @@ GLvoid drawScene(GLvoid)
 
 	glPushMatrix(); {
 		KHM::draw_moving_Harpoon();
+		KDK::draw_spray_of_water();
 	}glPopMatrix();
 
 	glPushMatrix(); {
@@ -1400,19 +1609,19 @@ GLvoid drawScene(GLvoid)
 		glOrtho(-150.0, 150.0, -100.0, 100.0, -100.0, 100.0);
 		glMatrixMode(GL_MODELVIEW);
 		glPushMatrix(); {
-			if(int(KHM::Gauge)<2)
+			if (int(KHM::Gauge) < 2)
 				glColor4f(1.0, 0.0, 0.0, 1.0f);
 			else if (int(KHM::Gauge) >= 2)
-				glColor4f(rand()%10*0.1, rand() % 10 * 0.1, rand() % 10 * 0.1, 1.0f);
+				glColor4f(rand() % 10 * 0.1, rand() % 10 * 0.1, rand() % 10 * 0.1, 1.0f);
 
-			int len = (int)strlen(shot_string[std::min(2,int(KHM::Gauge))]);
-			if (int(KHM::Gauge)==0)
+			int len = (int)strlen(shot_string[std::min(2, int(KHM::Gauge))]);
+			if (int(KHM::Gauge) == 0)
 				glRasterPos3f(-54, 0, 0);
 			else if (int(KHM::Gauge) == 1)
 				glRasterPos3f(-45, 0, 0);
 			else if (int(KHM::Gauge) >= 2)
 				glRasterPos3f(-27, 0, 0);
-			for (int i = 0; i < len; i++) 
+			for (int i = 0; i < len; i++)
 				glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, shot_string[std::min(2, int(KHM::Gauge))][i]);
 
 
@@ -1489,10 +1698,10 @@ void Keyboard(unsigned char key, int x, int y)
 		if (KHM::MODE_OF_VIEW == 1)
 		{
 
-		KHM::real_temp = KHM::Head->next->Harpoon.y_angle;
-		//KHM::shot_Harpoon();
+			KHM::real_temp = KHM::Head->next->Harpoon.y_angle;
+			//KHM::shot_Harpoon();
 
-		KHM::Gauge++;
+			KHM::Gauge++;
 		}
 		break;
 	case '1':
@@ -1559,7 +1768,7 @@ void Timerfunction(int value)
 	//======================================================================================
 	if (KHM::Boat.is_forward == true)
 	{
-		if (KHM::Boat.speed < 10.0)
+		if (KHM::Boat.speed < 5.0)
 		{
 			KHM::Boat.speed += KHM::Boat.velocity;
 		}
@@ -1585,14 +1794,17 @@ void Timerfunction(int value)
 
 	if (KHM::Boat.direction == LEFT)
 	{
-		KHM::Boat.y_angle++;
+		KHM::Boat.y_angle += KHM::Boat.speed / 5 + 0.5;
 	}
 	else if (KHM::Boat.direction == RIGHT)
 	{
-		KHM::Boat.y_angle--;
+		KHM::Boat.y_angle -= KHM::Boat.speed / 5 + 0.5;
 	}
+	if (KHM::Boat.speed > 0.0) {
 
-
+		KDK::Insert_Spray();
+	}
+	KDK::update_Spray();
 	//===========================================================================================
 	KDK::update_Whale();
 	KDK::update_wave();
