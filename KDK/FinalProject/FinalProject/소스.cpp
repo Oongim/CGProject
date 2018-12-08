@@ -18,9 +18,6 @@ using namespace std;
 
 static double prev_mx = 0;
 static double prev_my = 0;
-float check_x = 0;
-float check_y = 0;
-float check_z = 0;
 int windowW, windowH;
 GLfloat AmbientLight[] = { 0.0f, 1.0f, 0.0f, 1.0f }; // 녹색조명
 GLfloat DiffuseLight[] = { 1.0f, 0.0f, 0.0f, 1.0f }; // 적색조명
@@ -163,7 +160,7 @@ namespace KDK {
 		{
 			for (int j = 0; j < number_of_wave_pivots; ++j) {
 				wave_pivots[i][j][1] += wave_velocity[i][j];
-				if (wave_pivots[i][j][1] > 250 || wave_pivots[i][j][1] < -250)
+				if (wave_pivots[i][j][1] > 150 || wave_pivots[i][j][1] < -150)
 				{
 					wave_velocity[i][j] *= -1;
 				}
@@ -180,8 +177,16 @@ namespace KDK {
 			// 그리드를 이용한 곡면 드로잉
 			glMapGrid2f(number_of_wave_pivots, 0.0, 1.0, number_of_wave_pivots, 0.0, 1.0);
 			// 선을 이용하여 그리드 연결
+			//glEvalMesh2(GL_LINE, 0, number_of_wave_pivots, 0, number_of_wave_pivots);
 			glEvalMesh2(GL_FILL, 0, number_of_wave_pivots, 0, number_of_wave_pivots);
-			//glPointSize(2.0);
+			/*glPointSize(10.0);
+			glColor3f(1.0, 0.0, 0.0);
+			glBegin(GL_POINTS);
+			for (int i = 0; i < number_of_wave_pivots; i++)
+				for (int j = 0; j < number_of_wave_pivots; j++)
+					glVertex3fv(wave_pivots[i][j]);
+			glEnd();*/
+
 		}glPopMatrix();
 	}
 	///////////////////////////////맵////////////////////////////////////////////////////////
@@ -284,25 +289,25 @@ namespace KDK {
 			/**************************************섬?*************************************************************/
 			glPushMatrix(); {
 				glColor3f(1, 0, 0.6);
-				//glRotated(30, 1, 0, 0);
+
 				glTranslated(-2000, 0, 800);
 				draw_pyramid(2000);
 			}glPopMatrix();
 			glPushMatrix(); {
 				glColor3f(1, 0.7, 0.6);
-				//glRotated(270, 0, 0, 1);
+
 				glTranslated(-1000, 0, -2500);
 				draw_pyramid(2000);
 			}glPopMatrix();
 			glPushMatrix(); {
 				glColor3f(0.3, 0.7, 0.6);
-				//glRotated(135, 1, 0, 1);
+
 				glTranslated(2500, 0, 100);
 				draw_pyramid(2000);
 			}glPopMatrix();
 			glPushMatrix(); {
 				glColor3f(0.2, 0.2, 0.2);
-				//glRotated(-90, 1, 0, 0);
+
 				glTranslated(+1000, 0, 3000);
 				draw_pyramid(2000);
 			}glPopMatrix();
@@ -438,19 +443,13 @@ namespace KDK {
 		float phi, theta;
 		int HP;
 		bool isRun_away;
+		bool isAlive;
 	};
 	Whale whale[10];
 
 	void draw_basic_Whale(float x, float y, float z, int i)
 	{
 		glPushMatrix(); {
-			glBegin(GL_LINES);
-
-			glVertex3f(x, y, z);
-			glVertex3f(check_x, check_y, check_z);
-
-
-			glEnd();
 			glTranslatef(x, y, z);
 
 			glRotatef(whale[i].phi + 180, 0.0, 1.0, 0.0);
@@ -557,6 +556,7 @@ namespace KDK {
 			whale[i].x = rand() % (WORLD_SCALE * 2) - WORLD_SCALE;
 			whale[i].z = rand() % (WORLD_SCALE * 2) - WORLD_SCALE;
 			whale[i].y = -rand() % 800;
+			whale[i].isAlive = true;
 
 
 			whale[i].next_x = rand() % (WORLD_SCALE * 2) - WORLD_SCALE;
@@ -569,7 +569,9 @@ namespace KDK {
 		glEnable(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, textures[1]);
 		for (int i = 0; i < 10; ++i) {
-			draw_basic_Whale(whale[i].x, whale[i].y, whale[i].z, i);
+			if (whale[i].isAlive) {
+				draw_basic_Whale(whale[i].x, whale[i].y, whale[i].z, i);
+			}
 		}
 		glDisable(GL_TEXTURE_2D);
 	}
@@ -577,49 +579,49 @@ namespace KDK {
 	{
 		float normal_r = 0;
 		for (int i = 0; i < 10; ++i) {
-			if (KDK::whale[i].tail_moveRange[0] <= 20 && KDK::whale[i].tail_moveRange[0] >= 0) {
-				KDK::whale[i].tail_moveRange[0] += KDK::whale[i].tail_moveVelocity;
-				KDK::whale[i].Tail_Radian += KDK::whale[i].tail_moveVelocity * 4;
+			if (whale[i].isAlive) {
+				if (KDK::whale[i].tail_moveRange[0] <= 20 && KDK::whale[i].tail_moveRange[0] >= 0) {
+					KDK::whale[i].tail_moveRange[0] += KDK::whale[i].tail_moveVelocity;
+					KDK::whale[i].Tail_Radian += KDK::whale[i].tail_moveVelocity * 4;
 
-			}
-			else {
-				KDK::whale[i].tail_moveRange[1] += KDK::whale[i].tail_moveVelocity;
-				if (KDK::whale[i].tail_moveRange[1] > 30 || KDK::whale[i].tail_moveRange[1] < 0)
-				{
-					KDK::whale[i].tail_moveVelocity *= -1;
-					if (KDK::whale[i].tail_moveVelocity > 0)
-						KDK::whale[i].tail_moveRange[0] = 0;
-					else
-						KDK::whale[i].tail_moveRange[0] = 20;
 				}
-			}
-		}
-
-		for (int i = 0; i < 10; ++i)
-		{
-			normal_r = sqrt(pow(whale[i].next_x - whale[i].x, 2) + pow(whale[i].next_y - whale[i].y, 2) + pow(whale[i].next_z - whale[i].z, 2));
-			whale[i].x += (whale[i].next_x - whale[i].x) / normal_r * whale[i].move_Velocity;
-			whale[i].y += (whale[i].next_y - whale[i].y) / normal_r * whale[i].move_Velocity;
-			whale[i].z += (whale[i].next_z - whale[i].z) / normal_r * whale[i].move_Velocity;
-			if (whale[i].x > whale[i].next_x - whale[i].move_Velocity&&whale[i].x<whale[i].next_x + whale[i].move_Velocity&&
-				whale[i].y>whale[i].next_y - whale[i].move_Velocity&&whale[i].y<whale[i].next_y + whale[i].move_Velocity&&
-				whale[i].z>whale[i].next_z - whale[i].move_Velocity&&whale[i].z < whale[i].next_z + whale[i].move_Velocity)
-			{
-				if (whale[i].isRun_away)
-				{
-					whale[i].isRun_away = false;
-					whale[i].move_Velocity -= 2;
+				else {
+					KDK::whale[i].tail_moveRange[1] += KDK::whale[i].tail_moveVelocity;
+					if (KDK::whale[i].tail_moveRange[1] > 30 || KDK::whale[i].tail_moveRange[1] < 0)
+					{
+						KDK::whale[i].tail_moveVelocity *= -1;
+						if (KDK::whale[i].tail_moveVelocity > 0)
+							KDK::whale[i].tail_moveRange[0] = 0;
+						else
+							KDK::whale[i].tail_moveRange[0] = 20;
+					}
 				}
-				whale[i].next_x = rand() % WORLD_SCALE - WORLD_SCALE / 2;
-				whale[i].next_z = rand() % WORLD_SCALE - WORLD_SCALE / 2;
-				whale[i].next_y = -rand() % 400;
-			}
-			whale[i].phi = ((atan2((whale[i].next_x - whale[i].x), (whale[i].next_z - whale[i].z))) * 180 / PI);
 
-			whale[i].theta = acos((whale[i].next_y - whale[i].y) / normal_r) * 180 / PI - 90;
+
+				normal_r = sqrt(pow(whale[i].next_x - whale[i].x, 2) + pow(whale[i].next_y - whale[i].y, 2) + pow(whale[i].next_z - whale[i].z, 2));
+				whale[i].x += (whale[i].next_x - whale[i].x) / normal_r * whale[i].move_Velocity;
+				whale[i].y += (whale[i].next_y - whale[i].y) / normal_r * whale[i].move_Velocity;
+				whale[i].z += (whale[i].next_z - whale[i].z) / normal_r * whale[i].move_Velocity;
+				if (whale[i].x > whale[i].next_x - whale[i].move_Velocity&&whale[i].x<whale[i].next_x + whale[i].move_Velocity&&
+					whale[i].y>whale[i].next_y - whale[i].move_Velocity&&whale[i].y<whale[i].next_y + whale[i].move_Velocity&&
+					whale[i].z>whale[i].next_z - whale[i].move_Velocity&&whale[i].z < whale[i].next_z + whale[i].move_Velocity)
+				{
+					if (whale[i].isRun_away)
+					{
+						whale[i].isRun_away = false;
+						whale[i].move_Velocity -= 2;
+					}
+					whale[i].next_x = rand() % WORLD_SCALE - WORLD_SCALE / 2;
+					whale[i].next_z = rand() % WORLD_SCALE - WORLD_SCALE / 2;
+					whale[i].next_y = -rand() % 400;
+				}
+				whale[i].phi = ((atan2((whale[i].next_x - whale[i].x), (whale[i].next_z - whale[i].z))) * 180 / PI);
+
+				whale[i].theta = acos((whale[i].next_y - whale[i].y) / normal_r) * 180 / PI - 90;
+			}
 		}
 	}
-	void run_away_Whale(float boat_x, float boat_y, float boat_z,int num)
+	void run_away_Whale(float boat_x, float boat_y, float boat_z, int num)
 	{
 		whale[num].isRun_away = true;
 		whale[num].move_Velocity += 2;
@@ -627,6 +629,8 @@ namespace KDK {
 		whale[num].next_y = whale[num].y + whale[num].y - boat_y;
 		whale[num].next_z = whale[num].z + whale[num].z - boat_z;
 		whale[num].HP -= rand() % 10 + 20;
+		if (whale[num].HP < 0)
+			whale[num].isAlive = false;
 	}
 	/////////////////////////////////물보라//////////////////////////////////////////////////////
 	struct Spray {
@@ -727,6 +731,7 @@ namespace KHM
 	float Gauge = 0;
 	float real_temp = 0;
 
+
 	struct BOAT
 	{
 		bool is_forward = false;
@@ -736,6 +741,8 @@ namespace KHM
 		float velocity = 0.25;
 		float x, y, z;
 		float y_angle;
+		float waver_z_angle;
+		float waver_velocity = 0.1;
 	};
 	BOAT Boat;
 
@@ -744,19 +751,25 @@ namespace KHM
 		float x_angle = 0;
 		float x_angle_2 = 0;
 		float y_angle = 0;
-		float y_angle_2 = 0;
 		float real_temp_2 = 0;
 		float x = 0;
 		float y = 0;
 		float z = 0;
+		float x_2 = 0;
+		float y_2 = 0;
+		float z_2 = 0;
 		float t = 0;
-		float power = 1000;
-		bool is_hit = false;
+		float power = 2000;
+		float hit_locate_x = 0;
+		float hit_locate_y = 0;
+		float hit_locate_z = 0;
+		int hit_whale_num = -1;
 		bool is_fired = false;
 	};
 	struct Node
 	{
 		HARPOON Harpoon;
+		BOAT Boat;
 		Node * next;
 	};
 	Node * Head;
@@ -766,15 +779,21 @@ namespace KHM
 		New->Harpoon.x = KHM::Boat.x + (70 * sin(KHM::Boat.y_angle * RADIAN));
 		New->Harpoon.y = KHM::Boat.y + HARPOON_Y;
 		New->Harpoon.z = KHM::Boat.z + (HARPOON_Z * cos(KHM::Boat.y_angle * RADIAN));
+		New->Harpoon.x_2 = KHM::Boat.x;
+		New->Harpoon.y_2 = KHM::Boat.y;
+		New->Harpoon.z_2 = KHM::Boat.z;
 		New->Harpoon.x_angle = KHM::temp_x_angle;
 		New->Harpoon.y_angle = KHM::temp_y_angle;
 		New->Harpoon.x_angle_2 = KHM::temp_x_angle;
-		New->Harpoon.y_angle_2 = KHM::temp_y_angle;
+		//New->Harpoon.y_angle_2 = KHM::temp_y_angle;
 		New->Harpoon.real_temp_2 = KHM::real_temp;
-		New->Harpoon.is_hit = false;
+		New->Harpoon.hit_locate_x = 0;
+		New->Harpoon.hit_locate_y = 0;
+		New->Harpoon.hit_locate_z = 0;
+		New->Harpoon.hit_whale_num = -1;
 		New->Harpoon.is_fired = false;
-
 		New->next = Head->next;
+		New->Boat.z;
 		Head->next = New;
 	}
 	Node* Delete_Harpoon(Node * key)
@@ -799,9 +818,11 @@ namespace KHM
 		Node *curr = Head->next;
 		KHM::temp_x_angle = curr->Harpoon.x_angle; //쏜후 초기화될 작살총 각도 저장
 		KHM::temp_y_angle = curr->Harpoon.y_angle; //쏜후 초기화될 작살총 각도 저장
+		curr->Harpoon.x_2 = KHM::Boat.x;
+		curr->Harpoon.y_2 = KHM::Boat.y;
+		curr->Harpoon.z_2 = KHM::Boat.z;
 		curr->Harpoon.x_angle_2 = curr->Harpoon.x_angle;
 		curr->Harpoon.y_angle = KHM::Boat.y_angle;
-		curr->Harpoon.y_angle_2 = KHM::temp_y_angle;
 		curr->Harpoon.real_temp_2 = KHM::real_temp;
 		curr->Harpoon.is_fired = true;
 		Insert_Harpoon();
@@ -813,34 +834,54 @@ namespace KHM
 		{
 			if (curr->Harpoon.is_fired)
 			{
-				curr->Harpoon.x = KHM::Boat.x + (70 * sin(curr->Harpoon.y_angle * RADIAN)) + curr->Harpoon.power * curr->Harpoon.t * cos(curr->Harpoon.x_angle * RADIAN) * sin((curr->Harpoon.y_angle + curr->Harpoon.real_temp_2) * RADIAN);
-				curr->Harpoon.y = KHM::Boat.y + HARPOON_Y - curr->Harpoon.power * curr->Harpoon.t * sin(curr->Harpoon.x_angle * RADIAN) - (0.5 * 1000 * curr->Harpoon.t * curr->Harpoon.t);
-				curr->Harpoon.z = KHM::Boat.z + (HARPOON_Z * cos(curr->Harpoon.y_angle * RADIAN)) + curr->Harpoon.power * curr->Harpoon.t * cos(curr->Harpoon.x_angle * RADIAN) * cos((curr->Harpoon.y_angle + curr->Harpoon.real_temp_2)* RADIAN);
-				//curr->Harpoon.y_angle = curr->Harpoon.y_angle;
-				if (curr->Harpoon.t < 5)
+
+				if (curr->Harpoon.hit_whale_num == -1)
 				{
-					curr->Harpoon.x_angle_2 += 0.5;//떨어지는 작살각도 증가
-					curr->Harpoon.t += 0.01;
+					curr->Harpoon.x = curr->Harpoon.x_2 + (70 * sin(curr->Harpoon.y_angle * RADIAN)) + curr->Harpoon.power * curr->Harpoon.t * cos(curr->Harpoon.x_angle * RADIAN) * sin((curr->Harpoon.y_angle + curr->Harpoon.real_temp_2) * RADIAN);
+					curr->Harpoon.y = curr->Harpoon.y_2 + HARPOON_Y - curr->Harpoon.power * curr->Harpoon.t * sin(curr->Harpoon.x_angle * RADIAN) - (0.5 * 1000 * curr->Harpoon.t * curr->Harpoon.t);
+					curr->Harpoon.z = curr->Harpoon.z_2 + (HARPOON_Z * cos(curr->Harpoon.y_angle * RADIAN)) + curr->Harpoon.power * curr->Harpoon.t * cos(curr->Harpoon.x_angle * RADIAN) * cos((curr->Harpoon.y_angle + curr->Harpoon.real_temp_2)* RADIAN);
+					if (curr->Harpoon.t < 5)
+					{
+						curr->Harpoon.x_angle_2 += 0.5;//떨어지는 작살각도 증가
+						curr->Harpoon.t += 0.01;
+					}
+					for (int i = 0; i < 10; i++)
+					{
+						if ((KDK::whale[i].x - 50 <= curr->Harpoon.x && curr->Harpoon.x <= KDK::whale[i].x + 50) && (KDK::whale[i].y - 50 <= curr->Harpoon.y && curr->Harpoon.y <= KDK::whale[i].y + 50) && (KDK::whale[i].z - 50 <= curr->Harpoon.z && curr->Harpoon.z <= KDK::whale[i].z + 50))
+						{
+
+							curr->Harpoon.hit_whale_num = i;
+							curr->Harpoon.hit_locate_x = curr->Harpoon.x - KDK::whale[i].x;
+							curr->Harpoon.hit_locate_y = curr->Harpoon.y - KDK::whale[i].y;
+							curr->Harpoon.hit_locate_z = curr->Harpoon.z - KDK::whale[i].z;
+							cout << "명중" << endl;
+
+							KDK::run_away_Whale(Boat.x, Boat.y, Boat.z, i);
+							break;
+						}
+						else if (curr->Harpoon.y <= -4000 || curr->Harpoon.x > 4000 || curr->Harpoon.x < -4000 || curr->Harpoon.z > 4000 || curr->Harpoon.z < -4000)
+						{
+							curr = Delete_Harpoon(curr);
+							break;
+						}
+					}
+				}
+				else if (curr->Harpoon.hit_whale_num != -1)
+				{
+					if (KDK::whale[curr->Harpoon.hit_whale_num].isAlive) {
+						curr->Harpoon.x = KDK::whale[curr->Harpoon.hit_whale_num].x + curr->Harpoon.hit_locate_x;
+						curr->Harpoon.y = KDK::whale[curr->Harpoon.hit_whale_num].y + curr->Harpoon.hit_locate_y;
+						curr->Harpoon.z = KDK::whale[curr->Harpoon.hit_whale_num].z + curr->Harpoon.hit_locate_z;
+					}
+					else
+					{
+						curr = Delete_Harpoon(curr);
+					}
 				}
 
-				//여기 어딘가에 타겟 맞췄을 때 is_hit  true로 바꾸는거
-				//맵의 범위를 넘었을 때 삭제
-				for (int i = 0; i < 10; i++)
-				{
-					if ((KDK::whale[i].x - 50 <= curr->Harpoon.x && curr->Harpoon.x <= KDK::whale[i].x + 50) && (KDK::whale[i].y - 50 <= curr->Harpoon.y && curr->Harpoon.y <= KDK::whale[i].y + 50) && (KDK::whale[i].z - 50 <= curr->Harpoon.z && curr->Harpoon.z <= KDK::whale[i].z + 50))
-					{
-						cout << "명중" << endl;
-						curr = Delete_Harpoon(curr);
-						KDK::run_away_Whale(Boat.x, Boat.y, Boat.z, i);
-						break;
-					}
-					else if (curr->Harpoon.y <= -500)
-					{
-						curr = Delete_Harpoon(curr);
-						break;
-					}
-				}
+
 			}
+
 			if (curr == nullptr)
 				break;
 			curr = curr->next;
@@ -853,15 +894,18 @@ namespace KHM
 		Node* curr = Head->next->next;
 		while (curr != nullptr)
 		{
+
 			glPushMatrix(); {
-				glBegin(GL_LINES);
+				glPushMatrix(); {
+					//glRotated(KHM::Boat.y_angle, 0, 1, 0);
+					glBegin(GL_LINES);
 
-				glVertex3f(curr->Harpoon.x, curr->Harpoon.y, curr->Harpoon.z);
-				glVertex3f(check_x, check_y, check_z);
+					glVertex3f(curr->Harpoon.x, curr->Harpoon.y, curr->Harpoon.z);
+					glVertex3f(Boat.x - HARPOON_Z * cos((Boat.y_angle + 90)*RADIAN), Boat.y + HARPOON_Y, Boat.z + HARPOON_Z * sin((Boat.y_angle + 90)*RADIAN));
 
 
-				glEnd();
-
+					glEnd();
+				}glPopMatrix();
 				glTranslated(curr->Harpoon.x, curr->Harpoon.y, curr->Harpoon.z); //실제로 작살 움직이게 하기
 				glRotatef(curr->Harpoon.y_angle + curr->Harpoon.real_temp_2, 0.0, 1.0, 0.0);//날아가는 작살이 보고있는 각도
 				glRotatef(curr->Harpoon.x_angle_2, 1.0, 0.0, 0.0);//떨어지는 작살의 각도
@@ -918,17 +962,17 @@ void KDK::draw_spray_of_water()
 					glTranslatef(0, 0, 100);
 					glPushMatrix(); {
 
-							for (int j = 0; j < 10; ++j)
-							{
-								int rand_r = rand() % 30;
-								glTranslated(rand_r*sin(rand()%180 * RADIAN)*cos(rand() % 360 * RADIAN),
-									rand_r *sin(rand() % 180 * RADIAN)*sin(rand() % 360 * RADIAN),
-									rand_r *cos((rand() % 90 +90)* RADIAN));
-								glBegin(GL_POINTS);
-		
-								glVertex3f(0, 0, 0);
-								glEnd();
-							}
+						for (int j = 0; j < 10; ++j)
+						{
+							int rand_r = rand() % 30;
+							glTranslated(rand_r*sin(rand() % 180 * RADIAN)*cos(rand() % 360 * RADIAN),
+								rand_r *sin(rand() % 180 * RADIAN)*sin(rand() % 360 * RADIAN),
+								rand_r *cos((rand() % 90 + 90)* RADIAN));
+							glBegin(GL_POINTS);
+
+							glVertex3f(0, 0, 0);
+							glEnd();
+						}
 					}glPopMatrix();
 				}glPopMatrix();
 			}
@@ -937,7 +981,7 @@ void KDK::draw_spray_of_water()
 			glRotatef(curr->spray_of_water.angleY, 0, 1, 0);
 
 			glPushMatrix(); {
-				glTranslatef(curr->spray_of_water.count * 1+rand()%2, 0, 80);
+				glTranslatef(curr->spray_of_water.count * 1 + rand() % 2, 0, 80);
 				glBegin(GL_POINTS);
 				glVertex3f(0, 2, 0);
 				glEnd();
@@ -952,7 +996,7 @@ void KDK::draw_spray_of_water()
 				glBegin(GL_POINTS);
 				glVertex3f(0, 2, 0);
 				glEnd();
-				glTranslatef(-curr->spray_of_water.count *1 - rand() % 2, 0, 0);
+				glTranslatef(-curr->spray_of_water.count * 1 - rand() % 2, 0, 0);
 				glBegin(GL_POINTS);
 				glVertex3f(-10, 0, 0);
 				glEnd();
@@ -1341,36 +1385,36 @@ void drawRect_BG(float size)
 		glTexCoord2f(0.0f, 0.0f);
 		glVertex3f(-size / 2, -size, size / 2);//6
 		glTexCoord2f(0.25f, 0.0f);
-		glVertex3f(size / 2, -size , size / 2);//7
+		glVertex3f(size / 2, -size, size / 2);//7
 		glTexCoord2f(0.25f, 1.0f);
-		glVertex3f(size / 2, size , size / 2);//3
+		glVertex3f(size / 2, size, size / 2);//3
 											 //오른쪽옆면
 		glTexCoord2f(0.25f, 1.0f);
-		glVertex3f(size / 2, size , size / 2);//3
+		glVertex3f(size / 2, size, size / 2);//3
 		glTexCoord2f(0.25f, 0.0f);
-		glVertex3f(size / 2, -size , size / 2);//7
+		glVertex3f(size / 2, -size, size / 2);//7
 		glTexCoord2f(0.5f, 0.0f);
-		glVertex3f(size / 2, -size , -size / 2);//8
+		glVertex3f(size / 2, -size, -size / 2);//8
 		glTexCoord2f(0.5f, 1.0f);
-		glVertex3f(size / 2, size , -size / 2);//4
+		glVertex3f(size / 2, size, -size / 2);//4
 											  //왼쪽옆면
 		glTexCoord2f(0.75f, 1.0f);
-		glVertex3f(-size / 2, size , -size / 2);//1
+		glVertex3f(-size / 2, size, -size / 2);//1
 		glTexCoord2f(0.75f, 0.0f);
 		glVertex3f(-size / 2, -size, -size / 2);//5
 		glTexCoord2f(1.0f, 0.0f);
 		glVertex3f(-size / 2, -size, size / 2);//6
 		glTexCoord2f(1.0f, 1.0f);
-		glVertex3f(-size / 2, size , size / 2);//2
+		glVertex3f(-size / 2, size, size / 2);//2
 											  //뒷면
 		glTexCoord2f(0.5f, 1.0f);
-		glVertex3f(size / 2, size , -size / 2);//4
+		glVertex3f(size / 2, size, -size / 2);//4
 		glTexCoord2f(0.5f, 0.0f);
-		glVertex3f(size / 2, -size , -size / 2);//8
+		glVertex3f(size / 2, -size, -size / 2);//8
 		glTexCoord2f(0.75f, 0.0f);
 		glVertex3f(-size / 2, -size, -size / 2);//5
 		glTexCoord2f(0.75f, 1.0f);
-		glVertex3f(-size / 2, size , -size / 2);//1
+		glVertex3f(-size / 2, size, -size / 2);//1
 		glEnd();
 		//glDisable(GL_TEXTURE_GEN_S);
 		//glDisable(GL_TEXTURE_GEN_T);
@@ -1381,9 +1425,9 @@ void draw_SKY()
 	glPushMatrix();
 	glTranslated(0, WORLD_SCALE / 4, 0);
 	glEnable(GL_TEXTURE_2D);
-	
+
 	glColor4f(0.1f, 0.3f, 1.0f, 1.0f);
-	drawRect_BG(WORLD_SCALE*2+10);
+	drawRect_BG(WORLD_SCALE * 2 + 10);
 	glDisable(GL_TEXTURE_2D);
 	glPopMatrix();
 
@@ -1563,9 +1607,12 @@ GLvoid drawScene(GLvoid)
 		if (KHM::MODE_OF_VIEW == 3)
 		{
 			m_camera.SetPosition(float3{ KHM::Boat.x, KHM::Boat.y, KHM::Boat.z });
+			//glRotated(KHM::Boat.waver_z_angle, 1, 0, 0);
+			//glRotated(KHM::Boat.waver_z_angle, 0, 0, 1);
 			draw_Harpoon_Gun(0, HARPOON_Y, HARPOON_Z, KHM::Head->next->Harpoon.x_angle, 0); //KHM::Head->next->Harpoon.y_angle
 
 		}
+
 		draw_BOAT();
 	}glPopMatrix();
 
@@ -1800,10 +1847,20 @@ void Timerfunction(int value)
 	{
 		KHM::Boat.y_angle -= KHM::Boat.speed / 5 + 0.5;
 	}
+
+
+
 	if (KHM::Boat.speed > 0.0) {
 
 		KDK::Insert_Spray();
 	}
+
+	/*if (KHM::Boat.waver_z_angle >= 5.0|| KHM::Boat.waver_z_angle <= -5.0) {
+		KHM::Boat.waver_velocity *= -1;
+	}
+
+KHM::Boat.waver_z_angle += KHM::Boat.waver_velocity;
+KHM::Boat.y += KHM::Boat.waver_velocity*5;*/
 	KDK::update_Spray();
 	//===========================================================================================
 	KDK::update_Whale();
