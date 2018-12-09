@@ -27,4 +27,44 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="background.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="GreenPeace.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="name.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="seaweed.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="START.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="TrueEnding.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="whale_death_face.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="whale_face.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="BGM.mp3">
+      <Filter>리소스 파일</Filter>
+    </Media>
+    <Media Include="dead.wav">
+      <Filter>리소스 파일</Filter>
+    </Media>
+    <Media Include="fire.wav">
+      <Filter>리소스 파일</Filter>
+    </Media>
+    <Media Include="hit.wav">
+      <Filter>리소스 파일</Filter>
+    </Media>
+  </ItemGroup>
 </Project>

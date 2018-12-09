@@ -81,19 +81,19 @@ c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소�
 c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1780): warning C4326: 'main'의 반환 형식이 'int'이어야 하는데 'void'입니다.
 c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1781): warning C4244: '인수': 'time_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
 c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1905): warning C4305: '인수': 'double'에서 'GLfloat'(으)로 잘립니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1924): warning C4244: '인수': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(2016): warning C4244: '인수': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(2100): warning C4244: '+=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(2103): warning C4244: '-=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(2106): warning C4244: '+=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(2109): warning C4244: '-=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(2116): warning C4244: '-=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(2123): warning C4244: '-=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(2128): warning C4244: '+=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(2132): warning C4244: '-=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(1922): warning C4244: '인수': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(2006): warning C4244: '인수': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(2090): warning C4244: '+=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(2093): warning C4244: '-=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(2096): warning C4244: '+=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(2099): warning C4244: '-=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(2106): warning C4244: '-=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(2113): warning C4244: '-=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(2118): warning C4244: '+=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(2122): warning C4244: '-=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
 c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\camera.h(80): warning C4305: '=': 'double'에서 'float'(으)로 잘립니다.
   c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\camera.h(79): note: 클래스 템플릿 멤버 함수 'void Camera<float3>::Initialize_radian(void)'을(를) 컴파일하고 있습니다.
-  c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(2012): note: 컴파일 중인 함수 템플릿 인스턴스화 'void Camera<float3>::Initialize_radian(void)'에 대한 참조를 확인하십시오.
+  c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(2002): note: 컴파일 중인 함수 템플릿 인스턴스화 'void Camera<float3>::Initialize_radian(void)'에 대한 참조를 확인하십시오.
   c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(51): note: 컴파일 중인 클래스 템플릿 인스턴스화 'Camera<float3>'에 대한 참조를 확인하세요.
 c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(740): warning C4715: 'KDK::delete_Spray': 모든 제어 경로에서 값을 반환하지는 않습니다.
 c:\users\강동균\documents\github\cgproject\kdk\finalproject\finalproject\소스.cpp(913): warning C4715: 'KHM::Delete_Harpoon': 모든 제어 경로에서 값을 반환하지는 않습니다.

@@ -1,9 +1,9 @@
 #include<windows.h>
 #include<mmsystem.h>
 #include<Digitalv.h>
+#include <sstream>
 #define SOUND_BGM "../Resource/sound/BGM.mp3"
 #pragma comment(lib, "winmm.lib")
-//sndPlaySoundA("../Resource/sound/BGM.wav", SND_ASYNC | SND_NODEFAULT | SND_LOOP);
 
 
 
@@ -28,6 +28,7 @@ using namespace std;
 static double prev_mx = 0;
 static double prev_my = 0;
 int windowW, windowH;
+int sum_of_capture_Whale = 0;
 GLfloat AmbientLight[] = { 0.0f, 1.0f, 0.0f, 1.0f }; // 녹색조명
 GLfloat DiffuseLight[] = { 1.0f, 0.0f, 0.0f, 1.0f }; // 적색조명
 GLfloat SpecularLight[] = { 1.0, 1.0, 1.0, 1.0 }; // 백색조명
@@ -44,8 +45,9 @@ GLvoid drawScene(GLvoid);
 GLvoid Reshape(int w, int h);
 
 tm curr_time;
-time_t now;
-enum { TITLE, MAIN, END };
+time_t start;
+time_t end;
+enum { TITLE, MAIN, ENDING };
 int SCENE_STATE = TITLE;
 float  Select_arpha = 1.0f;
 Camera<float3> m_camera{ 768.f / 1024.f };
@@ -111,7 +113,7 @@ GLubyte * LoadDIBitmap(const char *filename, BITMAPINFO **info)
 }
 GLubyte *pBytes; // 데이터를 가리킬 포인터
 BITMAPINFO *info; // 비트맵 헤더 저장할 변수
-GLuint textures[6];
+GLuint textures[10];
 GLdouble rotateWC[16]
 = { 1,0,0,0,
 0,1,0,0,
@@ -705,6 +707,7 @@ namespace KDK {
 		{
 			whale[num].isAlive = false;
 			whale[num].isDeath_animation = true;
+			sum_of_capture_Whale++;
 		}
 	}
 
@@ -765,7 +768,7 @@ namespace KDK {
 		init_wave_pivots();
 
 		//텍스처 설정 정의를 한다. --- (3)
-		glGenTextures(6, textures);
+		glGenTextures(10, textures);
 		glBindTexture(GL_TEXTURE_2D, textures[0]);
 		pBytes = LoadDIBitmap("seaweed.bmp", &info);
 		glTexImage2D(GL_TEXTURE_2D, 0, 4, 128, 670, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, pBytes);
@@ -806,7 +809,32 @@ namespace KDK {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
+		glBindTexture(GL_TEXTURE_2D, textures[5]);
+		pBytes = LoadDIBitmap("GreenPeace.bmp", &info);
+		glTexImage2D(GL_TEXTURE_2D, 0, 4, 800, 533, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, pBytes);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+		glBindTexture(GL_TEXTURE_2D, textures[6]);
+		pBytes = LoadDIBitmap("TrueEnding.bmp", &info);
+		glTexImage2D(GL_TEXTURE_2D, 0, 4, 533, 330, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, pBytes);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+		glBindTexture(GL_TEXTURE_2D, textures[7]);
+		pBytes = LoadDIBitmap("name.bmp", &info);
+		glTexImage2D(GL_TEXTURE_2D, 0, 4, 197, 182, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, pBytes);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
 		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, GL_MODULATE);
+
 	}
 
 };
@@ -953,7 +981,7 @@ namespace KHM
 							curr->Harpoon.hit_locate_x = curr->Harpoon.x - KDK::whale[i].x;
 							curr->Harpoon.hit_locate_y = curr->Harpoon.y - KDK::whale[i].y;
 							curr->Harpoon.hit_locate_z = curr->Harpoon.z - KDK::whale[i].z;
-							PlaySound("dead.wav", NULL, SND_ASYNC | SND_ALIAS);
+							PlaySound("hit.wav", NULL, SND_ASYNC | SND_ALIAS);
 							cout << "명중" << endl;
 
 							KDK::run_away_Whale(Boat.x, Boat.y, Boat.z, i,0);
@@ -967,7 +995,7 @@ namespace KHM
 							curr->Harpoon.hit_locate_x = curr->Harpoon.x - KDK::whale[i].x;
 							curr->Harpoon.hit_locate_y = curr->Harpoon.y - KDK::whale[i].y;
 							curr->Harpoon.hit_locate_z = curr->Harpoon.z - KDK::whale[i].z;
-							PlaySound("dead.wav", NULL, SND_ASYNC | SND_ALIAS);
+							PlaySound("hit.wav", NULL, SND_ASYNC | SND_ALIAS);
 							cout << "명중" << endl;
 
 							KDK::run_away_Whale(Boat.x, Boat.y, Boat.z, i, 1);
@@ -1029,9 +1057,9 @@ namespace KHM
 						float phi= ((atan2((curr->Harpoon.x - KDK::whale[curr->Harpoon.hit_whale_num].x),
 							(curr->Harpoon.z - KDK::whale[curr->Harpoon.hit_whale_num].z))) * 180 / PI);
 						glBegin(GL_LINES);
-						glVertex3f(KDK::whale[curr->Harpoon.hit_whale_num].x + r * cos((KDK::whale[curr->Harpoon.hit_whale_num].phi+phi)*RADIAN),
+						glVertex3f(KDK::whale[curr->Harpoon.hit_whale_num].x + r * cos((KDK::whale[curr->Harpoon.hit_whale_num].phi+phi+360)*RADIAN),
 							curr->Harpoon.y, 
-							KDK::whale[curr->Harpoon.hit_whale_num].z + r * sin((KDK::whale[curr->Harpoon.hit_whale_num].phi  + phi)*RADIAN));
+							KDK::whale[curr->Harpoon.hit_whale_num].z + r * sin((KDK::whale[curr->Harpoon.hit_whale_num].phi  + phi+360)*RADIAN));
 						glVertex3f(Boat.x - HARPOON_Z * cos((Boat.y_angle + 90)*RADIAN), Boat.y + HARPOON_Y, Boat.z + HARPOON_Z * sin((Boat.y_angle + 90)*RADIAN));
 
 
@@ -1404,8 +1432,8 @@ void Mouse(int button, int state, int x, int y)
 				windowH - y> 50 && windowH - y < 150)
 			{
 				SCENE_STATE = MAIN;
-				localtime_s(&curr_time, &now);
-				now = time(0); 
+				localtime_s(&curr_time, &start);
+				start = time(0);
 			}
 			glutPostRedisplay();
 		}
@@ -1759,22 +1787,6 @@ void initialize()
 	MCI_PLAY_PARMS mciPlay;
 	int dwID = mciOpen.wDeviceID;
 	mciSendCommand(dwID, MCI_PLAY, MCI_DGV_PLAY_REPEAT, (DWORD)(LPVOID)&mciPlay);
-	//MCI_NOTIFY : 기본, MCI_DGV_PLAY_REPEAT : 반복
-
-	//다시시작
-	//mciSendCommandW(dwID, MCI_RESUME, 0, NULL);
-
-	// 일시정지
-	//mciSendCommand(dwID, MCI_PAUSE, MCI_NOTIFY, (DWORD)(LPVOID)&mciPlay);
-
-	// 정지
-	//mciSendCommandW(dwID, MCI_CLOSE, 0, NULL);
-
-	//SND_ASYNC  //재생중에도 프로그램이 계속 돌아감
-	//SND_SYNC //재생이 끝나야 프로그램이 돌아감
-	//SND_FILENAME //매개변수가 사운드 파일의 이름일 경우
-	//SND_LOOP //반복재생 SND_ASYNC랑 같이써야함
-	//SND_PURGE //재생중지
 }
 void main(int argc, char *argv[])
 {
@@ -1868,6 +1880,28 @@ GLvoid drawScene(GLvoid)
 	glDisable(GL_LIGHTING);
 	if (SCENE_STATE == TITLE)
 	{
+		glViewport(windowW / 2 - 150, windowH-200, 300, 150);
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho(-100.0, 100.0, -100.0, 100.0, -100.0, 100.0);
+		glMatrixMode(GL_MODELVIEW);
+		glPushMatrix(); {
+			glEnable(GL_TEXTURE_2D);
+			
+			glBindTexture(GL_TEXTURE_2D, textures[7]);
+			glColor4f(0.0, 0.0, 1.0, 0.5);
+			glBegin(GL_QUADS);
+			glTexCoord2f(0.0f, 1.0f);
+			glVertex3f(-100, 100, 0);//2
+			glTexCoord2f(0.0f, 0.0f);
+			glVertex3f(-100, -100, 0);//6
+			glTexCoord2f(1.0f, 0.0f);
+			glVertex3f(+100, -100, 0);//7
+			glTexCoord2f(1.0f, 1.0f);
+			glVertex3f(+100, +100, 0);//3
+			glEnd();
+			glDisable(GL_TEXTURE_2D);
+		}glPopMatrix();
 		glViewport(windowW / 2 - 150, 50, 300, 100);
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
@@ -1899,6 +1933,7 @@ GLvoid drawScene(GLvoid)
 		glLoadIdentity();
 		glOrtho(-100.0, 100.0, -100.0, 100.0, -100.0, 100.0);
 		glMatrixMode(GL_MODELVIEW);
+
 		glPushMatrix(); {
 			glColor4f(0.0, 1.0, 0.0, 1.0f);
 			glutWireCone(100, 1, 20, 4);
@@ -1907,6 +1942,43 @@ GLvoid drawScene(GLvoid)
 			glRotated(KHM::Boat.y_angle, 0, 0, 1);
 			glColor4f(1.0, 0.0, 0.0, 1.0f);
 			draw_rader_Whale();
+		}glPopMatrix();
+
+		glViewport(0, windowH -100, windowW, 100);
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho(-400.0, 400.0, -300.0, 300.0, -100.0, 100.0);
+		glMatrixMode(GL_MODELVIEW);
+		ostringstream o;
+		ostringstream o2;
+		o << 300 - (time(0) - start);
+		o2 << sum_of_capture_Whale;
+
+		string s = o.str();
+		string s2 = o2.str();
+		
+		glPushMatrix(); {
+			glEnable(GL_TEXTURE_2D);
+			const char *string = "Time Left";
+			glRasterPos3f(-35, 190, 50); // 문자 출력할 위치 설정 
+			int len = (int)strlen(string);
+			for (int i = 0; i < len; i++)
+				glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, string[i]);
+			glRasterPos3f(-10, 70, 50); // 문자 출력할 위치 설정 
+			//int len = (int)strlen(s);
+			for (int i = 0; i < 4; i++)
+				glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, s[i]);
+
+			const char *string2 = "Kill";
+			glRasterPos3f(-400, 190, 50); // 문자 출력할 위치 설정 
+			int len2 = (int)strlen(string2);
+			for (int i = 0; i < len2; i++)
+				glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, string2[i]);
+			glRasterPos3f(-400, 70, 50); // 문자 출력할 위치 설정 
+										//int len = (int)strlen(s);
+			for (int i = 0; i < 2; i++)
+				glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, s2[i]);
+
 		}glPopMatrix();
 		//----------------------------------------------------------------------------------------------
 		if (KHM::MODE_OF_VIEW == 1)
@@ -1918,25 +1990,72 @@ GLvoid drawScene(GLvoid)
 			glOrtho(-150.0, 150.0, -100.0, 100.0, -100.0, 100.0);
 			glMatrixMode(GL_MODELVIEW);
 			glPushMatrix(); {
-				if (int(KHM::Gauge) < 2)
-					glColor4f(1.0, 0.0, 0.0, 1.0f);
-				else if (int(KHM::Gauge) >= 2)
-					glColor4f(rand() % 10 * 0.1, rand() % 10 * 0.1, rand() % 10 * 0.1, 1.0f);
-
-				//int len = (int)strlen(shot_string[std::min(2, int(KHM::Gauge))]);
-				//if (int(KHM::Gauge) == 0)
-				//	glRasterPos3f(-54, 0, 0);
-				//else if (int(KHM::Gauge) == 1)
-				//	glRasterPos3f(-45, 0, 0);
-				//else if (int(KHM::Gauge) >= 2)
-				//	glRasterPos3f(-27, 0, 0);
-				//for (int i = 0; i < len; i++)
-				//	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, shot_string[std::min(2, int(KHM::Gauge))][i]);
-
+				if (KHM::Gauge > 10) {
+					glColor3f(rand() % 10 * 0.1, rand() % 10 * 0.1, rand() % 10 * 0.1);
+				}
+				glScaled(KHM::Gauge * 3, 1, 1);
+				glutSolidCube(10);
 
 			}glPopMatrix();
 		}
 	}
+	else
+	{
+		glViewport(windowW / 4 , windowH/4, windowW / 2, windowH/2 );
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho(-400.0, 400.0, -300.0, 300.0, -100.0, 100.0);
+		glMatrixMode(GL_MODELVIEW);
+		glPushMatrix(); {
+			glEnable(GL_TEXTURE_2D);
+			if (sum_of_capture_Whale == 10)
+			{
+				glBindTexture(GL_TEXTURE_2D, textures[6]);
+				glColor4f(1.0, 1.0, 1.0, 0.8);
+				glBegin(GL_QUADS);
+				glTexCoord2f(0.0f, 1.0f);
+				glVertex3f(-400, 300, 100);//2
+				glTexCoord2f(0.0f, 0.0f);
+				glVertex3f(-400, -100, 100);//6
+				glTexCoord2f(1.0f, 0.0f);
+				glVertex3f(+400, -100, 100);//7
+				glTexCoord2f(1.0f, 1.0f);
+				glVertex3f(+400, +300, 100);//3
+				glEnd();
+				glDisable(GL_TEXTURE_2D);
+				glColor3f(1, 0, 0);
+				const char *string = "Killed All Whale";
+				glRasterPos3f(-120, -200, 50); // 문자 출력할 위치 설정 
+				int len = (int)strlen(string);
+				for (int i = 0; i < len; i++)
+					glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, string[i]);
+			}
+			else
+			{
+				glBindTexture(GL_TEXTURE_2D, textures[5]);
+				glColor4f(1.0, 1.0, 1.0, 0.8);
+				glBegin(GL_QUADS);
+				glTexCoord2f(0.0f, 1.0f);
+				glVertex3f(-400, 300, 100);//2
+				glTexCoord2f(0.0f, 0.0f);
+				glVertex3f(-400, -100, 100);//6
+				glTexCoord2f(1.0f, 0.0f);
+				glVertex3f(+400, -100, 100);//7
+				glTexCoord2f(1.0f, 1.0f);
+				glVertex3f(+400, +300, 100);//3
+				glEnd();
+				glDisable(GL_TEXTURE_2D);
+				glColor3f(0, 1, 0);
+				const char *string = "!!!Greenpeace Appeared!!!";
+				glRasterPos3f(-200, -200, 50); // 문자 출력할 위치 설정 
+				int len = (int)strlen(string);
+				for (int i = 0; i < len; i++)
+					glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, string[i]);
+			}
+		}glPopMatrix();
+	}
+
+
 	glFlush(); // 화면에 출력하기
 	glutSwapBuffers(); // 화면에 출력하기
 }
@@ -1955,8 +2074,15 @@ void Keyboard(unsigned char key, int x, int y)
 	case 'q':
 		exit(1);
 		break;
+	case 't':
+		SCENE_STATE = ENDING;
+		break;
+	case 'r':
+		sum_of_capture_Whale = 10;
+		SCENE_STATE = ENDING;
+		break;
 	}
-
+	
 	if (SCENE_STATE == MAIN) {
 		int mod = 0;
 		switch (key)
@@ -2061,6 +2187,12 @@ void SetCursor(bool bVisible)
 
 void Timerfunction(int value)
 {
+	if (time(0)- start== 300)
+	{
+		SCENE_STATE = ENDING;
+	}
+
+
 
 	glPushMatrix(); {
 		KHM::move_Harpoon();
@@ -2070,7 +2202,10 @@ void Timerfunction(int value)
 	{
 		ShowCursor(false);
 		m_camera.Initialize(float3{ KHM::Boat.x + (70 * sin(KHM::Boat.y_angle * 3.141592f / 180)) ,KHM::Boat.y + HARPOON_Y + 35,KHM::Boat.z + (HARPOON_Z * cos(KHM::Boat.y_angle * 3.141592f / 180)) }, 30, 1, 99999, 90);
-
+		if (KHM::is_charging == true)
+		{
+			KHM::Gauge += 0.5;
+		}
 	}
 
 	//======================================================================================
@@ -2157,11 +2292,7 @@ void Timerfunction(int value)
 	KDK::update_wave();
 	KHM::real_temp = KHM::Head->next->Harpoon.y_angle;
 
-	if (KHM::is_charging == true)
-	{
-		KHM::Gauge++;
-	}
-
+	//cout << sum_of_capture_Whale << endl;
 	glutPostRedisplay();                  // 화면 재출력
 	glutTimerFunc(20, Timerfunction, 1);      // 타이머함수 재설정
 }

@@ -145,6 +145,22 @@
     <ClInclude Include="camera.h" />
     <ClInclude Include="float3.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="background.bmp" />
+    <Image Include="GreenPeace.bmp" />
+    <Image Include="name.bmp" />
+    <Image Include="seaweed.bmp" />
+    <Image Include="START.bmp" />
+    <Image Include="TrueEnding.bmp" />
+    <Image Include="whale_death_face.bmp" />
+    <Image Include="whale_face.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="BGM.mp3" />
+    <Media Include="dead.wav" />
+    <Media Include="fire.wav" />
+    <Media Include="hit.wav" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
