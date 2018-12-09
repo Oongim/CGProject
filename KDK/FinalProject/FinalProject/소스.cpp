@@ -1,6 +1,12 @@
-//#pragma comment(lib."winmm")
-//#include<mmsystem.h>
-//#include<Digitalv.h>
+#include<windows.h>
+#include<mmsystem.h>
+#include<Digitalv.h>
+#define SOUND_BGM "../Resource/sound/BGM.mp3"
+#pragma comment(lib, "winmm.lib")
+//sndPlaySoundA("../Resource/sound/BGM.wav", SND_ASYNC | SND_NODEFAULT | SND_LOOP);
+
+
+
 #include <GL/freeglut.h>
 #include<time.h>
 #include<stdlib.h>
@@ -15,7 +21,7 @@
 #define DISTANCE 500.0
 #define HARPOON_Y 165
 #define HARPOON_Z 70
-#define SOUND_BGM "../Resource/sound/BGM.wav"
+
 enum Direction { LEFT = -1, KEEP, RIGHT };
 using namespace std;
 
@@ -29,18 +35,27 @@ GLfloat lightPos[] = { 100.0, 100.0, 200.0, 1.0 }; // 위치: (10, 5, 20)
 
 GLfloat ambientLight[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 GLfloat specref[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+
+
 const char *shot_string[] = {
 	"NOT READY" ,"CHARGING","READY"
 };
 GLvoid drawScene(GLvoid);
 GLvoid Reshape(int w, int h);
 
+tm curr_time;
+time_t now;
+enum { TITLE, MAIN, END };
+int SCENE_STATE = TITLE;
+float  Select_arpha = 1.0f;
 Camera<float3> m_camera{ 768.f / 1024.f };
 
 void Keyboard(unsigned char key, int x, int y);
 void UpKeyboard(unsigned char key, int x, int y);
 
 void Timerfunction(int value);
+void SetCursor(bool bVisible);
+
 GLubyte * LoadDIBitmap(const char *filename, BITMAPINFO **info)
 {
 	FILE *fp;
@@ -96,7 +111,7 @@ GLubyte * LoadDIBitmap(const char *filename, BITMAPINFO **info)
 }
 GLubyte *pBytes; // 데이터를 가리킬 포인터
 BITMAPINFO *info; // 비트맵 헤더 저장할 변수
-GLuint textures[4];
+GLuint textures[6];
 GLdouble rotateWC[16]
 = { 1,0,0,0,
 0,1,0,0,
@@ -133,6 +148,7 @@ namespace KDK {
 	int wave_velocity[number_of_wave_pivots][number_of_wave_pivots] = { 0 };
 	void init_wave_pivots()
 	{
+
 		for (int i = 0; i < number_of_wave_pivots; ++i)
 		{
 			for (int j = 0; j < number_of_wave_pivots; ++j) {
@@ -341,7 +357,6 @@ namespace KDK {
 			/*************************************돌******************************************************/
 			glPushMatrix(); {
 				glColor3f(0, 0, 0);
-				//glRotated(-90, 1, 0, 0);
 				glTranslated(0, WORLD_SCALE, 0);
 				draw_stone();
 			}glPopMatrix();
@@ -628,7 +643,6 @@ namespace KDK {
 					}
 				}
 
-
 				normal_r = sqrt(pow(whale[i].next_x - whale[i].x, 2) + pow(whale[i].next_y - whale[i].y, 2) + pow(whale[i].next_z - whale[i].z, 2));
 				whale[i].x += (whale[i].next_x - whale[i].x) / normal_r * whale[i].move_Velocity;
 				whale[i].y += (whale[i].next_y - whale[i].y) / normal_r * whale[i].move_Velocity;
@@ -636,7 +650,8 @@ namespace KDK {
 				if (collide_pyramid(whale[i].x, whale[i].y, whale[i].z, -2000, 800, 1000) ||
 					collide_pyramid(whale[i].x, whale[i].y, whale[i].z, -1000, -2500, 1000) ||
 					collide_pyramid(whale[i].x, whale[i].y, whale[i].z, 2500, 100, 1000) ||
-					collide_pyramid(whale[i].x, whale[i].y, whale[i].z, 1000, 3000, 1000))
+					collide_pyramid(whale[i].x, whale[i].y, whale[i].z, 1000, 3000, 1000)||
+					whale[i].y <= -800 || whale[i].x > 4000 || whale[i].x < -4000 || whale[i].z > 4000 || whale[i].z < -4000)
 				{
 					if (whale[i].isRun_away)
 					{
@@ -674,14 +689,18 @@ namespace KDK {
 			}
 		}
 	}
-	void run_away_Whale(float boat_x, float boat_y, float boat_z, int num)
+	void run_away_Whale(float boat_x, float boat_y, float boat_z, int num,int part)
 	{
 		whale[num].isRun_away = true;
 		whale[num].move_Velocity += 2;
 		whale[num].next_x = whale[num].x + whale[num].x - boat_x;
 		whale[num].next_y = whale[num].y + whale[num].y - boat_y;
 		whale[num].next_z = whale[num].z + whale[num].z - boat_z;
-		whale[num].HP -= rand() % 10 + 20;
+		if(part==0)
+			whale[num].HP -= rand() % 10 + 20;
+		else
+			whale[num].HP -= rand() % 10 + 10;
+
 		if (whale[num].HP < 0)
 		{
 			whale[num].isAlive = false;
@@ -746,7 +765,7 @@ namespace KDK {
 		init_wave_pivots();
 
 		//텍스처 설정 정의를 한다. --- (3)
-		glGenTextures(4, textures);
+		glGenTextures(6, textures);
 		glBindTexture(GL_TEXTURE_2D, textures[0]);
 		pBytes = LoadDIBitmap("seaweed.bmp", &info);
 		glTexImage2D(GL_TEXTURE_2D, 0, 4, 128, 670, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, pBytes);
@@ -779,6 +798,14 @@ namespace KDK {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
+		glBindTexture(GL_TEXTURE_2D, textures[4]);
+		pBytes = LoadDIBitmap("START.bmp", &info);
+		glTexImage2D(GL_TEXTURE_2D, 0, 4, 285, 108, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, pBytes);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
 		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, GL_MODULATE);
 	}
 
@@ -791,7 +818,7 @@ namespace KHM
 	float temp_y_angle = 0;
 	float Gauge = 0;
 	float real_temp = 0;
-
+	bool is_charging = false;
 
 	struct BOAT
 	{
@@ -918,18 +945,32 @@ namespace KHM
 					}
 					for (int i = 0; i < 10; i++)
 					{
-						if ((KDK::whale[i].x - 50 <= curr->Harpoon.x && curr->Harpoon.x <= KDK::whale[i].x + 50) &&
+						if (((KDK::whale[i].x - 50 <= curr->Harpoon.x && curr->Harpoon.x <= KDK::whale[i].x + 50) &&
 							(KDK::whale[i].y - 50 <= curr->Harpoon.y && curr->Harpoon.y <= KDK::whale[i].y + 50) &&
-							(KDK::whale[i].z - 50 <= curr->Harpoon.z && curr->Harpoon.z <= KDK::whale[i].z + 50) &&
-							KDK::whale[i].isAlive)
+							(KDK::whale[i].z - 50 <= curr->Harpoon.z && curr->Harpoon.z <= KDK::whale[i].z + 50)) && KDK::whale[i].isAlive)
 						{
 							curr->Harpoon.hit_whale_num = i;
 							curr->Harpoon.hit_locate_x = curr->Harpoon.x - KDK::whale[i].x;
 							curr->Harpoon.hit_locate_y = curr->Harpoon.y - KDK::whale[i].y;
 							curr->Harpoon.hit_locate_z = curr->Harpoon.z - KDK::whale[i].z;
+							PlaySound("dead.wav", NULL, SND_ASYNC | SND_ALIAS);
 							cout << "명중" << endl;
 
-							KDK::run_away_Whale(Boat.x, Boat.y, Boat.z, i);
+							KDK::run_away_Whale(Boat.x, Boat.y, Boat.z, i,0);
+							break;
+						}
+						else if ((KDK::whale[i].isAlive&&(KDK::whale[i].x + 90 * sin((KDK::whale[i].phi + 180)*RADIAN)*cos(-KDK::whale[i].theta*RADIAN) - 30 <= curr->Harpoon.x &&curr->Harpoon.x <= KDK::whale[i].x + 90 * sin((KDK::whale[i].phi + 180)*RADIAN)*cos(-KDK::whale[i].theta*RADIAN) + 30) &&
+							(KDK::whale[i].y + 90 * sin((KDK::whale[i].phi + 180) *RADIAN)*sin(-KDK::whale[i].theta*RADIAN) - 30 <= curr->Harpoon.y &&curr->Harpoon.y <= KDK::whale[i].y + 90 * sin((KDK::whale[i].phi + 180) *RADIAN)*sin(-KDK::whale[i].theta*RADIAN) + 30) &&
+							(KDK::whale[i].z + 90 * cos((KDK::whale[i].phi + 180) *RADIAN) - 30 <= curr->Harpoon.z &&curr->Harpoon.z <= KDK::whale[i].z + 90 * cos((KDK::whale[i].phi + 180) *RADIAN) + 30)))
+						{
+							curr->Harpoon.hit_whale_num = i;
+							curr->Harpoon.hit_locate_x = curr->Harpoon.x - KDK::whale[i].x;
+							curr->Harpoon.hit_locate_y = curr->Harpoon.y - KDK::whale[i].y;
+							curr->Harpoon.hit_locate_z = curr->Harpoon.z - KDK::whale[i].z;
+							PlaySound("dead.wav", NULL, SND_ASYNC | SND_ALIAS);
+							cout << "명중" << endl;
+
+							KDK::run_away_Whale(Boat.x, Boat.y, Boat.z, i, 1);
 							break;
 						}
 						else if (curr->Harpoon.y <= -4000 || curr->Harpoon.x > 4000 || curr->Harpoon.x < -4000 || curr->Harpoon.z > 4000 || curr->Harpoon.z < -4000)
@@ -965,23 +1006,43 @@ namespace KHM
 		{
 
 			glPushMatrix(); {
-				glPushMatrix(); {
-					glColor3f(0.3, 0.2, 0.2);
-					glBegin(GL_LINES);
-
-					glVertex3f(curr->Harpoon.x, curr->Harpoon.y, curr->Harpoon.z);
-					glVertex3f(Boat.x - HARPOON_Z * cos((Boat.y_angle + 90)*RADIAN), Boat.y + HARPOON_Y, Boat.z + HARPOON_Z * sin((Boat.y_angle + 90)*RADIAN));
-
-					glEnd();
-				}glPopMatrix();
-				glTranslated(curr->Harpoon.x, curr->Harpoon.y, curr->Harpoon.z); //실제로 작살 움직이게 하기
-				if (curr->Harpoon.hit_whale_num != -1)
+				glColor3f(0.4, 0.2, 0.2);
+				if (curr->Harpoon.hit_whale_num == -1)
 				{
-					glRotatef(curr->Harpoon.y_angle + curr->Harpoon.real_temp_2+ KDK::whale[curr->Harpoon.hit_whale_num].phi+180, 0.0, 1.0, 0.0);//날아가는 작살이 보고있는 각도
-					glRotatef(curr->Harpoon.x_angle_2- KDK::whale[curr->Harpoon.hit_whale_num].theta, 1.0, 0.0, 0.0);//떨어지는 작살의 각도
-				}
-				else {
+					glPushMatrix(); {
+						glBegin(GL_LINES);
+
+						glVertex3f(curr->Harpoon.x, curr->Harpoon.y, curr->Harpoon.z);
+						glVertex3f(Boat.x - HARPOON_Z * cos((Boat.y_angle + 90)*RADIAN), Boat.y + HARPOON_Y, Boat.z + HARPOON_Z * sin((Boat.y_angle + 90)*RADIAN));
+
+
+						glEnd();
+					}glPopMatrix();
+					glTranslated(curr->Harpoon.x, curr->Harpoon.y, curr->Harpoon.z); //실제로 작살 움직이게 하기
 					glRotatef(curr->Harpoon.y_angle + curr->Harpoon.real_temp_2, 0.0, 1.0, 0.0);//날아가는 작살이 보고있는 각도
+					glRotatef(curr->Harpoon.x_angle_2, 1.0, 0.0, 0.0);//떨어지는 작살의 각도
+				}
+				else if (curr->Harpoon.hit_whale_num != -1)
+				{
+					glPushMatrix(); {
+						float r = sqrt(pow(curr->Harpoon.hit_locate_x, 2) + pow(curr->Harpoon.hit_locate_z, 2));
+						float phi= ((atan2((curr->Harpoon.x - KDK::whale[curr->Harpoon.hit_whale_num].x),
+							(curr->Harpoon.z - KDK::whale[curr->Harpoon.hit_whale_num].z))) * 180 / PI);
+						glBegin(GL_LINES);
+						glVertex3f(KDK::whale[curr->Harpoon.hit_whale_num].x + r * cos((KDK::whale[curr->Harpoon.hit_whale_num].phi+phi)*RADIAN),
+							curr->Harpoon.y, 
+							KDK::whale[curr->Harpoon.hit_whale_num].z + r * sin((KDK::whale[curr->Harpoon.hit_whale_num].phi  + phi)*RADIAN));
+						glVertex3f(Boat.x - HARPOON_Z * cos((Boat.y_angle + 90)*RADIAN), Boat.y + HARPOON_Y, Boat.z + HARPOON_Z * sin((Boat.y_angle + 90)*RADIAN));
+
+
+						glEnd();
+					}glPopMatrix();
+					glTranslated(KDK::whale[curr->Harpoon.hit_whale_num].x,
+						KDK::whale[curr->Harpoon.hit_whale_num].y,
+						KDK::whale[curr->Harpoon.hit_whale_num].z); //실제로 작살 움직이게 하기
+					glRotatef(KDK::whale[curr->Harpoon.hit_whale_num].phi + 180, 0.0, 1.0, 0.0);
+					glTranslated(curr->Harpoon.hit_locate_x,curr->Harpoon.hit_locate_y,curr->Harpoon.hit_locate_z);
+					glRotatef(curr->Harpoon.y_angle + curr->Harpoon.real_temp_2, 0.0, 1.0, 0.0);
 					glRotatef(curr->Harpoon.x_angle_2, 1.0, 0.0, 0.0);//떨어지는 작살의 각도
 				}
 				glPushMatrix(); {
@@ -1336,10 +1397,42 @@ void draw_Harpoon_Gun(float x, float y, float z, float x_angle, float y_angle)
 
 void Mouse(int button, int state, int x, int y)
 {
-	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
-	{
+	if (SCENE_STATE == TITLE) {
+		if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+		{
+			if (x > windowW / 2 - 150 && x < windowW / 2 + 150 &&
+				windowH - y> 50 && windowH - y < 150)
+			{
+				SCENE_STATE = MAIN;
+				localtime_s(&curr_time, &now);
+				now = time(0); 
+			}
+			glutPostRedisplay();
+		}
+	}
 
-		glutPostRedisplay();
+	if (SCENE_STATE == MAIN)
+	{
+		if (KHM::MODE_OF_VIEW == 1)
+		{
+			if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+			{
+					//KHM::real_temp = KHM::Head->next->Harpoon.y_angle;
+					//KHM::shot_Harpoon();
+				KHM::is_charging = true;
+			}
+			if (button == GLUT_LEFT_BUTTON && state == GLUT_UP)
+			{
+				//KHM::real_temp = KHM::Head->next->Harpoon.y_angle;
+				if (KHM::Gauge >= 10)
+				{
+					KHM::shot_Harpoon();
+					PlaySound("fire.wav", NULL, SND_ASYNC | SND_ALIAS);
+				}
+				KHM::is_charging = false;
+				KHM::Gauge = 0;
+			}
+		}
 	}
 }
 void mouseWheel(int button, int dir, int x, int y)
@@ -1358,74 +1451,113 @@ void mouseWheel(int button, int dir, int x, int y)
 }
 void Motion(int x, int y)
 {
+	if (SCENE_STATE == MAIN) {
+		
+		if (KHM::MODE_OF_VIEW == 3)
+		{
+			if (y > prev_my)
+			{
+				{
+					//KHM::Head->next->Harpoon.x_angle = 0;
+					m_camera.Rotate(0, -0.05);
+				}
+			}
 
-	if (x > prev_mx)
-	{
-		if (KHM::MODE_OF_VIEW == 1)
-		{
-			if (KHM::Head->next->Harpoon.y_angle >= -28.6472)
+			else if (y < prev_my)
 			{
-				KHM::Head->next->Harpoon.y_angle -= 2.86472;
+				{
+					//KHM::Head->next->Harpoon.x_angle = 0;
+					m_camera.Rotate(0, 0.05);
+				}
+			}
 
-			}
-		}
-		else
-		{
-			//KHM::Head->next->Harpoon.y_angle = 0;
-			m_camera.Rotate(0.05, 0);
-		}
-	}
-	else if (x < prev_mx)
-	{
-		if (KHM::MODE_OF_VIEW == 1)
-		{
-			if (KHM::Head->next->Harpoon.y_angle <= 28.6472)
+			if (x > prev_mx)
 			{
-				KHM::Head->next->Harpoon.y_angle += 2.86472;
+				{
+					m_camera.Rotate(0.05, 0);
+				}
 			}
-		}
-		else
-		{
-			//KHM::Head->next->Harpoon.y_angle = 0;
-			m_camera.Rotate(-0.05, 0);
-		}
-	}
 
-	if (y > prev_my)
-	{
-		if (KHM::MODE_OF_VIEW == 1)
-		{
-			if (KHM::Head->next->Harpoon.x_angle <= 28.6472)
+			else if (x < prev_mx)
 			{
-				KHM::Head->next->Harpoon.x_angle += 2.86472;
+
+				{
+					m_camera.Rotate(-0.05, 0);
+				}
 			}
 		}
-		else
-		{
-			KHM::Head->next->Harpoon.x_angle = 0;
-			m_camera.Rotate(0, -0.05);
-		}
+		glutPostRedisplay();
+		prev_mx = x;
+		prev_my = y;
 	}
-	else if (y < prev_my)
-	{
-		if (KHM::MODE_OF_VIEW == 1)
-		{
-			if (KHM::Head->next->Harpoon.x_angle >= -28.6472)
-			{
-				KHM::Head->next->Harpoon.x_angle -= 2.86472;
-			}
-		}
-		else
-		{
-			KHM::Head->next->Harpoon.x_angle = 0;
-			m_camera.Rotate(0, 0.05);
-		}
-	}
-	glutPostRedisplay();
-	prev_mx = x;
-	prev_my = y;
 }
+void PassiveMotion(int x, int y)
+{
+	if (SCENE_STATE == TITLE) {
+		if (x > windowW / 2 - 150 && x < windowW / 2 + 150 &&
+			windowH - y> 50 && windowH - y < 150)
+		{
+			Select_arpha = 0.5f;
+		}
+		else
+		{
+			Select_arpha = 1.0f;
+		}
+		glutPostRedisplay();
+	}
+	else if (SCENE_STATE == MAIN)
+	{
+		if (y > prev_my)
+		{
+			if (KHM::MODE_OF_VIEW == 1)
+			{
+				if (KHM::Head->next->Harpoon.x_angle <= 28.6472)
+				{
+					KHM::Head->next->Harpoon.x_angle += 2.86472 / 2;
+				}
+			}
 
+		}
+		else if (y < prev_my)
+		{
+			if (KHM::MODE_OF_VIEW == 1)
+			{
+				if (KHM::Head->next->Harpoon.x_angle >= -28.6472)
+				{
+					KHM::Head->next->Harpoon.x_angle -= 2.86472 / 2;
+				}
+			}
+
+		}
+		if (x > prev_mx)
+		{
+			if (KHM::MODE_OF_VIEW == 1)
+			{
+				if (KHM::Head->next->Harpoon.y_angle >= -28.6472)
+				{
+					KHM::Head->next->Harpoon.y_angle -= 2.86472 / 2;
+
+				}
+			}
+
+		}
+		else if (x < prev_mx)
+		{
+			if (KHM::MODE_OF_VIEW == 1)
+			{
+				if (KHM::Head->next->Harpoon.y_angle <= 28.6472)
+				{
+					KHM::Head->next->Harpoon.y_angle += 2.86472 / 2;
+				}
+			}
+
+		}
+
+		glutPostRedisplay();
+		prev_mx = x;
+		prev_my = y;
+	}
+}
 void draw_BOTTOM()
 {
 	glPushMatrix();
@@ -1614,32 +1746,35 @@ void initialize()
 	KDK::initiallize();
 
 	m_camera.Initialize(float3{ 0,0,0 }, DISTANCE, 1, 99999, 90);
+
+	//PlaySound("BGM.wav", NULL, SND_SYNC| SND_LOOP);
+
 	///////////////////////////////////////////////////////////////////////////////
-	//MCI_OPEN_PARMS mciOpen;   // MCI_OPEN_PARAMS 구조체 변수 
-	//mciOpen.lpstrDeviceType = "mpegvideo";  // mpegvideo : mp3, waveaudio : wav, avivideo : avi
-	//mciOpen.lpstrElementName = "hammer.mp3"; // 파일이름
-	////mciSendCommand(0, MCI_OPEN,
-	//	MCI_OPEN_ELEMENT | MCI_OPEN_TYPE | MCI_OPEN_TYPE,
-	//	(DWORD)(LPVOID)&mciOpen);
-	//MCI_PLAY_PARMS mciPlay;
-	//int dwID = mciOpen.wDeviceID;
-	////mciSendCommand(dwID, MCI_PLAY, MCI_NOTIFY, (DWORD)(LPVOID)&mciPlay);
-	//////MCI_NOTIFY : 기본, MCI_DGV_PLAY_REPEAT : 반복
+	MCI_OPEN_PARMS mciOpen;   // MCI_OPEN_PARAMS 구조체 변수 
+	mciOpen.lpstrElementName = "BGM.mp3"; // 파일이름
+	mciOpen.lpstrDeviceType = "mpegvideo";  // mpegvideo : mp3, waveaudio : wav, avivideo : avi
+	mciSendCommand(0, MCI_OPEN,
+		MCI_OPEN_ELEMENT | MCI_OPEN_TYPE | MCI_OPEN_TYPE,
+		(DWORD)(LPVOID)&mciOpen);
+	MCI_PLAY_PARMS mciPlay;
+	int dwID = mciOpen.wDeviceID;
+	mciSendCommand(dwID, MCI_PLAY, MCI_DGV_PLAY_REPEAT, (DWORD)(LPVOID)&mciPlay);
+	//MCI_NOTIFY : 기본, MCI_DGV_PLAY_REPEAT : 반복
 
-	//////다시시작
-	////mciSendCommandW(dwID, MCI_RESUME, 0, NULL);
+	//다시시작
+	//mciSendCommandW(dwID, MCI_RESUME, 0, NULL);
 
-	////// 일시정지
-	////mciSendCommand(dwID, MCI_PAUSE, MCI_NOTIFY, (DWORD)(LPVOID)&mciPlay);
+	// 일시정지
+	//mciSendCommand(dwID, MCI_PAUSE, MCI_NOTIFY, (DWORD)(LPVOID)&mciPlay);
 
-	////// 정지
-	////mciSendCommandW(dwID, MCI_CLOSE, 0, NULL);
-	////PlaySound(TEXT(SOUND_BGM), NULL, SND_ASYNC | SND_ALIAS);
-	////SND_ASYNC  재생중에도 프로그램이 계속 돌아감
-	////SND_SYNC 재생이 끝나야 프로그램이 돌아감
-	////SND_FILENAME 매개변수가 사운드 파일의 이름일 경우
-	////SND_LOOP 반복재생 SND_ASYNC랑 같이써야함
-	////SND_PURGE 재생중지
+	// 정지
+	//mciSendCommandW(dwID, MCI_CLOSE, 0, NULL);
+
+	//SND_ASYNC  //재생중에도 프로그램이 계속 돌아감
+	//SND_SYNC //재생이 끝나야 프로그램이 돌아감
+	//SND_FILENAME //매개변수가 사운드 파일의 이름일 경우
+	//SND_LOOP //반복재생 SND_ASYNC랑 같이써야함
+	//SND_PURGE //재생중지
 }
 void main(int argc, char *argv[])
 {
@@ -1653,6 +1788,7 @@ void main(int argc, char *argv[])
 	glutDisplayFunc(drawScene); // 출력 함수의 지정
 	glutMouseFunc(Mouse);
 	glutMotionFunc(Motion);
+	glutPassiveMotionFunc(PassiveMotion);
 	glutMouseWheelFunc(mouseWheel);
 	glutReshapeFunc(Reshape);
 	glutKeyboardFunc(Keyboard);                  // 키보드 입력 콜백 함수
@@ -1662,11 +1798,11 @@ void main(int argc, char *argv[])
 	glEnable(GL_BLEND);
 	glEnable(GL_TEXTURE_2D);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	initialize();
 	glutMainLoop();
 }
 // 윈도우 출력 함수
-
 GLvoid drawScene(GLvoid)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -1730,50 +1866,77 @@ GLvoid drawScene(GLvoid)
 	}glPopMatrix();
 
 	glDisable(GL_LIGHTING);
-	//------------------------------------------------------------------------------------------
-	glViewport(windowW - 200, windowH - 200, 200, 200);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glOrtho(-100.0, 100.0, -100.0, 100.0, -100.0, 100.0);
-	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix(); {
-		glColor4f(0.0, 1.0, 0.0, 1.0f);
-		glutWireCone(100, 1, 20, 4);
-		glColor4f(0.0, 0.2, 0.0, 0.5f);
-		glutSolidCone(100, 1, 20, 4);
-		glRotated(KHM::Boat.y_angle, 0, 0, 1);
-		glColor4f(1.0, 0.0, 0.0, 1.0f);
-		draw_rader_Whale();
-	}glPopMatrix();
-	//----------------------------------------------------------------------------------------------
-	if (KHM::MODE_OF_VIEW == 1)
+	if (SCENE_STATE == TITLE)
 	{
-
 		glViewport(windowW / 2 - 150, 50, 300, 100);
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 		glOrtho(-150.0, 150.0, -100.0, 100.0, -100.0, 100.0);
 		glMatrixMode(GL_MODELVIEW);
 		glPushMatrix(); {
-			if (int(KHM::Gauge) < 2)
-				glColor4f(1.0, 0.0, 0.0, 1.0f);
-			else if (int(KHM::Gauge) >= 2)
-				glColor4f(rand() % 10 * 0.1, rand() % 10 * 0.1, rand() % 10 * 0.1, 1.0f);
+			glEnable(GL_TEXTURE_2D);
 
-			int len = (int)strlen(shot_string[std::min(2, int(KHM::Gauge))]);
-			if (int(KHM::Gauge) == 0)
-				glRasterPos3f(-54, 0, 0);
-			else if (int(KHM::Gauge) == 1)
-				glRasterPos3f(-45, 0, 0);
-			else if (int(KHM::Gauge) >= 2)
-				glRasterPos3f(-27, 0, 0);
-			for (int i = 0; i < len; i++)
-				glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, shot_string[std::min(2, int(KHM::Gauge))][i]);
-
-
+			glBindTexture(GL_TEXTURE_2D, textures[4]);
+			glColor4f(1.0, 1.0, 1.0, Select_arpha);
+			glBegin(GL_QUADS);
+			glTexCoord2f(0.0f, 1.0f);
+			glVertex3f(-150, 100, 100);//2
+			glTexCoord2f(0.0f, 0.0f);
+			glVertex3f(-150, -100, 100);//6
+			glTexCoord2f(1.0f, 0.0f);
+			glVertex3f(+150, -100, 100);//7
+			glTexCoord2f(1.0f, 1.0f);
+			glVertex3f(+150, +100, 100);//3
+			glEnd();
+			glDisable(GL_TEXTURE_2D);
 		}glPopMatrix();
 	}
-	
+	//------------------------------------------------------------------------------------------
+	else if (SCENE_STATE ==MAIN)
+	{
+		glViewport(windowW - 200, windowH - 200, 200, 200);
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho(-100.0, 100.0, -100.0, 100.0, -100.0, 100.0);
+		glMatrixMode(GL_MODELVIEW);
+		glPushMatrix(); {
+			glColor4f(0.0, 1.0, 0.0, 1.0f);
+			glutWireCone(100, 1, 20, 4);
+			glColor4f(0.0, 0.2, 0.0, 0.5f);
+			glutSolidCone(100, 1, 20, 4);
+			glRotated(KHM::Boat.y_angle, 0, 0, 1);
+			glColor4f(1.0, 0.0, 0.0, 1.0f);
+			draw_rader_Whale();
+		}glPopMatrix();
+		//----------------------------------------------------------------------------------------------
+		if (KHM::MODE_OF_VIEW == 1)
+		{
+
+			glViewport(windowW / 2 - 150, 50, 300, 100);
+			glMatrixMode(GL_PROJECTION);
+			glLoadIdentity();
+			glOrtho(-150.0, 150.0, -100.0, 100.0, -100.0, 100.0);
+			glMatrixMode(GL_MODELVIEW);
+			glPushMatrix(); {
+				if (int(KHM::Gauge) < 2)
+					glColor4f(1.0, 0.0, 0.0, 1.0f);
+				else if (int(KHM::Gauge) >= 2)
+					glColor4f(rand() % 10 * 0.1, rand() % 10 * 0.1, rand() % 10 * 0.1, 1.0f);
+
+				//int len = (int)strlen(shot_string[std::min(2, int(KHM::Gauge))]);
+				//if (int(KHM::Gauge) == 0)
+				//	glRasterPos3f(-54, 0, 0);
+				//else if (int(KHM::Gauge) == 1)
+				//	glRasterPos3f(-45, 0, 0);
+				//else if (int(KHM::Gauge) >= 2)
+				//	glRasterPos3f(-27, 0, 0);
+				//for (int i = 0; i < len; i++)
+				//	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, shot_string[std::min(2, int(KHM::Gauge))][i]);
+
+
+			}glPopMatrix();
+		}
+	}
 	glFlush(); // 화면에 출력하기
 	glutSwapBuffers(); // 화면에 출력하기
 }
@@ -1787,88 +1950,79 @@ GLvoid Reshape(int w, int h)
 }
 void Keyboard(unsigned char key, int x, int y)
 {
-	int mod = 0;
-
 	switch (key)
 	{
 	case 'q':
 		exit(1);
 		break;
-	case 'w':
-		if (KHM::MODE_OF_VIEW == 3)
-		{
-			KHM::Boat.is_forward = true;
-			mod = glutGetModifiers();
-			if (mod == 'a')
-			{
-				glPushMatrix();
-				KHM::Boat.direction = LEFT;
-				glPopMatrix();
-			}
-			else if (mod == 'd')
-			{
-				glPushMatrix();
-				KHM::Boat.direction = RIGHT;
-				glPopMatrix();
-			}
-		}
-		break;
-	case 'a':
-		if (KHM::MODE_OF_VIEW == 3)
-		{
-			KHM::Boat.direction = LEFT;
-			mod = glutGetModifiers();
-			if (mod == 'w')
-			{
-				KHM::Boat.is_forward = true;
-			}
-		}
-		break;
-	case 's':
-		if (KHM::Boat.speed > 0.0)
-		{
-			KHM::Boat.is_breaking = true;
-		}
-		break;
-	case 'd':
-		if (KHM::MODE_OF_VIEW == 3)
-		{
-			KHM::Boat.direction = RIGHT;
-			mod = glutGetModifiers();
-			if (mod == 'w')
-			{
-				KHM::Boat.is_forward = true;
-			}
-		}
-		break;
-	case 'f':
-		if (KHM::MODE_OF_VIEW == 1)
-		{
-
-			KHM::real_temp = KHM::Head->next->Harpoon.y_angle;
-			//KHM::shot_Harpoon();
-
-			KHM::Gauge++;
-		}
-		break;
-	case '1':
-		m_camera.Initialize_radian();
-		prev_mx = 0;
-		prev_my = 0;
-		KHM::MODE_OF_VIEW = 1;
-		m_camera.Rotate(-KHM::Boat.y_angle * RADIAN, 0);
-		break;
-	case '3':
-		KHM::Head->next->Harpoon.x_angle = 0;
-		KHM::Head->next->Harpoon.y_angle = 0;
-		m_camera.Initialize(float3{ 0,0,0 }, KHM::temp_distance, 1, 99999, 90);
-		KHM::MODE_OF_VIEW = 3;
-		break;
-	case 'i':
-		m_camera.Rotate(3.141592, 0);
-		break;
 	}
 
+	if (SCENE_STATE == MAIN) {
+		int mod = 0;
+		switch (key)
+		{
+		case 'w':
+			if (KHM::MODE_OF_VIEW == 3)
+			{
+				KHM::Boat.is_forward = true;
+				mod = glutGetModifiers();
+				if (mod == 'a')
+				{
+					glPushMatrix();
+					KHM::Boat.direction = LEFT;
+					glPopMatrix();
+				}
+				else if (mod == 'd')
+				{
+					glPushMatrix();
+					KHM::Boat.direction = RIGHT;
+					glPopMatrix();
+				}
+			}
+			break;
+		case 'a':
+			if (KHM::MODE_OF_VIEW == 3)
+			{
+				KHM::Boat.direction = LEFT;
+				mod = glutGetModifiers();
+				if (mod == 'w')
+				{
+					KHM::Boat.is_forward = true;
+				}
+			}
+			break;
+		case 's':
+			if (KHM::Boat.speed > 0.0)
+			{
+				KHM::Boat.is_breaking = true;
+			}
+			break;
+		case 'd':
+			if (KHM::MODE_OF_VIEW == 3)
+			{
+				KHM::Boat.direction = RIGHT;
+				mod = glutGetModifiers();
+				if (mod == 'w')
+				{
+					KHM::Boat.is_forward = true;
+				}
+			}
+			break;
+		case '1':
+			m_camera.Initialize_radian();
+			prev_mx = 0;
+			prev_my = 0;
+			KHM::MODE_OF_VIEW = 1;
+			m_camera.Rotate(-KHM::Boat.y_angle * RADIAN, 0);
+			break;
+		case '3':
+			KHM::Head->next->Harpoon.x_angle = 0;
+			KHM::Head->next->Harpoon.y_angle = 0;
+			m_camera.Initialize(float3{ 0,0,0 }, KHM::temp_distance, 1, 99999, 90);
+			KHM::MODE_OF_VIEW = 3;
+			break;
+		}
+	}
 	glutPostRedisplay();
 }
 
@@ -1888,15 +2042,21 @@ void UpKeyboard(unsigned char key, int x, int y)
 	case 's':
 		KHM::Boat.is_breaking = false;
 		break;
-	case 'f':
-		KHM::real_temp = KHM::Head->next->Harpoon.y_angle;
-		if (KHM::Gauge >= 2)
-		{
-			KHM::shot_Harpoon();
-		}
-		KHM::Gauge = 0;
-		break;
+
 	}
+}
+
+void SetCursor(bool bVisible)
+
+{
+	CONSOLE_CURSOR_INFO ConsoleCursor;
+
+	ConsoleCursor.bVisible = bVisible; // true 보임, false 안보임
+
+	ConsoleCursor.dwSize = 1; // 커서사이즈
+
+	SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &ConsoleCursor); // 설정
+
 }
 
 void Timerfunction(int value)
@@ -1908,6 +2068,7 @@ void Timerfunction(int value)
 
 	if (KHM::MODE_OF_VIEW == 1)
 	{
+		ShowCursor(false);
 		m_camera.Initialize(float3{ KHM::Boat.x + (70 * sin(KHM::Boat.y_angle * 3.141592f / 180)) ,KHM::Boat.y + HARPOON_Y + 35,KHM::Boat.z + (HARPOON_Z * cos(KHM::Boat.y_angle * 3.141592f / 180)) }, 30, 1, 99999, 90);
 
 	}
@@ -1995,6 +2156,12 @@ void Timerfunction(int value)
 	KDK::update_Whale();
 	KDK::update_wave();
 	KHM::real_temp = KHM::Head->next->Harpoon.y_angle;
+
+	if (KHM::is_charging == true)
+	{
+		KHM::Gauge++;
+	}
+
 	glutPostRedisplay();                  // 화면 재출력
 	glutTimerFunc(20, Timerfunction, 1);      // 타이머함수 재설정
 }
