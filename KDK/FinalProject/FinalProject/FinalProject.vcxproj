@@ -144,6 +144,8 @@
   <ItemGroup>
     <ClInclude Include="camera.h" />
     <ClInclude Include="float3.h" />
+    <ClInclude Include="LoadDlBitmap.h" />
+    <ClInclude Include="Whale.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="background.bmp" />
