@@ -58,6 +58,7 @@ GLubyte * LoadDIBitmap(const char *filename, BITMAPINFO **info)
  GLubyte *pBytes; // 데이터를 가리킬 포인터
  BITMAPINFO *info; // 비트맵 헤더 저장할 변수
  GLuint textures[8];
+
  void init_textures()
  {
 	 //텍스처 설정 정의를 한다. --- (3)
