@@ -5,8 +5,7 @@
 #define SOUND_BGM "../Resource/sound/BGM.mp3"
 #pragma comment(lib, "winmm.lib")
 
-#include"LoadDlBitmap.h"
-#include"Whale.h"
+
 
 #include <GL/freeglut.h>
 #include<time.h>
@@ -366,15 +365,6 @@ namespace KDK {
 
 		}glPopMatrix();
 	}
-	bool collide_pyramid(float x1, float y1, float z1, float x2, float z2, float size)
-	{
-		if (x1 - 100 < x2 + size * -y1 / size && x1 + 100 > x2 - size * -y1 / size &&
-			z1 + 100 > z2 - size * -y1 / size && z1 - 100 < z2 + size * -y1 / size)
-		{
-			return 1;
-		}
-		return 0;
-	}
 	////////////////////////////////고래///////////////////////////////////////////////////////
 	void drawRect(float size, float x, float y, float z)
 	{
@@ -461,8 +451,265 @@ namespace KDK {
 		}glPopMatrix();
 
 	}
-
+	struct Whale {
+		float x, y, z;
+		float next_x, next_y, next_z;
+		int move_Velocity;
+		int tail_moveVelocity;
+		int moveTailCount;
+		int Tail_Radian;
+		int tail_moveRange[2];
+		float phi, theta;
+		int HP;
+		bool isRun_away;
+		bool isAlive;
+		bool isDeath_animation;
+	};
 	Whale whale[10];
+
+	void draw_basic_Whale(float x, float y, float z, int i)
+	{
+		glPushMatrix(); {
+			glTranslatef(x, y, z);
+			if (whale[i].isDeath_animation) {
+				glRotated(180, 0, 0, 1);
+			}
+			else
+			{
+				glRotatef(whale[i].phi + 180, 0.0, 1.0, 0.0);
+
+				glRotatef(-whale[i].theta, 1.0, 0.0, 0.0);
+			}
+			///////////////////큰 몸통/////////////////////////////////////////////
+			glColor3f(1.0, 1.0, 1.0);
+			draw_face_Rect(100);
+			/////////////////////////지느러미 2개//////////////////////////
+			glPushMatrix(); {
+				glTranslatef(0, -30, 20);
+				/****************왼쪽*******************/
+				glPushMatrix(); {
+					glTranslatef(60, 0, 0);
+
+					glScalef(0.5, 0.5, 1);
+					//glColor3f(1.0, 1.0, 1.0);
+					drawRect(40, 0, 0, 0);
+					glPushMatrix(); {
+						glTranslatef(30, 0, 0);
+
+						glScalef(0.7, 0.8, 0.7);
+						//glColor3f(1.0, 1.0, 1.0);
+						drawRect(40, 0, 0, 0);
+					}glPopMatrix();
+				}glPopMatrix();
+				/***************오른쪽*****************/
+				glPushMatrix(); {
+					glTranslatef(-60, 0, 0);
+
+					glScalef(0.5, 0.5, 1);
+					//glColor3f(1.0, 1.0, 1.0);
+					drawRect(40, 0, 0, 0);
+					glPushMatrix(); {
+						glTranslatef(-30, 0, 0);
+
+						glScalef(0.7, 0.8, 0.7);
+						//glColor3f(1.0, 1.0, 1.0);
+						drawRect(40, 0, 0, 0);
+					}glPopMatrix();
+				}glPopMatrix();
+			}glPopMatrix();
+			/////////////////////////////////////////////////////////////////////
+			/**********************중간 몸통***********************************/
+			glPushMatrix(); {
+				glTranslatef(0, -10 + KDK::whale[i].tail_moveRange[0], 70);
+
+				glRotatef(0, 0.0, 0.0, 1.0);
+				glPushMatrix(); {
+					glScalef(1, 1, 0.5);
+					//glColor3f(1.0, 1.0, 1.0);
+					drawRect(80, 0, 0, 0);
+				}glPopMatrix();
+				/*****************꼬리 몸통**********************************/
+				glPushMatrix(); {
+					glTranslatef(0, -10 + KDK::whale[i].tail_moveRange[1], 40);
+
+					glRotatef(0, 0.0, 0.0, 1.0);
+					//glColor3f(1.0, 1.0, 1.0);
+					drawRect(40, 0, 0, 0);
+					/*************************************************************/
+					glPushMatrix(); {
+						glTranslatef(0, 0, 20);
+						glRotatef(KDK::whale[i].Tail_Radian, 1.0, 0.0, 0.0);
+						glTranslatef(0, 0, 20);
+						//////////////////꼬리 지느러미 2개+가운데 1개////////////////// 
+						/******************지느러미 왼쪽**********************/
+						glPushMatrix(); {
+							glTranslatef(20, 0, 0);
+							glRotatef(30, 0.0, 1.0, 0.0);
+							glScalef(0.7, 0.5, 1);
+							//glColor3f(1.0, 1.0, 1.0);
+							drawRect(40, 0, 0, 0);
+						}glPopMatrix();
+						/********************지느러미 오른쪽***************************/
+						glPushMatrix(); {
+							glTranslatef(-20, 0, 0);
+							glRotatef(-30, 0.0, 1.0, 0.0);
+							glScalef(0.7, 0.5, 1);
+							//glColor3f(1.0, 1.0, 1.0);
+							drawRect(40, 0, 0, 0);
+						}glPopMatrix();
+						/***********************지느러미 가운데**********************/
+						glPushMatrix(); {
+							glTranslatef(0, 0, -10);
+							glScalef(1, 1, 1);
+							//glColor3f(1.0, 1.0, 1.0);
+							drawRect(20, 0, 0, 0);
+						}glPopMatrix();
+						/*****************************************************************/
+					}glPopMatrix();
+				}glPopMatrix();
+			}glPopMatrix();
+		}glPopMatrix();
+	}
+	bool collide_pyramid(float x1, float y1, float z1, float x2, float z2, float size)
+	{
+		if (x1 - 100 < x2 + size * -y1 / size && x1 + 100 > x2 - size * -y1 / size &&
+			z1 + 100 > z2 - size * -y1 / size && z1 - 100 < z2 + size * -y1 / size)
+		{
+			return 1;
+		}
+		return 0;
+	}
+	void init_Whale()
+	{
+		for (int i = 0; i < 10; ++i) {
+			whale[i].HP = 100;
+			whale[i].tail_moveVelocity = 3;
+			whale[i].move_Velocity = 3;
+			whale[i].Tail_Radian = -45;
+			whale[i].x = rand() % (WORLD_SCALE * 2) - WORLD_SCALE;
+			whale[i].z = rand() % (WORLD_SCALE * 2) - WORLD_SCALE;
+			whale[i].y = -rand() % 800;
+			whale[i].isAlive = true;
+			whale[i].isDeath_animation = false;
+			while ((collide_pyramid(whale[i].x, whale[i].y, whale[i].z, -2000, 800, 1000) ||
+				collide_pyramid(whale[i].x, whale[i].y, whale[i].z, -1000, -2500, 1000) ||
+				collide_pyramid(whale[i].x, whale[i].y, whale[i].z, 2500, 100, 1000) ||
+				collide_pyramid(whale[i].x, whale[i].y, whale[i].z, 1000, 3000, 1000)))
+			{
+				whale[i].x = rand() % (WORLD_SCALE * 2) - WORLD_SCALE;
+				whale[i].z = rand() % (WORLD_SCALE * 2) - WORLD_SCALE;
+				whale[i].y = -rand() % 800;
+			}
+
+			whale[i].next_x = rand() % (WORLD_SCALE * 2) - WORLD_SCALE;
+			whale[i].next_z = rand() % (WORLD_SCALE * 2) - WORLD_SCALE;
+			whale[i].next_y = -rand() % 800;
+		}
+	}
+	void draw_Whale()
+	{
+		glEnable(GL_TEXTURE_2D);
+
+		for (int i = 0; i < 10; ++i) {
+			if (whale[i].isAlive) {
+				glBindTexture(GL_TEXTURE_2D, textures[1]);
+				draw_basic_Whale(whale[i].x, whale[i].y, whale[i].z, i);
+			}
+			else if (whale[i].isDeath_animation) {
+				glBindTexture(GL_TEXTURE_2D, textures[3]);
+
+				draw_basic_Whale(whale[i].x, whale[i].y, whale[i].z, i);
+			}
+		}
+		glDisable(GL_TEXTURE_2D);
+	}
+	void update_Whale()
+	{
+		float normal_r = 0;
+		for (int i = 0; i < 10; ++i) {
+			if (whale[i].isAlive) {
+				if (KDK::whale[i].tail_moveRange[0] <= 20 && KDK::whale[i].tail_moveRange[0] >= 0) {
+					KDK::whale[i].tail_moveRange[0] += KDK::whale[i].tail_moveVelocity;
+					KDK::whale[i].Tail_Radian += KDK::whale[i].tail_moveVelocity * 4;
+
+				}
+				else {
+					KDK::whale[i].tail_moveRange[1] += KDK::whale[i].tail_moveVelocity;
+					if (KDK::whale[i].tail_moveRange[1] > 30 || KDK::whale[i].tail_moveRange[1] < 0)
+					{
+						KDK::whale[i].tail_moveVelocity *= -1;
+						if (KDK::whale[i].tail_moveVelocity > 0)
+							KDK::whale[i].tail_moveRange[0] = 0;
+						else
+							KDK::whale[i].tail_moveRange[0] = 20;
+					}
+				}
+
+				normal_r = sqrt(pow(whale[i].next_x - whale[i].x, 2) + pow(whale[i].next_y - whale[i].y, 2) + pow(whale[i].next_z - whale[i].z, 2));
+				whale[i].x += (whale[i].next_x - whale[i].x) / normal_r * whale[i].move_Velocity;
+				whale[i].y += (whale[i].next_y - whale[i].y) / normal_r * whale[i].move_Velocity;
+				whale[i].z += (whale[i].next_z - whale[i].z) / normal_r * whale[i].move_Velocity;
+				if (collide_pyramid(whale[i].x, whale[i].y, whale[i].z, -2000, 800, 1000) ||
+					collide_pyramid(whale[i].x, whale[i].y, whale[i].z, -1000, -2500, 1000) ||
+					collide_pyramid(whale[i].x, whale[i].y, whale[i].z, 2500, 100, 1000) ||
+					collide_pyramid(whale[i].x, whale[i].y, whale[i].z, 1000, 3000, 1000)||
+					whale[i].y <= -800 || whale[i].x > 4000 || whale[i].x < -4000 || whale[i].z > 4000 || whale[i].z < -4000)
+				{
+					if (whale[i].isRun_away)
+					{
+						whale[i].isRun_away = false;
+						whale[i].move_Velocity -= 2;
+					}
+					whale[i].x -= (whale[i].next_x - whale[i].x) / normal_r * whale[i].move_Velocity;
+					whale[i].y -= (whale[i].next_y - whale[i].y) / normal_r * whale[i].move_Velocity;
+					whale[i].z -= (whale[i].next_z - whale[i].z) / normal_r * whale[i].move_Velocity;
+					whale[i].next_x = rand() % WORLD_SCALE - WORLD_SCALE / 2;
+					whale[i].next_z = rand() % WORLD_SCALE - WORLD_SCALE / 2;
+					whale[i].next_y = -rand() % 400;
+				}
+				if (whale[i].x > whale[i].next_x - whale[i].move_Velocity&&whale[i].x<whale[i].next_x + whale[i].move_Velocity&&
+					whale[i].y>whale[i].next_y - whale[i].move_Velocity&&whale[i].y<whale[i].next_y + whale[i].move_Velocity&&
+					whale[i].z>whale[i].next_z - whale[i].move_Velocity&&whale[i].z < whale[i].next_z + whale[i].move_Velocity)
+				{
+					if (whale[i].isRun_away)
+					{
+						whale[i].isRun_away = false;
+						whale[i].move_Velocity -= 2;
+					}
+					whale[i].next_x = rand() % WORLD_SCALE - WORLD_SCALE / 2;
+					whale[i].next_z = rand() % WORLD_SCALE - WORLD_SCALE / 2;
+					whale[i].next_y = -rand() % 400;
+				}
+				whale[i].phi = ((atan2((whale[i].next_x - whale[i].x), (whale[i].next_z - whale[i].z))) * 180 / PI);
+
+				whale[i].theta = acos((whale[i].next_y - whale[i].y) / normal_r) * 180 / PI - 90;
+			}
+			else if (whale[i].isDeath_animation) {
+				whale[i].y += 1;
+				if (whale[i].y > 0)
+					whale[i].isDeath_animation = false;
+			}
+		}
+	}
+	void run_away_Whale(float boat_x, float boat_y, float boat_z, int num,int part)
+	{
+		whale[num].isRun_away = true;
+		whale[num].move_Velocity += 2;
+		whale[num].next_x = whale[num].x + whale[num].x - boat_x;
+		whale[num].next_y = whale[num].y + whale[num].y - boat_y;
+		whale[num].next_z = whale[num].z + whale[num].z - boat_z;
+		if(part==0)
+			whale[num].HP -= rand() % 10 + 20;
+		else
+			whale[num].HP -= rand() % 10 + 10;
+
+		if (whale[num].HP < 0)
+		{
+			whale[num].isAlive = false;
+			whale[num].isDeath_animation = true;
+			sum_of_capture_Whale++;
+		}
+	}
 
 	/////////////////////////////////물보라//////////////////////////////////////////////////////
 	struct Spray {
@@ -517,9 +764,76 @@ namespace KDK {
 		Head->spray_of_water.x = NULL;
 		Head->next = nullptr;
 		init_seaweed_postion();
+		init_Whale();
 		init_wave_pivots();
 
-		init_textures();
+		//텍스처 설정 정의를 한다. --- (3)
+		glGenTextures(10, textures);
+		glBindTexture(GL_TEXTURE_2D, textures[0]);
+		pBytes = LoadDIBitmap("seaweed.bmp", &info);
+		glTexImage2D(GL_TEXTURE_2D, 0, 4, 128, 670, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, pBytes);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+		glBindTexture(GL_TEXTURE_2D, textures[1]);
+		pBytes = LoadDIBitmap("whale_face.bmp", &info);
+		glTexImage2D(GL_TEXTURE_2D, 0, 4, 701, 526, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, pBytes);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+		glBindTexture(GL_TEXTURE_2D, textures[2]);
+		pBytes = LoadDIBitmap("background.bmp", &info);
+		glTexImage2D(GL_TEXTURE_2D, 0, 4, 1920, 900, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, pBytes);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+		glBindTexture(GL_TEXTURE_2D, textures[3]);
+		pBytes = LoadDIBitmap("whale_death_face.bmp", &info);
+		glTexImage2D(GL_TEXTURE_2D, 0, 4, 701, 526, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, pBytes);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+		glBindTexture(GL_TEXTURE_2D, textures[4]);
+		pBytes = LoadDIBitmap("START.bmp", &info);
+		glTexImage2D(GL_TEXTURE_2D, 0, 4, 285, 108, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, pBytes);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+		glBindTexture(GL_TEXTURE_2D, textures[5]);
+		pBytes = LoadDIBitmap("GreenPeace.bmp", &info);
+		glTexImage2D(GL_TEXTURE_2D, 0, 4, 800, 533, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, pBytes);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+		glBindTexture(GL_TEXTURE_2D, textures[6]);
+		pBytes = LoadDIBitmap("TrueEnding.bmp", &info);
+		glTexImage2D(GL_TEXTURE_2D, 0, 4, 533, 330, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, pBytes);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+		glBindTexture(GL_TEXTURE_2D, textures[7]);
+		pBytes = LoadDIBitmap("name.bmp", &info);
+		glTexImage2D(GL_TEXTURE_2D, 0, 4, 197, 182, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, pBytes);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, GL_MODULATE);
 
 	}
 
@@ -1978,7 +2292,7 @@ void Timerfunction(int value)
 	KDK::update_wave();
 	KHM::real_temp = KHM::Head->next->Harpoon.y_angle;
 
-	//cout << sum_of_capture_Whale << endl;
+	cout << sum_of_capture_Whale << endl;
 	glutPostRedisplay();                  // 화면 재출력
 	glutTimerFunc(20, Timerfunction, 1);      // 타이머함수 재설정
 }
